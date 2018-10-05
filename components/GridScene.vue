@@ -8,7 +8,13 @@ export default Vue.extend({
   data() {
     return {
       params: {
-        animate: false
+        animate: false,
+        camera: {
+          type: 'orthographic',
+          frustrum: {
+            type: 'dynamic'
+          }
+        }
       }
     }
   },
@@ -23,7 +29,6 @@ export default Vue.extend({
       })
       this.mesh = new Three.Mesh(geometry, material)
       this.scene.add(this.mesh)
-      this.camera.position.z = 5
     },
     update: function() {
     }
