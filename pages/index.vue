@@ -1,13 +1,13 @@
 <template>
-<cube-scene/>
+<grid-scene/>
 </template>
 
 <script>
-import CubeScene from '~/components/CubeScene.vue'
+import GridScene from '~/components/GridScene.vue'
 
 export default {
   components: {
-    CubeScene
+    GridScene
   }
 }
 </script>

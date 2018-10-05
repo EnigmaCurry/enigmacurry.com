@@ -11,7 +11,7 @@ export default Vue.extend({
       let material = new Three.MeshNormalMaterial()
       this.mesh = new Three.Mesh(geometry, material)
       this.scene.add(this.mesh)
-      this.camera.position.z = 1      
+      this.camera.position.z = 1
     },
     update: function() {
       this.mesh.rotation.x += 0.002

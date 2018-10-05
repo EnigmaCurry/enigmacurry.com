@@ -17,6 +17,9 @@ import * as _ from 'lodash'
 export default {
   data() {
     return {
+      params: {
+        animate: true
+      }
     }
   },
   methods: {
@@ -37,9 +40,12 @@ export default {
       // Update Scene each frame ...
     },
     _animate: function() {
-      requestAnimationFrame(this._animate)
+      // Animate a single frame, or run continuously if this.params.animate == true
       this.update()
       this.renderer.render(this.scene, this.camera)
+      if (this.params.animate) {
+        requestAnimationFrame(this._animate)
+      }
     },
     setSize: function() {
       let width = this.container.clientWidth
@@ -47,6 +53,7 @@ export default {
       this.renderer.setSize(width, height)
       this.camera.aspect = (width / height)
       this.camera.updateProjectionMatrix()
+      this._animate()
     }
   },
   mounted() {
