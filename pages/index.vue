@@ -1,5 +1,5 @@
 <template>
-<cube-scene/>
+<grid-scene/>
 </template>
 
 <script>

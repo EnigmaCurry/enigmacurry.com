@@ -9,10 +9,18 @@ export default Vue.extend({
     return {
       params: {
         animate: false,
+        container: {
+          width: '1000px',
+          height: '1000px'
+        },
         camera: {
           type: 'orthographic',
           frustrum: {
-            type: 'dynamic'
+            type: 'static',
+            left: -50,
+            right: 50,
+            top: -50,
+            bottom: 50
           }
         }
       }
@@ -20,15 +28,13 @@ export default Vue.extend({
   },
   methods: {
     init: function() {
-      let geometry = new Three.CircleGeometry(1, 64)
-      let material = new Three.MeshPhongMaterial({
-        color: 0x156289,
-        emissive: 0x072534,
-        side: Three.DoubleSide,
-        flatShading: true
-      })
-      this.mesh = new Three.Mesh(geometry, material)
-      this.scene.add(this.mesh)
+      var material = new Three.LineBasicMaterial({ color: 0x0000ff })
+      var geometry = new Three.Geometry()
+      geometry.vertices.push(new Three.Vector3(-10, 0, 0))
+      geometry.vertices.push(new Three.Vector3(0, 10, 0))
+      geometry.vertices.push(new Three.Vector3(10, 0, 0))
+      var line = new Three.Line(geometry, material)
+      this.scene.add(line)
     },
     update: function() {
     }

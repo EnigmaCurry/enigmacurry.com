@@ -3,13 +3,6 @@
   </div>
 </template>
 
-<style scoped>
-.threejs_container {
-    width: 100vw;
-    height: 99vh;
-}
-</style>
-
 <script>
 import * as Three from 'three'
 import * as _ from 'lodash'
@@ -34,6 +27,10 @@ export default {
           near: 0.01,
           far: 10,
           position: { x: 0, y: 0, z: 5 }
+        },
+        container: {
+          width: '100vw',
+          height: '99vh'
         }
       }
     }
@@ -66,9 +63,8 @@ export default {
       
       this.container.appendChild(this.renderer.domElement)
       // Auto (re)size with debounce
-      this.setSize()
-      this.resizeEventCallback = _.debounce(this.setSize, 200)
-      
+      this.setSize()      
+      this.resizeEventCallback = _.debounce(this.setSize, 200)      
     },
     init: function() {
       // Create Scene Objects ...
@@ -85,23 +81,23 @@ export default {
       }
     },
     setSize: function() {
-      let width = this.container.clientWidth
-      let height = this.container.clientHeight
-      this.renderer.setSize(width, height)
-      this.camera.aspect = (width / height)
+      this.container.style.width = this.params.container.width
+      this.container.style.height = this.params.container.height
+      this.renderer.setSize(this.container.clientWidth, this.container.clientHeight)
+      this.camera.aspect = (this.container.clientWidth / this.container.clientHeight)
       if (this.camera instanceof Three.OrthographicCamera) {
         if (this.params.camera.frustrum.type == 'dynamic') {
-          this.camera.left = width / this.params.camera.frustrum.left
-          this.camera.right = width / this.params.camera.frustrum.right
-          this.camera.top = height / this.params.camera.frustrum.top
-          this.camera.bottom = height / this.params.camera.frustrum.bottom
+          this.camera.left = this.container.clientWidth / this.params.camera.frustrum.left
+          this.camera.right = this.container.clientWidth / this.params.camera.frustrum.right
+          this.camera.top = this.container.clientHeight / this.params.camera.frustrum.top
+          this.camera.bottom = this.container.clientHeight / this.params.camera.frustrum.bottom
         } else {
           this.camera.left =  this.params.camera.frustrum.left
           this.camera.right = this.params.camera.frustrum.right
           this.camera.top = this.params.camera.frustrum.top
-          this.camera.bottom = this.params.camera.frustrum.bottom          
+          this.camera.bottom = this.params.camera.frustrum.bottom
         }
-      }      
+      }
       this.camera.updateProjectionMatrix()
       this.renderer.render(this.scene, this.camera)
     }
