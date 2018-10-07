@@ -20,10 +20,10 @@ export default Vue.extend({
           }
         },
         flower: {
-          unitRadius: 2,
-          level: 4,
+          unitRadius: 1.5,
+          level: 14,
           circleSegments: 128,
-          colors: [ 'white', 'red', 'blue', 'pink', 'green']
+          colors: [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ]
         }
       }
     }
@@ -52,51 +52,39 @@ export default Vue.extend({
             level_x += 1
           }
         }
-        let circle = new Three.LineLoop(unitCircle, this.materials[level])
+        let circle = new Three.LineLoop(unitCircle, this.materials[level % this.materials.length])
         circle.position.copy(points[p])
         this.scene.add(circle)
       }
     },
     flowerPattern: function(origin, unitRadius, levels) {
       let points = [ origin.clone() ]
+      let clockPattern = [
+        //Down Right
+        new Three.Vector3(0.5 * unitRadius * Math.sqrt(3), 0.5 * unitRadius),
+        //Down
+        new Three.Vector3(0, 1 * unitRadius),
+        //Down Left
+        new Three.Vector3(-0.5 * unitRadius * Math.sqrt(3), 0.5 * unitRadius),
+        //Up Left
+        new Three.Vector3(-0.5 * unitRadius * Math.sqrt(3), -0.5 * unitRadius),
+        //Up
+        new Three.Vector3(0, -1 * unitRadius),
+        //Up Right
+        new Three.Vector3(0.5 * unitRadius * Math.sqrt(3), -0.5 * unitRadius)
+      ]
       for (let level = 1; level <= levels; level++) {
-        // Up
+        // Up Level
         points.push(new Three.Vector3(points[0].x, (points[0].y - level) * unitRadius, 0))
-        // Down Right
-        for (let c = 0; c < level; c++) {
-          let p = points[points.length-1].clone()
-          p.add(new Three.Vector3(0.5 * unitRadius * Math.sqrt(3), 0.5 * unitRadius))
-          points.push(p)
-        }
-        // Down
-        for (let c = 0; c < level; c++) {
-          let p = points[points.length-1].clone()
-          p.add(new Three.Vector3(0, 1 * unitRadius))
-          points.push(p)
-        }
-        // Down Left
-        for (let c = 0; c < level; c++) {
-          let p = points[points.length-1].clone()
-          p.add(new Three.Vector3(-0.5 * unitRadius * Math.sqrt(3), 0.5 * unitRadius))
-          points.push(p)
-        }
-        // Up Left
-        for (let c = 0; c < level; c++) {
-          let p = points[points.length-1].clone()
-          p.add(new Three.Vector3(-0.5 * unitRadius * Math.sqrt(3), -0.5 * unitRadius))
-          points.push(p)
-        }
-        // Up
-        for (let c = 0; c < level; c++) {
-          let p = points[points.length-1].clone()
-          p.add(new Three.Vector3(0, -1 * unitRadius))
-          points.push(p)
-        }
-        // Up Right
-        for (let c = 0; c < level-1; c++) {
-          let p = points[points.length-1].clone()
-          p.add(new Three.Vector3(0.5 * unitRadius * Math.sqrt(3), -0.5 * unitRadius))
-          points.push(p)
+        // Around the outside clockwise
+        for (let vec=0; vec < clockPattern.length; vec++) {
+          //Edge length is the same as the level, except for the last segment:
+          let edgeLength = (vec === clockPattern.length - 1) ? level -1 : level
+          for (let c=0; c < edgeLength; c++) {
+            let p = points[points.length-1].clone()
+            p.add(clockPattern[vec])
+            points.push(p)
+          }
         }
       }
       return points

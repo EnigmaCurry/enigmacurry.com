@@ -1,19 +1,13 @@
 <template>
-<flower-of-life/>
+<cube-scene/>
 </template>
 
 <script>
-import GridScene from '~/components/GridScene.vue'
 import CubeScene from '~/components/CubeScene.vue'
-import SeedOfLife from '~/components/SeedOfLife.vue'
-import FlowerOfLife from '~/components/FlowerOfLife.vue'
 
 export default {
   components: {
-    GridScene,
-    CubeScene,
-    SeedOfLife,
-    FlowerOfLife
+    CubeScene
   }
 }
 </script>
