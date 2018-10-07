@@ -8,7 +8,7 @@ export default Vue.extend({
   data() {
     return {
       params: {
-        animate: false,
+        animate: true,
         camera: {
           type: 'orthographic',
           frustrum: {
@@ -23,18 +23,24 @@ export default Vue.extend({
           unitRadius: 1.5,
           level: 14,
           circleSegments: 128,
-          colors: [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ]
+          colors: [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
+          colorCycleRate: 2,
+          colorInterpolation: 0.05
         }
       }
     }
   },
   methods: {
-    init: function() {     
-      this.materials = []
-      this.params.flower.colors.forEach(c => {
-        this.materials.push(new Three.LineBasicMaterial({ color: c }))
-      })
+    init: function() {
+      this._materials = []
+      this._colors = []
+      for (let c = 0; c < this.params.flower.colors.length; c++) {
+        let color = new Three.Color(this.params.flower.colors[c])
+        this._colors.push(color)
+        this._materials.push(new Three.LineBasicMaterial({ color: color }))
+      }
       this.drawFlower()
+      setInterval(this.cycleColors, 1000 * this.params.flower.colorCycleRate)
     },
     drawFlower: function() {
       let unitRadius = this.params.flower.unitRadius
@@ -52,9 +58,18 @@ export default Vue.extend({
             level_x += 1
           }
         }
-        let circle = new Three.LineLoop(unitCircle, this.materials[level % this.materials.length])
+        let circle = new Three.LineLoop(unitCircle, this._materials[level % this._materials.length])
         circle.position.copy(points[p])
         this.scene.add(circle)
+      }
+    },
+    cycleColors: function() {
+      //cycle materials
+      this._colors.push(this._colors.shift())
+    },
+    update: function() {
+      for (let m = 0; m < this._materials.length; m++) {
+        this._materials[m].color.lerp(this._colors[m], this.params.flower.colorInterpolation)
       }
     },
     flowerPattern: function(origin, unitRadius, levels) {

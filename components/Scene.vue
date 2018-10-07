@@ -74,11 +74,11 @@ export default {
     },
     _animate: function() {
       // Animate a single frame, or run continuously if this.params.animate == true
-      this.update()
-      this.renderer.render(this.scene, this.camera)
       if (this.params.animate) {
         requestAnimationFrame(this._animate)
       }
+      this.update()
+      this.renderer.render(this.scene, this.camera)
     },
     setSize: function() {
       this.container.style.width = this.params.container.width
