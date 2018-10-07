@@ -21,26 +21,41 @@ export default Vue.extend({
         },
         flower: {
           unitRadius: 2,
-          level: 8,
+          level: 4,
           circleSegments: 128,
-          color: 0x0000ff
+          colors: [ 'white', 'red', 'blue', 'pink', 'green']
         }
       }
     }
   },
   methods: {
-    init: function() {
+    init: function() {     
+      this.materials = []
+      this.params.flower.colors.forEach(c => {
+        this.materials.push(new Three.LineBasicMaterial({ color: c }))
+      })
+      this.drawFlower()
+    },
+    drawFlower: function() {
       let unitRadius = this.params.flower.unitRadius
-      let material = new Three.LineBasicMaterial({ color: this.params.flower.color })
       let unitCircle = new Three.CircleGeometry( unitRadius, this.params.flower.circleSegments )
       unitCircle.vertices.shift()
-
       let points = this.flowerPattern(new Three.Vector3(0,0,0), unitRadius, this.params.flower.level)
-      points.forEach(p => {
-        let circle = new Three.LineLoop(unitCircle, material)
-        circle.position.copy(p)
+      let level = 0
+      let level_x = 1
+      for(let p = 0; p < points.length; p++) {
+        if(p > 0) {
+          if (level_x >= (6*level)) {
+            level += 1
+            level_x = 1
+          } else {
+            level_x += 1
+          }
+        }
+        let circle = new Three.LineLoop(unitCircle, this.materials[level])
+        circle.position.copy(points[p])
         this.scene.add(circle)
-      })
+      }
     },
     flowerPattern: function(origin, unitRadius, levels) {
       let points = [ origin.clone() ]
