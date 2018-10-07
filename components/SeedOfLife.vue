@@ -60,8 +60,7 @@ export default Vue.extend({
       let seven = new Three.LineLoop(unitCircle, material)
       seven.position.x = six.position.x
       seven.position.y = four.position.y
-      this.scene.add(seven)
-       
+      this.scene.add(seven)       
     }
   }
 })
