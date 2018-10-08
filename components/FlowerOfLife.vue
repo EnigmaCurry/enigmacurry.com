@@ -16,19 +16,18 @@ export default Vue.extend({
           }
         },
         flower: {
-          resetInterval: 48,
+          resetInterval: 60,
           unitRadius: 40,
-          levelMin: 1,
+          levelMin: 3,
           levelMax: 24,
           circleSegments: [128,12,6,4,3],
           colors: [
             [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
-            [ 0xBF0B2C, 0x02173D, 0x0AA38C, 0xF5900F, 0xF24E13 ],
-            [ 0x011627, 0xf71735, 0x41ead4, 0xfdfffc, 0xff9f1c ],
-            [ 0x515e6b, 0xb2b5be, 0x40434a, 0xd0cfd4, 0x43525c ],
-            [ 0x670bf3, 0xffe400, 0xff1053, 0x390099, 0xffae03 ],
+            [ 0xBF0B2C, 0x02173D, 0x0AA38C, 0xF5900F, 0xF24E13, 0x011627, 0xf71735, 0x41ead4, 0xfdfffc, 0xff9f1c ],
+            [ 0x515e6b, 0xb2b5be, 0x40434a, 0xd0cfd4, 0x43525c, 0x670bf3, 0xffe400, 0xff1053, 0x390099, 0xffae03 ],
           ],
           colorCycleRate: 2,
+          colorSwapRate: 20,
           colorInterpolation: 0.05,
           rotationRateMax: 0.003,
           rotationRateMin: 0.0004,
@@ -62,27 +61,27 @@ export default Vue.extend({
       this._rotationRate = Math.random() > 0.5 ? -1 * this._rotationRate : this._rotationRate
       //Randomize flower level:
       this.params.flower.level = Math.floor((Math.random() * this.params.flower.levelMax) + this.params.flower.levelMin)
-      //Randomize flower color swatch
-      this._colorSwatch = this.params.flower.colors[Math.floor(Math.random() * this.params.flower.colors.length)]
-      console.log(this._colorSwatch)
       //Small levels should subtly zoom out, Large levels subtly in:
       if (this.params.flower.level < 0.5 * this.params.flower.levelMax) {
         this._zoomRate = -1 * (Math.random() * this.params.flower.zoomRateMax)
       } else {
         this._zoomRate = (Math.random() * (this.params.flower.zoomRateMax - this.params.flower.zoomRateMin)) + this.params.flower.zoomRateMin
       }
-      //Draw a new flower:
-      this._materials = []
+      //Randomize material colors
       this._colors = []
-      for (let c = 0; c < this._colorSwatch.length; c++) {
-        let color = new Three.Color(this._colorSwatch[c])
+      this._materials = []
+      for (let c = 0; c < this.params.flower.level; c++) {
+        let color = new Three.Color()
         this._colors.push(color)
         this._materials.push(new Three.LineBasicMaterial({ color: color }))
       }
+      this._swapColors()
+      //Draw a new flower:
       this.drawFlower()
       this.setSize()
       //Periodic callbacks:
-      this.timers.push(setInterval(this.cycleColors, this.params.flower.colorCycleRate * 1000))
+      this.timers.push(setInterval(this._cycleColors, this.params.flower.colorCycleRate * 1000))
+      this.timers.push(setInterval(this._swapColors, this.params.flower.colorSwapRate * 1000))
       this.timers.push(setInterval(this.reset, this.params.flower.resetInterval * 1000))
     },
     onResize: function() {
@@ -117,7 +116,14 @@ export default Vue.extend({
         this.scene.add(circle)
       }
     },
-    cycleColors: function() {
+    _swapColors: function() {
+      //Randomize flower color swatch
+      this._colorSwatch = this.params.flower.colors[Math.floor(Math.random() * this.params.flower.colors.length)]
+      for (let c = 0; c < this._colors.length; c++) {
+        this._colors[c].set(this._colorSwatch[c % this._colorSwatch.length])
+      }
+    },
+    _cycleColors: function() {
       //cycle materials
       this._colors.push(this._colors.shift())
     },
