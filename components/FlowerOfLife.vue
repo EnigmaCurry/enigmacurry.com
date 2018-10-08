@@ -32,7 +32,10 @@ export default Vue.extend({
           colorInterpolation: 0.05,
           rotationRateMax: 0.003,
           rotationRateMin: 0.0004,
-          maxZoomRate: 0.002
+          zoomRateMax: 0.002,
+          zoomRateMin: 0.0002,
+          zoomMin: 1,
+          zoomMax: 8
         }
       }
     }
@@ -64,9 +67,9 @@ export default Vue.extend({
       console.log(this._colorSwatch)
       //Small levels should subtly zoom out, Large levels subtly in:
       if (this.params.flower.level < 0.5 * this.params.flower.levelMax) {
-        this._zoomRate = -1 * (Math.random() * this.params.flower.maxZoomRate)
+        this._zoomRate = -1 * (Math.random() * this.params.flower.zoomRateMax)
       } else {
-        this._zoomRate = Math.random() * this.params.flower.maxZoomRate
+        this._zoomRate = (Math.random() * (this.params.flower.zoomRateMax - this.params.flower.zoomRateMin)) + this.params.flower.zoomRateMin
       }
       //Draw a new flower:
       this._materials = []
@@ -123,7 +126,13 @@ export default Vue.extend({
         this._materials[m].color.lerp(this._colors[m], this.params.flower.colorInterpolation)
       }
       this.camera.rotation.z = this.camera.rotation.z + this._rotationRate
+      if (this._zoomRate > 0 && this.camera.zoom > this.params.flower.zoomMax) {
+        this._zoomRate = this._zoomRate * -1
+      } else if (this._zoomRate < 0 && this.camera.zoom < this.params.flower.zoomMin) {
+        this._zoomRate = this._zoomRate * -1
+      }
       this.camera.zoom = this.camera.zoom + this._zoomRate
+      
       this.camera.updateProjectionMatrix()
     },
     flowerPattern: function(origin, unitRadius, levels) {
