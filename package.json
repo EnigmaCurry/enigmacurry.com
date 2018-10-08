@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
+    "dev:public": "cross-env NODE_ENV=development HOST=0.0.0.0 PORT=3000 nuxt",
     "build": "nuxt build",
     "build:gh-pages": "cross-env DEPLOY_ENV=GH_PAGES nuxt build",
     "start": "nuxt start",
