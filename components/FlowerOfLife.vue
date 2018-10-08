@@ -12,26 +12,35 @@ export default Vue.extend({
         camera: {
           type: 'orthographic',
           frustrum: {
-            type: 'dynamic',
-            left: -50,
-            right: 50,
-            top: -50,
-            bottom: 50
+            type: 'dynamic'
           }
         },
         flower: {
-          unitRadius: 1.5,
-          level: 14,
+          unitRadius: 40,
+          minLevel: 1,
+          maxLevel: 25,
           circleSegments: 128,
           colors: [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
           colorCycleRate: 2,
-          colorInterpolation: 0.05
+          colorInterpolation: 0.05,
+          rotationRate: 0.001
         }
       }
     }
   },
   methods: {
     init: function() {
+      this._objects = []
+      this.reset()
+      setInterval(this.cycleColors, 1000 * this.params.flower.colorCycleRate)
+      setInterval(this.reset, 10000)
+    },
+    reset: function() {
+      this._objects.forEach(obj => {
+        this.scene.remove(obj)
+      })
+      this._objects = []
+      this.params.flower.level = Math.floor((Math.random() * this.params.flower.maxLevel) + this.params.flower.minLevel)
       this._materials = []
       this._colors = []
       for (let c = 0; c < this.params.flower.colors.length; c++) {
@@ -40,7 +49,16 @@ export default Vue.extend({
         this._materials.push(new Three.LineBasicMaterial({ color: color }))
       }
       this.drawFlower()
-      setInterval(this.cycleColors, 1000 * this.params.flower.colorCycleRate)
+      this.ensureResize()
+    },
+    onResize: function() {
+      //Maintain zoom level corresponding to resized container:
+      let flowerDiameter = this.params.flower.level * 1 * this.params.flower.unitRadius
+      if (this.container.clientWidth < this.container.clientHeight) {
+        this.camera.zoom = this.container.clientWidth / flowerDiameter
+      } else {
+        this.camera.zoom = this.container.clientHeight / flowerDiameter
+      }
     },
     drawFlower: function() {
       let unitRadius = this.params.flower.unitRadius
@@ -60,6 +78,7 @@ export default Vue.extend({
         }
         let circle = new Three.LineLoop(unitCircle, this._materials[level % this._materials.length])
         circle.position.copy(points[p])
+        this._objects.push(circle)
         this.scene.add(circle)
       }
     },
@@ -71,6 +90,7 @@ export default Vue.extend({
       for (let m = 0; m < this._materials.length; m++) {
         this._materials[m].color.lerp(this._colors[m], this.params.flower.colorInterpolation)
       }
+      this.camera.rotation.z = this.camera.rotation.z + this.params.flower.rotationRate
     },
     flowerPattern: function(origin, unitRadius, levels) {
       let points = [ origin.clone() ]

@@ -5,7 +5,6 @@
 
 <script>
 import * as Three from 'three'
-import * as _ from 'lodash'
 
 export default {
   data() {
@@ -19,10 +18,11 @@ export default {
             // if type is 'static', these are absolute values passed directly to the camera
             // if type is 'dynamic', these scale the current window dimensions
             type: 'dynamic',
-            left: -200,
-            right: 200,
-            top: -200,
-            bottom: 200
+            left: -1,
+            right: 1,
+            top: -1,
+            bottom: 1,
+            zoom: 1
           },
           near: 0.01,
           far: 10,
@@ -62,9 +62,6 @@ export default {
       this.camera.position.z = this.params.camera.position.z
       
       this.container.appendChild(this.renderer.domElement)
-      // Auto (re)size with debounce
-      this.setSize()      
-      this.resizeEventCallback = _.debounce(this.setSize, 200)      
     },
     init: function() {
       // Create Scene Objects ...
@@ -80,11 +77,13 @@ export default {
       this.update()
       this.renderer.render(this.scene, this.camera)
     },
+    onResize: function() {
+      //Called by setSize
+    },
     setSize: function() {
       this.container.style.width = this.params.container.width
       this.container.style.height = this.params.container.height
       this.renderer.setSize(this.container.clientWidth, this.container.clientHeight)
-      this.camera.aspect = (this.container.clientWidth / this.container.clientHeight)
       if (this.camera instanceof Three.OrthographicCamera) {
         if (this.params.camera.frustrum.type == 'dynamic') {
           this.camera.left = this.container.clientWidth / this.params.camera.frustrum.left
@@ -97,19 +96,29 @@ export default {
           this.camera.top = this.params.camera.frustrum.top
           this.camera.bottom = this.params.camera.frustrum.bottom
         }
+      } else {
+        this.camera.aspect = (this.container.clientWidth / this.container.clientHeight)
       }
+      this.onResize()
       this.camera.updateProjectionMatrix()
       this.renderer.render(this.scene, this.camera)
+    },
+    ensureResize: function() {
+      //Triply ensure that resize occurs:
+      this.setSize()
+      this.setSize()
+      setTimeout(this.setSize, 500)
     }
   },
   mounted() {
     this._setup()
     this.init()
-    window.addEventListener('resize', this.resizeEventCallback, true)
+    window.addEventListener('resize', this.ensureResize, true)
     this._animate()
+    this.ensureResize()
   },
   destroyed() {
-    window.removeEventListener('resize', this.resizeEventCallback)
+    window.removeEventListener('resize', this.ensureResize)
   }
 }
 </script>
