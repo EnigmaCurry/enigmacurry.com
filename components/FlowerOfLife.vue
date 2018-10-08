@@ -20,7 +20,7 @@ export default Vue.extend({
           unitRadius: 40,
           levelMin: 3,
           levelMax: 24,
-          circleSegments: [128,12,6,4,3],
+          circleSegments: [128,128,128,12,6,4,3],
           colors: [
             [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
             [ 0xBF0B2C, 0x02173D, 0x0AA38C, 0xF5900F, 0xF24E13, 0x011627, 0xf71735, 0x41ead4, 0xfdfffc, 0xff9f1c ],
