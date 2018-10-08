@@ -16,6 +16,7 @@
   "dependencies": {
     "@nuxtjs/bulma": "^1.2.0",
     "cross-env": "^5.2.0",
+    "fullscreen-polyfill": "^1.0.2",
     "nuxt": "^2.0.0",
     "three": "^0.97.0"
   },

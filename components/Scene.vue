@@ -5,6 +5,7 @@
 
 <script>
 import * as Three from 'three'
+import * as Fullscreen from 'fullscreen-polyfill'
 
 export default {
   data() {
@@ -41,7 +42,7 @@ export default {
       this.container = this.$refs.threejs_container
       this.renderer = new Three.WebGLRenderer({ antialias: true })
       this.scene = new Three.Scene()
-      
+
       // Camera parameters and initial position
       let width = this.container.clientWidth
       let height = this.container.clientHeight
@@ -62,6 +63,7 @@ export default {
       this.camera.position.z = this.params.camera.position.z
       
       this.container.appendChild(this.renderer.domElement)
+      this.bindKeys()
     },
     init: function() {
       // Create Scene Objects ...
@@ -108,6 +110,21 @@ export default {
       this.setSize()
       this.setSize()
       setTimeout(this.setSize, 500)
+    },
+    bindKeys: function() {
+      this._isFullscreen = false
+      let toggleFullscreen = function() {
+        if (this._isFullscreen) {
+          console.log(document.exitFullscreen())
+          this._isFullscreen = false
+        } else {
+          if (document.fullscreenEnabled) {
+            console.log(document.body.requestFullscreen())
+            this._isFullscreen = true
+          }
+        }
+      }
+      document.addEventListener('dblclick', toggleFullscreen, false);
     }
   },
   mounted() {
