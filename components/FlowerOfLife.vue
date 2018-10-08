@@ -16,14 +16,17 @@ export default Vue.extend({
           }
         },
         flower: {
+          resetInterval: 48,
           unitRadius: 40,
-          minLevel: 1,
-          maxLevel: 25,
+          levelMin: 1,
+          levelMax: 25,
           circleSegments: 128,
           colors: [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
           colorCycleRate: 2,
           colorInterpolation: 0.05,
-          rotationRate: 0.001
+          rotationRateMax: 0.003,
+          rotationRateMin: 0.0004,
+          maxZoomRate: 0.002
         }
       }
     }
@@ -31,16 +34,32 @@ export default Vue.extend({
   methods: {
     init: function() {
       this._objects = []
+      this.timers = []
       this.reset()
-      setInterval(this.cycleColors, 1000 * this.params.flower.colorCycleRate)
-      setInterval(this.reset, 10000)
     },
     reset: function() {
+      //Cancel all callbacks:
+      for (let t = 0; t < this.timers.length; t++) {
+        clearInterval(this.timers[t])
+      }
+      //Remove all objects from the scene:
       this._objects.forEach(obj => {
         this.scene.remove(obj)
       })
       this._objects = []
-      this.params.flower.level = Math.floor((Math.random() * this.params.flower.maxLevel) + this.params.flower.minLevel)
+      //Randomize rotation rate and direction:
+      this._rotationRate = ((Math.random() * (this.params.flower.rotationRateMax-this.params.flower.rotationRateMin))
+                            + this.params.flower.rotationRateMin)
+      this._rotationRate = Math.random() > 0.5 ? -1 * this._rotationRate : this._rotationRate
+      //Randomize flower level:
+      this.params.flower.level = Math.floor((Math.random() * this.params.flower.levelMax) + this.params.flower.levelMin)
+      //Small levels should subtly zoom out, Large levels subtly in:
+      if (this.params.flower.level < 0.5 * this.params.flower.levelMax) {
+        this._zoomRate = -1 * (Math.random() * this.params.flower.maxZoomRate)
+      } else {
+        this._zoomRate = Math.random() * this.params.flower.maxZoomRate
+      }
+      //Draw a new flower:
       this._materials = []
       this._colors = []
       for (let c = 0; c < this.params.flower.colors.length; c++) {
@@ -49,10 +68,13 @@ export default Vue.extend({
         this._materials.push(new Three.LineBasicMaterial({ color: color }))
       }
       this.drawFlower()
-      this.ensureResize()
+      this.setSize()
+      //Periodic callbacks:
+      this.timers.push(setInterval(this.cycleColors, this.params.flower.colorCycleRate * 1000))
+      this.timers.push(setInterval(this.reset, this.params.flower.resetInterval * 1000))
     },
     onResize: function() {
-      //Maintain zoom level corresponding to resized container:
+      //Maintain zoom level of flower corresponding to resized container:
       let flowerDiameter = this.params.flower.level * 1 * this.params.flower.unitRadius
       if (this.container.clientWidth < this.container.clientHeight) {
         this.camera.zoom = this.container.clientWidth / flowerDiameter
@@ -90,7 +112,9 @@ export default Vue.extend({
       for (let m = 0; m < this._materials.length; m++) {
         this._materials[m].color.lerp(this._colors[m], this.params.flower.colorInterpolation)
       }
-      this.camera.rotation.z = this.camera.rotation.z + this.params.flower.rotationRate
+      this.camera.rotation.z = this.camera.rotation.z + this._rotationRate
+      this.camera.zoom = this.camera.zoom + this._zoomRate
+      this.camera.updateProjectionMatrix()
     },
     flowerPattern: function(origin, unitRadius, levels) {
       let points = [ origin.clone() ]

@@ -115,7 +115,7 @@ export default {
     this.init()
     window.addEventListener('resize', this.ensureResize, true)
     this._animate()
-    this.ensureResize()
+    this.setSize()
   },
   destroyed() {
     window.removeEventListener('resize', this.ensureResize)
