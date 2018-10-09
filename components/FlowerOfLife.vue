@@ -19,8 +19,28 @@ export default Vue.extend({
           resetInterval: 60,
           unitRadius: 40,
           levelMin: 3,
-          levelMax: 24,
-          circleSegments: [128,128,128,12,6,4,3],
+          levelMax: 33,
+          circleSegments: [
+            {segments: 128, margin: 50},
+            {segments: 128, margin: 5},
+            {segments: 128, margin: 0},
+            {segments: 128, margin: -24},
+            {segments: 12, margin: 10},
+            {segments: 12},
+            {segments: 12, margin: -20},
+            {segments: 9, margin: -10},
+            {segments: 8, margin: -3},
+            {segments: 7, margin: -499},
+            {segments: 6},
+            {segments: 6, margin: 6},
+            {segments: 6, margin: 16},
+            {segments: 6, margin: -6},
+            {segments: 4},
+            {segments: 4, margin: -33},
+            {segments: 4, margin: 333},
+            {segments: 3, margin: 6},
+            {segments: 3, margin: 99}
+          ],
           colors: [
             [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
             [ 0xBF0B2C, 0x02173D, 0x0AA38C, 0xF5900F, 0xF24E13, 0x011627, 0xf71735, 0x41ead4, 0xfdfffc, 0xff9f1c ],
@@ -95,8 +115,8 @@ export default Vue.extend({
     },
     drawFlower: function() {
       let unitRadius = this.params.flower.unitRadius
-      let unitCircle = new Three.CircleGeometry( unitRadius,
-                                                 this.params.flower.circleSegments[Math.floor(Math.random() * this.params.flower.circleSegments.length)] )
+      let circleParams = this.params.flower.circleSegments[Math.floor(Math.random() * this.params.flower.circleSegments.length)]
+      let unitCircle = new Three.CircleGeometry( unitRadius + (circleParams.margin || 0), circleParams.segments)
       unitCircle.vertices.shift()
       let points = this.flowerPattern(new Three.Vector3(0,0,0), unitRadius, this.params.flower.level)
       let level = 0
