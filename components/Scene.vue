@@ -31,7 +31,7 @@ export default {
         },
         container: {
           width: '100vw',
-          height: '99vh'
+          height: '100vh'
         }
       }
     }
@@ -112,17 +112,12 @@ export default {
       setTimeout(this.setSize, 500)
     },
     bindKeys: function() {
-      this._isFullscreen = false
       let toggleFullscreen = function() {
-        if (this._isFullscreen) {
-          console.log(document.exitFullscreen())
-          this._isFullscreen = false
+        if (document.fullscreenElement) {
+          document.exitFullscreen()
         } else {
-          if (document.fullscreenEnabled) {
-            console.log(document.body.requestFullscreen())
-            this._isFullscreen = true
-          }
-        }
+          document.body.requestFullscreen()
+        }        
       }
       document.addEventListener('dblclick', toggleFullscreen, false);
     }
