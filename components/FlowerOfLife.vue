@@ -122,10 +122,16 @@ export default Vue.extend({
       for (let c = 0; c < this._colors.length; c++) {
         this._colors[c].set(this._colorSwatch[c % this._colorSwatch.length])
       }
+      //Randomize cycle direction
+      this._cycleColorsReversed = Math.random() > 0.5
     },
     _cycleColors: function() {
       //cycle materials
-      this._colors.push(this._colors.shift())
+      if (this._cycleColorsReversed) {
+        this._colors.unshift(this._colors.pop())
+      } else {
+        this._colors.push(this._colors.shift())
+      }
     },
     update: function() {
       for (let m = 0; m < this._materials.length; m++) {
