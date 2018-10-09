@@ -19,7 +19,4 @@ body {
     margin: 0;
     background-color: #001;
 }
-::-webkit-scrollbar { 
-    display: none; 
-}
 </style>

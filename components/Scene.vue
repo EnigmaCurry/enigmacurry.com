@@ -1,7 +1,30 @@
 <template>
-  <div class="threejs_container" ref="threejs_container">
+  <div id="scene" ref="scene">
+    <div class="threejs_container" ref="threejs_container">
+    </div>
+    <div class="music_player" ref="music_player">
+      <iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/619307016%3Fsecret_token%3Ds-GE5ly&color=%23121a22&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+    </div>
   </div>
 </template>
+
+<style scoped>
+  .threejs_container {
+      position: fixed;
+      z-index: 1;
+  }
+  .music_player {
+      position: fixed;
+      opacity: 0.75;
+      bottom: 0;
+      left:0;
+      right:0;
+      z-index: 2;
+  }
+  ::-webkit-scrollbar { 
+      display: none; 
+  }
+</style>
 
 <script>
 import * as Three from 'three'
@@ -29,6 +52,10 @@ export default {
           far: 10,
           position: { x: 0, y: 0, z: 5 }
         },
+        musicPlayer: {
+          timeout: 10,
+          height: '400px'
+        },
         container: {
           width: '100vw',
           height: '100vh'
@@ -42,7 +69,7 @@ export default {
       this.container = this.$refs.threejs_container
       this.renderer = new Three.WebGLRenderer({ antialias: true })
       this.scene = new Three.Scene()
-
+      
       // Camera parameters and initial position
       let width = this.container.clientWidth
       let height = this.container.clientHeight
@@ -64,6 +91,7 @@ export default {
       
       this.container.appendChild(this.renderer.domElement)
       this.bindKeys()
+      this.setupUIVisibility()
     },
     init: function() {
       // Create Scene Objects ...
@@ -116,10 +144,27 @@ export default {
         if (document.fullscreenElement) {
           document.exitFullscreen()
         } else {
-          document.body.requestFullscreen()
+          document.getElementById('scene').requestFullscreen()
         }        
       }
       document.addEventListener('dblclick', toggleFullscreen, false);
+    },
+    setupUIVisibility: function() {
+      // Only show music player when interacting with mouse / touch:
+      let timeout
+      let self = this
+      let revealMusicPlayer = function(e) {
+        clearTimeout(timeout)
+        document.body.style.cursor = ''
+        self.$refs.music_player.style.height = self.params.musicPlayer.height;
+        timeout = setTimeout(function(){
+          document.body.style.cursor = 'none'
+          self.$refs.music_player.style.height = 0
+        }, self.params.musicPlayer.timeout * 1000)
+      }
+      revealMusicPlayer()
+      document.addEventListener('mousemove', revealMusicPlayer)
+      document.addEventListener('touchstart', revealMusicPlayer)
     }
   },
   mounted() {

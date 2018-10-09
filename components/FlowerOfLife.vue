@@ -1,13 +1,3 @@
-<template>
-  <div>
-    <div class="threejs_container" ref="threejs_container">
-    </div>
-    <div class="music_player" ref="music_player">
-      <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/619307016%3Fsecret_token%3Ds-GE5ly&color=%23121a22&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-    </div>
-  </div>
-</template>
-
 <script>
 import * as Three from 'three'
 import Scene from './Scene'
