@@ -1,14 +1,6 @@
 const pkg = require('./package');
 
-// change router base when on github pages:
-const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? {
-  router: {
-    base: '/threejs-geometry/'
-  }
-} : {};
-
 module.exports = {
-  ...routerBase,
   mode: 'spa',
 
   /*

@@ -3,7 +3,7 @@
     <div class="threejs_container" ref="threejs_container">
     </div>
     <div class="music_player" ref="music_player">
-      <iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/619307016%3Fsecret_token%3Ds-GE5ly&color=%23121a22&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+      <iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/619307016%3Fsecret_token%3Ds-GE5ly&color=%23ff5500&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true"></iframe>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@
 <script>
 import * as Three from 'three'
 import * as Fullscreen from 'fullscreen-polyfill'
+import * as _ from 'lodash'
 
 export default {
   data() {
@@ -91,7 +92,7 @@ export default {
       
       this.container.appendChild(this.renderer.domElement)
       this.bindKeys()
-      this.setupUIVisibility()
+      this.musicPlayerShow()
     },
     init: function() {
       // Create Scene Objects ...
@@ -148,23 +149,20 @@ export default {
         }        
       }
       document.addEventListener('dblclick', toggleFullscreen, false);
+      document.addEventListener('mousemove', this.musicPlayerShow)
+      document.addEventListener('touchmove', this.musicPlayerShow)
     },
-    setupUIVisibility: function() {
-      // Only show music player when interacting with mouse / touch:
-      let timeout
-      let self = this
-      let revealMusicPlayer = function(e) {
-        clearTimeout(timeout)
-        document.body.style.cursor = ''
-        self.$refs.music_player.style.height = self.params.musicPlayer.height;
-        timeout = setTimeout(function(){
-          document.body.style.cursor = 'none'
-          self.$refs.music_player.style.height = 0
-        }, self.params.musicPlayer.timeout * 1000)
-      }
-      revealMusicPlayer()
-      document.addEventListener('mousemove', revealMusicPlayer)
-      document.addEventListener('touchstart', revealMusicPlayer)
+    musicPlayerShow: function() {
+      clearTimeout(this._musicPlayerTimeout)
+      document.body.style.cursor = ''
+      this.$refs.music_player.style.height = this.params.musicPlayer.height;
+      this._musicPlayerVisible = true
+      this._musicPlayerTimeout = setTimeout(this.musicPlayerHide, this.params.musicPlayer.timeout * 1000)
+    },
+    musicPlayerHide: function() {
+      document.body.style.cursor = 'none'
+      this.$refs.music_player.style.height = 0
+      this._musicPlayerVisible = false
     }
   },
   mounted() {

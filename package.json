@@ -1,7 +1,7 @@
 {
-  "name": "geometry",
+  "name": "enigmacurry.com",
   "version": "1.0.0",
-  "description": "three.js geometry",
+  "description": "EnigmaCurry.com",
   "author": "Ryan McGuire",
   "private": true,
   "scripts": {
@@ -11,8 +11,7 @@
     "build:gh-pages": "cross-env DEPLOY_ENV=GH_PAGES nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "generate:gh-pages": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
-    "deploy": "npm run generate:gh-pages && push-dir --dir=dist --branch=gh-pages --cleanup"
+    "deploy": "npm run generate && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
     "@nuxtjs/bulma": "^1.2.0",

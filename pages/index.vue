@@ -1,13 +1,13 @@
 <template>
-<cube-scene/>
+<flower-of-life/>
 </template>
 
 <script>
-import CubeScene from '~/components/CubeScene.vue'
+import FlowerOfLife from '~/components/FlowerOfLife.vue'
 
 export default {
   components: {
-    CubeScene
+    FlowerOfLife
   }
 }
 </script>
@@ -18,8 +18,5 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #001;
-}
-::-webkit-scrollbar { 
-    display: none; 
 }
 </style>
