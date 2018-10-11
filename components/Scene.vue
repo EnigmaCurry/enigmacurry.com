@@ -2,7 +2,7 @@
   <div id="scene" ref="scene">
     <div class="threejs_container" ref="threejs_container">
     </div>
-    <div class="music_player" ref="music_player">
+    <div v-if="params.musicPlayer.enabled" class="music_player" ref="music_player">
       <iframe width="100%" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/619307016%3Fsecret_token%3Ds-GE5ly&color=%23ff5500&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true"></iframe>
     </div>
   </div>
@@ -54,8 +54,9 @@ export default {
           position: { x: 0, y: 0, z: 5 }
         },
         musicPlayer: {
+          enabled: false,
           timeout: 10,
-          height: '400px'
+          height: '400px',
         },
         container: {
           width: '100vw',
@@ -153,16 +154,20 @@ export default {
       document.addEventListener('touchmove', this.musicPlayerShow)
     },
     musicPlayerShow: function() {
-      clearTimeout(this._musicPlayerTimeout)
-      document.body.style.cursor = ''
-      this.$refs.music_player.style.height = this.params.musicPlayer.height;
-      this._musicPlayerVisible = true
-      this._musicPlayerTimeout = setTimeout(this.musicPlayerHide, this.params.musicPlayer.timeout * 1000)
+      if (this.params.musicPlayer.enabled) {
+        clearTimeout(this._musicPlayerTimeout)
+        document.body.style.cursor = ''
+        this.$refs.music_player.style.height = this.params.musicPlayer.height;
+        this._musicPlayerVisible = true
+        this._musicPlayerTimeout = setTimeout(this.musicPlayerHide, this.params.musicPlayer.timeout * 1000)
+      }
     },
     musicPlayerHide: function() {
-      document.body.style.cursor = 'none'
-      this.$refs.music_player.style.height = 0
-      this._musicPlayerVisible = false
+      if (this.params.musicPlayer.enabled) {
+        document.body.style.cursor = 'none'
+        this.$refs.music_player.style.height = 0
+        this._musicPlayerVisible = false
+      }
     }
   },
   mounted() {

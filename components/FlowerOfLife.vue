@@ -15,6 +15,9 @@ export default Vue.extend({
             type: 'dynamic'
           }
         },
+        musicPlayer: {
+          enabled: true
+        },
         flower: {
           resetInterval: 60,
           unitRadius: 40,
