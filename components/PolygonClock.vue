@@ -14,7 +14,7 @@ export default Vue.extend({
           position: {x:0, y:0, z:-5}
         },
         geometry: {
-          vertices: 60,
+          vertices: 12,
           unitRadius: 0.60 * (window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight),
           pointRadius: 25,
           showVertices: true,
@@ -27,6 +27,10 @@ export default Vue.extend({
   },
   methods: {
     init: function() {
+      let poly = this.polyClock()
+      this.scene.add(poly)
+    },
+    polyClock() {
       let params = {
         vertices: this.params.geometry.vertices,
         radius: this.params.geometry.unitRadius,
@@ -36,11 +40,10 @@ export default Vue.extend({
         labelSize: this.params.geometry.labelSize,
         labelColor: this.params.geometry.labelColor
       }
-      let poly = this.regularPolygon(
+      return this.regularPolygon(
         params.vertices, params.radius, params.showVertices, params.labels,
         params.labelRadius, params.labelSize, params.labelColor
       )
-      this.scene.add(poly)
     },
     _createLabelSequence: function(num, shift) {
       let seq = Array.apply(num, Array(num)).map(function(_,b) { return b + 1; })
