@@ -9,7 +9,8 @@ import Vue from 'vue';
 //    unitRadius - the radius of the circles.
 //    levels     - the number of levels to compute.
 //                 Level 1 is the seed, with 7 circles. Level 2 is 19 etc.
-Vue.prototype.$flowerPattern = function(origin, unitRadius, levels) {
+//    rotation   - Rotate flower n degress
+Vue.prototype.$flowerPattern = function(origin, unitRadius, levels, rotation=0) {
   let points = [ origin.clone() ];
   let clockPattern = [
     //Down Right
@@ -39,5 +40,22 @@ Vue.prototype.$flowerPattern = function(origin, unitRadius, levels) {
       }
     }
   }
+  if (rotation !== 0) {
+    let rotatePoint = function( point, center, degrees ){
+      let radians = degrees * (Math.PI / 180);
+      let cosTheta = Math.cos(radians);
+      let sinTheta = Math.sin(radians);
+      return new Three.Vector3(
+        (cosTheta * ( point.x - center.x) -
+         sinTheta * ( point.y - center.y) + center.x),
+        (sinTheta * (point.x - center.x) +
+         cosTheta * (point.y - center.y) + center.y),
+        0
+      );
+    };
+    for(let p=0; p < points.length; p++){
+      points[p] = rotatePoint(points[p], origin, rotation);
+    } 
+  }
   return points;
-}
+};

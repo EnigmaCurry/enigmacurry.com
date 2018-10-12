@@ -1,4 +1,11 @@
 <script>
+
+// Based on the work of Lucien Khan
+// See http://metatron216.co.za/
+//
+// The last digit of each fibonnaci number is an infinitely repeating 60 digit pattern.
+// Wrap these around the geometry of the flower of life and see what happens.
+
 import * as Three from 'three'
 import PolygonClock from './PolygonClock'
 import Vue from 'vue'
@@ -22,17 +29,26 @@ export default Vue.extend({
   },
   methods: {
     init: function() {
-      let flower = this.$flowerPattern(new Three.Vector3(0,0,0), this.params.geometry.unitRadius, 1)
-      let labels = this._createSequentialLabels(this.params.geometry.vertices, 0.25* this.params.geometry.vertices)
+      let colors = ['red','orange','yellow','green','blue','indigo','violet']
+      let flower = this.$flowerPattern(new Three.Vector3(0,0,0), this.params.geometry.unitRadius, 1, 30)
+      let labels = this._shiftLabels(this._fibonacciLabels(), this.params.geometry.vertices / 4)
       for (let i=0; i < flower.length; i++) {
-        let poly = this.polyClock(labels)
+        let poly = this.polyClock(labels, colors[i])
         let position = flower[i]
         poly.position.set(position.x, position.y, position.z)
-        this._labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 
-38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
+        
         this.scene.add(poly)
       }
     },
+    _fibonacciLabels: function() {
+      let fib = [0, 1]
+      let labels = ["0", "1"]
+      for (let i=2; i < this.params.geometry.vertices; i++) {
+        fib[i] = fib[i - 2] + fib[i - 1]
+        labels.push(fib[i].toString().slice(-1))
+      }
+      return labels
+    }
   }
 })
 </script>

@@ -21,8 +21,7 @@ export default Vue.extend({
           showVertices: true,
           showLabels: true,
           labelRadiusOffset: 80,
-          labelSize: 50,
-          labelColor: 'white'
+          labelSize: 50
         }
       }
     }
@@ -33,7 +32,7 @@ export default Vue.extend({
       let poly = this.polyClock()
       this.scene.add(poly)
     },
-    polyClock(labels = []) {
+    polyClock: function(labels = [], labelColor='white') {
       //this._labels can be specified in init or use this default:
       if (!this.params.geometry.showLabels) {
         labels = []
@@ -47,7 +46,7 @@ export default Vue.extend({
         labels: labels,
         labelRadius: this.params.geometry.unitRadius + this.params.geometry.labelRadiusOffset,
         labelSize: this.params.geometry.labelSize,
-        labelColor: this.params.geometry.labelColor
+        labelColor: labelColor
       }
       return this.regularPolygon(
         params.vertices, params.radius, params.showPoly, params.showVertices, params.labels,
