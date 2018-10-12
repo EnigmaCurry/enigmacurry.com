@@ -17,7 +17,9 @@ export default Vue.extend({
           vertices: 12,
           unitRadius: 0.60 * (window.innerWidth < window.innerHeight ? window.innerWidth : window.innerHeight),
           pointRadius: 25,
+          showPoly: true,
           showVertices: true,
+          showLabels: true,
           labelRadiusOffset: 80,
           labelSize: 50,
           labelColor: 'white'
@@ -27,30 +29,41 @@ export default Vue.extend({
   },
   methods: {
     init: function() {
+      let labels = this._createSequentialLabels(this.params.geometry.vertices)
       let poly = this.polyClock()
       this.scene.add(poly)
     },
-    polyClock() {
+    polyClock(labels = []) {
+      //this._labels can be specified in init or use this default:
+      if (!this.params.geometry.showLabels) {
+        labels = []
+      }
+
       let params = {
         vertices: this.params.geometry.vertices,
         radius: this.params.geometry.unitRadius,
+        showPoly: this.params.geometry.showPoly,
         showVertices: this.params.geometry.showVertices,
-        labels: this._createLabelSequence(this.params.geometry.vertices, (0.25*this.params.geometry.vertices)-1),
+        labels: labels,
         labelRadius: this.params.geometry.unitRadius + this.params.geometry.labelRadiusOffset,
         labelSize: this.params.geometry.labelSize,
         labelColor: this.params.geometry.labelColor
       }
       return this.regularPolygon(
-        params.vertices, params.radius, params.showVertices, params.labels,
+        params.vertices, params.radius, params.showPoly, params.showVertices, params.labels,
         params.labelRadius, params.labelSize, params.labelColor
       )
     },
-    _createLabelSequence: function(num, shift) {
+    _createSequentialLabels: function(num, shift) {
       let seq = Array.apply(num, Array(num)).map(function(_,b) { return b + 1; })
+      return this._shiftLabels(seq, shift)
+    },
+    _shiftLabels: function(seq, shift) {
+      let labels = seq.slice()
       for(let x=0; x<shift; x++) {
-        seq.push(seq.shift())
+          labels.push(labels.shift())
       }
-      return seq
+      return labels
     },
     canvasTextTexture: function(text, size=50, color='white') {
       let canvas = document.createElement('canvas')
@@ -69,7 +82,9 @@ export default Vue.extend({
       mesh._canvasHeight = canvas.height
       return mesh
     },
-    regularPolygon: function(vertices, radius, showVertices=true, labels=[], labelRadius, labelSize, labelColor) {
+    regularPolygon: function(vertices, radius, showPoly=true,
+                             showVertices=true, labels=[], labelRadius,
+                             labelSize, labelColor) {
       let group = new Three.Group()
       // Polygon
       let poly = new Three.CircleGeometry( radius, vertices )
@@ -77,7 +92,9 @@ export default Vue.extend({
       poly.rotateY(Math.PI)
       let polyMaterial = new Three.LineBasicMaterial()
       let mesh = new Three.LineLoop(poly, polyMaterial)
-      group.add(mesh)
+      if (showPoly) {
+        group.add(mesh)
+      }
       // Vertex points
       if (showVertices) {
         for (let v = 0; v < poly.vertices.length; v++) {

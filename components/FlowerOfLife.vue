@@ -121,7 +121,7 @@ export default Vue.extend({
       let circleParams = this.params.flower.circleSegments[Math.floor(Math.random() * this.params.flower.circleSegments.length)]
       let unitCircle = new Three.CircleGeometry( unitRadius + (circleParams.margin || 0), circleParams.segments)
       unitCircle.vertices.shift()
-      let points = this.flowerPattern(new Three.Vector3(0,0,0), unitRadius, this.params.flower.level)
+      let points = this.$flowerPattern(new Three.Vector3(0,0,0), unitRadius, this.params.flower.level)
       let level = 0
       let level_x = 1
       for(let p = 0; p < points.length; p++) {
@@ -169,39 +169,9 @@ export default Vue.extend({
       this.camera.zoom = this.camera.zoom + this._zoomRate
       
       this.camera.updateProjectionMatrix()
-    },
-    flowerPattern: function(origin, unitRadius, levels) {
-      let points = [ origin.clone() ]
-      let clockPattern = [
-        //Down Right
-        new Three.Vector3(0.5 * unitRadius * Math.sqrt(3), 0.5 * unitRadius),
-        //Down
-        new Three.Vector3(0, 1 * unitRadius),
-        //Down Left
-        new Three.Vector3(-0.5 * unitRadius * Math.sqrt(3), 0.5 * unitRadius),
-        //Up Left
-        new Three.Vector3(-0.5 * unitRadius * Math.sqrt(3), -0.5 * unitRadius),
-        //Up
-        new Three.Vector3(0, -1 * unitRadius),
-        //Up Right
-        new Three.Vector3(0.5 * unitRadius * Math.sqrt(3), -0.5 * unitRadius)
-      ]
-      for (let level = 1; level <= levels; level++) {
-        // Up Level
-        points.push(new Three.Vector3(points[0].x, (points[0].y - level) * unitRadius, 0))
-        // Around the outside clockwise
-        for (let vec=0; vec < clockPattern.length; vec++) {
-          //Edge length is the same as the level, except for the last segment:
-          let edgeLength = (vec === clockPattern.length - 1) ? level -1 : level
-          for (let c=0; c < edgeLength; c++) {
-            let p = points[points.length-1].clone()
-            p.add(clockPattern[vec])
-            points.push(p)
-          }
-        }
-      }
-      return points
     }
   }
 })
+
+
 </script>
