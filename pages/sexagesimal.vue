@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import sexagesimal from '~/components/sexagesimal.vue'
+import sexagesimal from '~/components/Sexagesimal.vue'
 
 export default {
   components: {
