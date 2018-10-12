@@ -51,7 +51,7 @@ export default {
           },
           near: 0.01,
           far: 10,
-          position: { x: 0, y: 0, z: 5 }
+          position: { x: 0, y: 0, z: -5 }
         },
         musicPlayer: {
           enabled: false,
@@ -90,7 +90,8 @@ export default {
       this.camera.position.x = this.params.camera.position.x
       this.camera.position.y = this.params.camera.position.y
       this.camera.position.z = this.params.camera.position.z
-      
+      this.camera.lookAt(new Three.Vector3(0,0,0))
+
       this.container.appendChild(this.renderer.domElement)
       this.bindKeys()
       this.musicPlayerShow()
