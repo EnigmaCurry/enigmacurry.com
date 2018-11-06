@@ -1,0 +1,35 @@
+{
+  "name": "enigmacurry.com",
+  "version": "1.0.0",
+  "description": "EnigmaCurry.com",
+  "author": "EnigmaCurry",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "dev:public": "cross-env NODE_ENV=development HOST=0.0.0.0 PORT=3000 nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
+  },
+  "dependencies": {
+    "@tweenjs/tween.js": "^17.2.0",
+    "cross-env": "^5.2.0",
+    "dat.gui": "^0.7.3",
+    "nuxt": "^2.0.0",
+    "oimo": "^1.0.9",
+    "three": "^0.97.0",
+    "vue-threejs": "^0.1.1",
+    "vuetify": "^1.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "babel-eslint": "^8.2.1",
+    "eslint": "^5.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-vue": "^4.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2"
+  }
+}
