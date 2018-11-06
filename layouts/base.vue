@@ -37,6 +37,7 @@
         clipped-left
         fixed
         app
+        class="header"
         v-bind:class="[{ fadeIn: headerShown }, { fadeOut: !headerShown }]">
         <v-toolbar-side-icon @click="toggleDrawer" />
         <v-toolbar-title v-text="title"/>
@@ -74,23 +75,18 @@ div#app {
 .btnSelected {
   background-color: orange !important;
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; display: none;} }
 .fadeIn {
-  opacity: 0;
-  animation: fadeIn ease-in;
-  animation-fill-mode: forwards;
-  animation-duration: 0.25s;
+  opacity: 1;
 }
 .fadeOut {
-  opacity: 1;
+  opacity: 0;
   pointer-events: none !important;
-  animation: fadeOut ease-in;
-  animation-fill-mode: forwards;
-  animation-duration: 1s;
 }
 .hideCursor {
   cursor: none;  
+}
+.header {
+  z-index: 2;
 }
 </style>
 
