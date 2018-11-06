@@ -38,7 +38,8 @@ module.exports = {
     '@/plugins/components',
     '@/plugins/event-bus',
     '@/plugins/vuetify',
-    '@/plugins/vue-threejs'
+    '@/plugins/vue-threejs',
+    '@/plugins/geometry',
   ],
 
   /*

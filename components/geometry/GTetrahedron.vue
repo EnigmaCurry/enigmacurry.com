@@ -1,7 +1,7 @@
 <template>
   <div>
     <mesh name="GTetrahedron">
-      <geometry type="Tetrahedron" :args="[radius]" />
+      <g-geometry type="Tetrahedron" :args="[radius]" />
       <g-wireframe-material wire-color="#c20540"/>
     </mesh>
     <animation :fn="animate" :speed="speed" />
@@ -11,12 +11,10 @@
 <script>
 import GSymmetricRotationObject from '~/components/geometry/GSymmetricRotationObject.vue'
 import GScalingObject from '~/components/geometry/GScalingObject.vue'
-import GWireframeMaterial from '~/components/geometry/GWireframeMaterial.vue'
 import * as TWEEN from '@tweenjs/tween.js'
 
 export default {
   name: 'g-tetrahedron',
-  components: {GWireframeMaterial},
   mixins: [GSymmetricRotationObject, GScalingObject],
   props: {
     radius:  { type: Number, default: 1 },

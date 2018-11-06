@@ -1,7 +1,7 @@
 <template>
   <div>
     <mesh name="GIcosahedron">
-      <geometry type="Icosahedron" :args="[radius]" />
+      <g-geometry type="Icosahedron" :args="[radius]" />
       <g-wireframe-material wire-color="#F5DBBA"/>
     </mesh>
     <animation :fn="animate" :speed="speed" />
@@ -11,12 +11,10 @@
 <script>
 import GSymmetricRotationObject from '~/components/geometry/GSymmetricRotationObject.vue'
 import GScalingObject from '~/components/geometry/GScalingObject.vue'
-import GWireframeMaterial from '~/components/geometry/GWireframeMaterial.vue'
 import * as TWEEN from '@tweenjs/tween.js'
 
 export default {
   name: 'g-icosahedron',
-  components: {GWireframeMaterial},
   mixins: [GSymmetricRotationObject, GScalingObject],
   props: {
     radius:  { type: Number, default: 1 },

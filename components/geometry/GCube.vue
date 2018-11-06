@@ -1,7 +1,7 @@
 <template>
   <div>
     <mesh name="GCube">
-      <geometry type="Box" :args="[size, size, size]" />
+      <g-geometry type="Box" :args="[size, size, size]" />
       <g-wireframe-material wire-color="#440922" />
     </mesh>
     <animation :fn="animate" :speed="speed" />
@@ -11,12 +11,10 @@
 <script>
 import GSymmetricRotationObject from '~/components/geometry/GSymmetricRotationObject.vue'
 import GScalingObject from '~/components/geometry/GScalingObject.vue'
-import GWireframeMaterial from '~/components/geometry/GWireframeMaterial.vue'
 import * as TWEEN from '@tweenjs/tween.js'
 
 export default {
   name: 'g-cube',
-  components: {GWireframeMaterial},
   mixins: [GSymmetricRotationObject, GScalingObject],
   props: {
     size:  { type: Number, default: 1 },
