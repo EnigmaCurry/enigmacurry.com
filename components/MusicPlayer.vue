@@ -1,5 +1,5 @@
 <template>
-<div ref="content" class="musicPlayer" v-bind:class="[{ fadeIn: music_player_show }, { fadeOut: !music_player_show }]">
+<div ref="content" class="musicPlayer" v-bind:class="[{ musicFadeIn: music_player_show }, { musicFadeOut: !music_player_show }]">
   <iframe width="100%" :height="getHeight()" scrolling="no" frameborder="no" :src="embed_url"></iframe>
 </div>
 </template>
@@ -11,6 +11,13 @@
   left: 0;
   right: 0;
   z-index: 2;
+}
+.musicFadeIn {
+  opacity: 0.85;
+}
+.musicFadeOut {
+  opacity: 0;
+  pointer-events: none !important;  
 }
 </style>
 
