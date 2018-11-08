@@ -11,10 +11,10 @@ export default {
   name: "g-flower",
   mixins: [Object3D],
   props: {
-    circleSegments: {type: Number, default: 64},
+    circleSegments: {type: Number, default: 12},
     unitRadius: {type: Number, default: 2},
-    shapeRadius: {type: Number, default: 16},
-    levels: {type: Number, default: 12},
+    shapeRadius: {type: Number, default: 8},
+    levels: {type: Number, default: 6},
     tweenInterval: {type: Number, default: 6}
   },
   data() {
@@ -30,17 +30,20 @@ export default {
         // TWEEN.Easing.Quintic.InOut,
         // TWEEN.Easing.Exponential.InOut,
         // TWEEN.Easing.Elastic.In
-      ]      
+      ],
+      params: [
+        {circleSegments: 64, unitRadius: 3, shapeRadius: 7, numLevels: 9},
+        {circleSegments: 10, unitRadius: 3, shapeRadius: 11, numLevels: 9},
+        {circleSegments: 4, unitRadius: 1, shapeRadius: 5, numLevels: 5},
+        {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
+        {circleSegments: 6, unitRadius: 1, shapeRadius: 5.2, numLevels: 4},
+        {circleSegments: 12, unitRadius: 2, shapeRadius: 8, numLevels: 5},
+        {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},
+      ]
     }
   },
   created() {
-    this.newFlower({
-      numLevels: this.levels,
-      colors: this.colorChoices[2],
-      unitRadius: this.unitRadius,
-      shapeRadius: this.shapeRadius,
-      circleSegments: this.circleSegments
-    })
+    this.newFlower({...this.params[0], colors: this.colorChoices[2]})
     this.newMaterialTweenInterval()
   },
   methods: {

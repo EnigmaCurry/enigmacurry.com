@@ -1,7 +1,7 @@
 <template>
   <g-renderer class="renderer" ref="renderer" :transparent="false">
     <scene>
-      <g-camera orthographic :zoomScale=20></g-camera>
+      <g-camera orthographic :zoomScale=15></g-camera>
 
       <g-flower />
        
