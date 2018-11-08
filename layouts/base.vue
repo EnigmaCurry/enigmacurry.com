@@ -119,10 +119,7 @@ export default {
     ...mapState({
       user_active: state => state.ui.user_active,
       music_player_show: state => state.ui.music_player_show
-    }),
-    backgroundStyle: function() {
-      return "background-image: url(" + this.backgroundImageURL + ");"
-    }
+    })
   },
   watch: {
     user_active(active) {

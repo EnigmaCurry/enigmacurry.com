@@ -11,9 +11,10 @@ export default {
   name: "g-flower",
   mixins: [Object3D],
   props: {
-    levels: {type: Number, default: 9},
-    unitRadius: {type: Number, default: 2},
     circleSegments: {type: Number, default: 64},
+    unitRadius: {type: Number, default: 2},
+    shapeRadius: {type: Number, default: 16},
+    levels: {type: Number, default: 12},
     tweenInterval: {type: Number, default: 6}
   },
   data() {
@@ -25,9 +26,10 @@ export default {
       ],
       easingChoices: [
         TWEEN.Easing.Sinusoidal.InOut,
-        TWEEN.Easing.Quartic.InOut,
-        TWEEN.Easing.Quintic.InOut,
-        TWEEN.Easing.Exponential.InOut,
+        // TWEEN.Easing.Quartic.InOut,
+        // TWEEN.Easing.Quintic.InOut,
+        // TWEEN.Easing.Exponential.InOut,
+        // TWEEN.Easing.Elastic.In
       ]      
     }
   },
@@ -36,6 +38,7 @@ export default {
       numLevels: this.levels,
       colors: this.colorChoices[2],
       unitRadius: this.unitRadius,
+      shapeRadius: this.shapeRadius,
       circleSegments: this.circleSegments
     })
     this.newMaterialTweenInterval()
@@ -44,10 +47,10 @@ export default {
     animate(tt) {
       TWEEN.update()
     },    
-    newFlower({numLevels, colors, unitRadius, circleSegments}) {
+    newFlower({numLevels, colors, unitRadius, shapeRadius, circleSegments}) {
       let group = new Three.Group()
       this.curObj = group
-      let shape = new Three.CircleGeometry(unitRadius, circleSegments)
+      let shape = new Three.CircleGeometry(shapeRadius, circleSegments)
       shape.vertices.shift()
       
       // Create colors and materials
