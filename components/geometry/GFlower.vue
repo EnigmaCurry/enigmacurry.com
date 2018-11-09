@@ -1,9 +1,9 @@
 <template>
   <animation :fn="animate" />
-</template>
-
-<script>
-import * as Three from 'three'
+  </template>
+  
+  <script>
+  import * as Three from 'three'
 import {Object3D} from 'vue-threejs'
 import * as TWEEN from '@tweenjs/tween.js'
 
@@ -15,7 +15,9 @@ export default {
     unitRadius: {type: Number, default: 2},
     shapeRadius: {type: Number, default: 8},
     levels: {type: Number, default: 6},
-    tweenInterval: {type: Number, default: 6}
+    materialTweenInterval: {type: Number, default: 6},
+    scaleTweenInterval: {type: Number, default: 6},
+    scaleTweenWait: {type: Number, default: 10}
   },
   data() {
     return {
@@ -33,24 +35,30 @@ export default {
       ],
       params: [
         {circleSegments: 64, unitRadius: 3, shapeRadius: 7, numLevels: 9},
-        {circleSegments: 10, unitRadius: 3, shapeRadius: 11, numLevels: 9},
         {circleSegments: 4, unitRadius: 1, shapeRadius: 5, numLevels: 5},
-        {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
-        {circleSegments: 6, unitRadius: 1, shapeRadius: 5.2, numLevels: 4},
+        {circleSegments: 10, unitRadius: 3, shapeRadius: 11, numLevels: 9},
+        {circleSegments: 6, unitRadius: 1, shapeRadius: 5.2, numLevels: 9},
         {circleSegments: 12, unitRadius: 2, shapeRadius: 8, numLevels: 5},
         {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},
+
+
+        // {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
       ]
     }
   },
   created() {
-    this.newFlower({...this.params[0], colors: this.colorChoices[2]})
+    this.newFlower({...this.params[Math.floor(Math.random() * this.params.length)],
+                    colors: this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]})
     this.newMaterialTweenInterval()
+    this.newMeshScaleTweenInterval()
   },
   methods: {
     animate(tt) {
       TWEEN.update()
+      this.curObj.rotation.z += 0.0002
     },    
     newFlower({numLevels, colors, unitRadius, shapeRadius, circleSegments}) {
+      this._meshes = []
       let group = new Three.Group()
       this.curObj = group
       let shape = new Three.CircleGeometry(shapeRadius, circleSegments)
@@ -59,8 +67,8 @@ export default {
       // Create colors and materials
       this._materials = []
       this._currentColors = []
-      for (let c = 0; c < colors.length; c++) {
-        let color = new Three.Color(colors[c])
+      for (let m = 0; m < numLevels; m++) {
+        let color = new Three.Color(colors[m % colors.length])
         this._currentColors.push(color)
         this._materials.push(new Three.LineBasicMaterial({ color }))
       }
@@ -81,6 +89,7 @@ export default {
         let material = this._materials[level % this._materials.length]
         let mesh = new Three.LineLoop(shape, material)
         mesh.position.copy(pattern[p])
+        this._meshes.push(mesh)
         group.add(mesh)
       }
     },
@@ -103,8 +112,30 @@ export default {
       this._currentColors.push(this._currentColors.shift())
       for(let m=0; m < this._materials.length; m++) {
         this.tweenMaterial(m, this._currentColors[m % this._currentColors.length],
-                           this.tweenInterval, m==0 ? this.newMaterialTweenInterval : function(){})
+                           this.materialTweenInterval, m==0 ? this.newMaterialTweenInterval : function(){})
       }
+    },
+    tweenMeshScales(toScale, duration=10, onComplete=function(){}) {
+      let scale = {value: this._meshes[0].scale.x}
+      return new TWEEN.Tween(scale)
+        .to({value: toScale}, duration * 1000)
+        .easing(this.easingChoices[Math.floor(Math.random() * this.easingChoices.length)])
+        .onComplete(onComplete)
+        .onUpdate(() => {
+          for(let m=0; m < this._meshes.length; m++) {
+            this._meshes[m].scale.x = scale.value
+            this._meshes[m].scale.y = scale.value
+            this._meshes[m].scale.z = scale.value
+          }
+        })
+        .start()
+    },
+    newMeshScaleTweenInterval() {
+      let max = 2
+      let min = 0.5
+      let toScale = Math.random() * (max - min) + min
+      console.log(toScale)
+      this.tweenMeshScales(toScale, this.scaleTweenInterval, () => {setTimeout(() => {this.newMeshScaleTweenInterval()}, this.scaleTweenWait * 1000)})
     }
   }
 }
