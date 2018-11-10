@@ -10,7 +10,6 @@
         hide-overlay
         clipped
         temporary
-        fixed
         app>
         <v-list>
           <v-list-tile>
@@ -23,9 +22,10 @@
             :to="item.to"
             :key="i"
             router
-            exact>
+            exact
+            class="navIcon" >
             <v-list-tile-action>
-              <v-icon v-html="item.icon" />
+              <img :src="item.img" />
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title v-text="item.title" />
@@ -88,6 +88,9 @@ div#app {
 .header {
   z-index: 2;
 }
+.navIcon {
+  padding-top: 10px;
+}
 </style>
 
 <script>
@@ -111,7 +114,8 @@ export default {
       musicPlayerLoaded: false,
       title: 'EnigmaCurry',
       menuItems: [
-        { icon: 'apps', title: 'Home', to: '/' }
+        { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/' },
+        { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }
       ],
     }
   },
