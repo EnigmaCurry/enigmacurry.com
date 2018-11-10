@@ -58,14 +58,19 @@ export default {
       this.curObj.rotation.z += 0.0002
     },
     newFlowerInterval({initial=false} = {}) {
-      const interval = () => {
-        this.newFlower({...this.params[Math.floor(Math.random() * this.params.length)],
-                        colors: this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]})
+      const interval = ({paramsIndex}) => {
+        this._currentParamsIndex = paramsIndex
+        this.newFlower({...this.params[paramsIndex], colors: this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]})
       }
       if (initial) {
-        interval()
+        interval({paramsIndex: 0})
       } else {
-        this.fadeMaterialsToBlack(interval)
+        let paramsIndex = this._currentParamsIndex
+        // Don't choose the same params twice in a row:
+        while(paramsIndex == this._currentParamsIndex) {
+          paramsIndex = Math.floor(Math.random() * this.params.length)
+        }
+        this.fadeMaterialsToBlack(() => {interval({paramsIndex})})
       }
     },
     newFlower({numLevels, colors, unitRadius, shapeRadius, circleSegments}) {
