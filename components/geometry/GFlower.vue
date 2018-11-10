@@ -127,12 +127,13 @@ export default {
     },
     newMaterialTweenInterval() {
       if(this._stopMaterialTweens === true){
-        return
-      }
-      this._currentColors.push(this._currentColors.shift())
-      for(let m=0; m < this._materials.length; m++) {
-        this.tweenMaterial(m, this._currentColors[m % this._currentColors.length],
-                           this.materialTweenInterval, m==0 ? this.newMaterialTweenInterval : function(){})
+        setTimeout(this.newMaterialTweenInterval, this.newMaterialTweenInterval)
+      } else {
+        this._currentColors.push(this._currentColors.shift())
+        for(let m=0; m < this._materials.length; m++) {
+          this.tweenMaterial(m, this._currentColors[m % this._currentColors.length],
+                             this.materialTweenInterval, m==0 ? this.newMaterialTweenInterval : function(){})
+        }
       }
     },
     fadeMaterialsToBlack(onComplete) {
