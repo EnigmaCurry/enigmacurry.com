@@ -3,7 +3,7 @@
   </template>
   
   <script>
-  import * as Three from 'three'
+import * as Three from 'three'
 import {Object3D} from 'vue-threejs'
 import * as TWEEN from '@tweenjs/tween.js'
 
@@ -17,7 +17,8 @@ export default {
     levels: {type: Number, default: 6},
     materialTweenInterval: {type: Number, default: 6},
     scaleTweenInterval: {type: Number, default: 6},
-    scaleTweenWait: {type: Number, default: 10}
+    scaleTweenWait: {type: Number, default: 10},
+    flowerInterval: {type: Number, default: 60}
   },
   data() {
     return {
@@ -39,16 +40,15 @@ export default {
         {circleSegments: 10, unitRadius: 3, shapeRadius: 11, numLevels: 9},
         {circleSegments: 6, unitRadius: 1, shapeRadius: 5.2, numLevels: 9},
         {circleSegments: 12, unitRadius: 2, shapeRadius: 8, numLevels: 5},
-        {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},
-
-
-        // {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
+        {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},       
+        {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
+        {circleSegments: 3, unitRadius: 1, shapeRadius: 6.6, numLevels: 25},
       ]
     }
   },
   created() {
-    this.newFlower({...this.params[Math.floor(Math.random() * this.params.length)],
-                    colors: this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]})
+    this.newFlowerInterval()
+    setInterval(this.newFlowerInterval, this.flowerInterval * 1000)
     this.newMaterialTweenInterval()
     this.newMeshScaleTweenInterval()
   },
@@ -56,7 +56,11 @@ export default {
     animate(tt) {
       TWEEN.update()
       this.curObj.rotation.z += 0.0002
-    },    
+    },
+    newFlowerInterval() {
+      this.newFlower({...this.params[Math.floor(Math.random() * this.params.length)],
+                      colors: this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]})
+    },
     newFlower({numLevels, colors, unitRadius, shapeRadius, circleSegments}) {
       this._meshes = []
       let group = new Three.Group()
