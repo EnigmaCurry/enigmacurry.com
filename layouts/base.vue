@@ -40,7 +40,7 @@
         class="header"
         v-bind:class="[{ fadeIn: headerShown }, { fadeOut: !headerShown }]">
         <v-toolbar-side-icon @click="toggleDrawer" />
-        <v-toolbar-title v-text="title"/>
+        <v-toolbar-title class="title" v-text="title"/>
         <v-spacer></v-spacer>
         <v-btn icon v-bind:class="{ btnSelected: music_player_show }" @click="toggleMusicPlayer">
           <v-icon>queue_music</v-icon>
@@ -87,6 +87,13 @@ div#app {
 }
 .header {
   z-index: 2;
+  user-select: none;
+}
+.title {
+  font-family: 'Doppio One' !important;
+  line-height: 2 !important;
+  font-size: 1.5em !important;
+  padding-left: 0.5em;
 }
 .navIcon {
   padding-top: 10px;
@@ -114,7 +121,7 @@ export default {
       musicPlayerLoaded: false,
       title: 'EnigmaCurry',
       menuItems: [
-        { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/' },
+        { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/flower-of-life' },
         { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }
       ],
     }
