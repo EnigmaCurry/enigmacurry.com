@@ -1,8 +1,8 @@
 <template>
   <animation :fn="animate" />
-  </template>
+</template>
   
-  <script>
+<script>
 import * as Three from 'three'
 import {Object3D} from 'vue-threejs'
 import * as TWEEN from '@tweenjs/tween.js'

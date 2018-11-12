@@ -25,3 +25,6 @@ Vue.component('g-wireframe-material', GWireframeMaterial)
 
 import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
+
+import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
+Vue.component('g-penrose-kite', GPenroseKite)
