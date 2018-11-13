@@ -32,7 +32,9 @@ import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
 import GPenroseDart from '~/components/geometry/GPenroseDart.vue'
 import GPenroseSun from '~/components/geometry/GPenroseSun.vue'
 import GPenroseStar from '~/components/geometry/GPenroseStar.vue'
+import GPenroseAce from '~/components/geometry/GPenroseAce.vue'
 Vue.component('g-penrose-kite', GPenroseKite)
 Vue.component('g-penrose-dart', GPenroseDart)
 Vue.component('g-penrose-sun', GPenroseSun)
 Vue.component('g-penrose-star', GPenroseStar)
+Vue.component('g-penrose-ace', GPenroseAce)

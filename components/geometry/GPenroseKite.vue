@@ -9,8 +9,11 @@ export default {
   name: 'g-penrose-kite',
   mixins: [ Object3D ],
   props: {
+    color: {type: String, default: "blue"},
     width: {type: Number, default: 1},
-    origin: {type: String, default: "top"} //top, bottom, left, right
+    origin: {type: String, default: "top"}, //top, bottom, left, right
+    wireColor: {type: String, default: "white"},
+    wireWidth: {type: Number, default: 2}    
   },
   created() {
     // If long pointy end is facing up, and the width is given, find the height.
@@ -38,9 +41,15 @@ export default {
       geom.translate(0, -1 * topHeight, 0)
     }
     geom.computeFaceNormals()
-
-    let material = new Three.MeshNormalMaterial({wireframe: false})
+    
+    let material = new Three.MeshStandardMaterial({color: new Three.Color(this.color)})
     let mesh = new Three.Mesh( geom, material )
+
+    //Wireframe
+    let wireGeometry = new Three.EdgesGeometry(geom)
+    let wireMaterial = new Three.LineBasicMaterial( {
+      color: this.wireColor, linewidth: this.wireWidth } )
+    mesh.add( new Three.LineSegments(wireGeometry, wireMaterial) )
 
     this.curObj = mesh
   }

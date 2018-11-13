@@ -9,8 +9,12 @@ export default {
   name: 'g-penrose-dart',
   mixins: [ Object3D ],
   props: {
+    color: {type: String, default: "yellow"},
     width: {type: Number, default: 1},
-    origin: {type: String, default: "top"} //top, bottom, left, right
+    padding: {type: Number, default: 2},
+    origin: {type: String, default: "top"}, //top, bottom, left, right
+    wireColor: {type: String, default: "white"},
+    wireWidth: {type: Number, default: 2}
   },
   created() {
     // If pointy end is up, and the width is given, find the height.
@@ -42,8 +46,14 @@ export default {
     }
     geom.computeFaceNormals()
     
-    let material = new Three.MeshNormalMaterial({wireframe: false})
+    let material = new Three.MeshStandardMaterial({color: new Three.Color(this.color)})
     let mesh = new Three.Mesh( geom, material )
+    
+    //Wireframe
+    let wireGeometry = new Three.EdgesGeometry(geom)
+    let wireMaterial = new Three.LineBasicMaterial( {
+      color: this.wireColor, linewidth: this.wireWidth } )
+    mesh.add( new Three.LineSegments(wireGeometry, wireMaterial) )
 
     this.curObj = mesh
   }
