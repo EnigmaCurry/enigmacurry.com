@@ -29,6 +29,10 @@ import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
 
 import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
+import GPenroseDart from '~/components/geometry/GPenroseDart.vue'
 import GPenroseSun from '~/components/geometry/GPenroseSun.vue'
+import GPenroseStar from '~/components/geometry/GPenroseStar.vue'
 Vue.component('g-penrose-kite', GPenroseKite)
+Vue.component('g-penrose-dart', GPenroseDart)
 Vue.component('g-penrose-sun', GPenroseSun)
+Vue.component('g-penrose-star', GPenroseStar)
