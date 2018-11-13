@@ -4,10 +4,12 @@ import GRenderer from '~/components/geometry/GRenderer.vue'
 import GCamera from '~/components/geometry/GCamera.vue'
 import GLight from '~/components/geometry/GLight.vue'
 import GGeometry from '~/components/geometry/GGeometry.vue'
+import GGrid from '~/components/geometry/GGrid.vue'
 Vue.component('g-renderer', GRenderer)
 Vue.component('g-camera', GCamera)
 Vue.component('g-light', GLight)
 Vue.component('g-geometry', GGeometry)
+Vue.component('g-grid', GGrid)
 
 import GTetrahedron from '~/components/geometry/GTetrahedron.vue'
 import GCube from '~/components/geometry/GCube.vue'
@@ -27,4 +29,6 @@ import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
 
 import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
+import GPenroseSun from '~/components/geometry/GPenroseSun.vue'
 Vue.component('g-penrose-kite', GPenroseKite)
+Vue.component('g-penrose-sun', GPenroseSun)
