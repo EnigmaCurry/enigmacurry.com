@@ -9,8 +9,8 @@
       <!-- <g-penrose-kite/> -->
       <!-- <g-penrose-dart/> -->
       <!-- <g-penrose-sun origin="top" :rotation="{z:0.5 * Math.PI}"/> -->
-      <g-penrose-star origin="top" :rotation="{z:Math.PI}"/>
-      <!-- <g-penrose-ace /> -->
+      <!-- <g-penrose-star origin="top" :rotation="{z:Math.PI}"/> -->
+      <g-penrose-ace origin="right" :rotation="{z:0.5 * Math.PI}"/>
     </scene>
   </g-renderer>
 </template>
