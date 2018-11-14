@@ -42,7 +42,7 @@ export default {
     } 
 
     // Materials:
-    this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color)})
+    this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color), wireframe: true})
     //Wireframe:
     let wireGeometry = new Three.EdgesGeometry( this.mesh.geometry )
     let wireMaterial = new Three.LineBasicMaterial( { color: new Three.Color(this.wireColor), linewidth: this.wireWidth } )
