@@ -1,25 +1,15 @@
 <template>
   <g-mesh>
-    <g-penrose-geometry proto-tile="dart" :origin="origin" :width="width"/>
-    <g-wireframe-material wire-color="#fff"/>
+    <g-penrose-geometry proto-tile="dart" :origin="origin" />
   </g-mesh>
 </template>
 
 <script>
 import * as Three from 'three'
-import { Object3D, Mesh } from 'vue-threejs'
+import GPenroseTile from '~/components/geometry/GPenroseTile.vue'
 
 export default {
   name: 'g-penrose-dart',
-  mixins: [Object3D],
-  props: {
-    width: {type: Number, default: 1},
-    origin: {type: String, default: "top"}, //top, bottom, left, right
-  },
-  provide () {
-    return { meshParent: this }
-  },
-  mounted() {
-  }
+  mixins: [GPenroseTile],
 }
 </script>
