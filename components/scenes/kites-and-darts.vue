@@ -6,7 +6,7 @@
       <g-grid :divisions="10"/>
       <g-camera orthographic :zoomScale=2></g-camera>
 
-      <g-penrose-jack />
+      <g-penrose-queen />
 
       <!-- <g-penrose-kite origin="top" :rotation="{z: Math.PI}"/> -->
       <!-- <g-penrose-kite origin="top" :rotation="{z: Math.PI + (72*(Math.PI/180))}"/> -->

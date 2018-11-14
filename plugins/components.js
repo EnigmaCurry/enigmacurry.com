@@ -38,6 +38,7 @@ import GPenroseStar from '~/components/geometry/GPenroseStar.vue'
 import GPenroseAce from '~/components/geometry/GPenroseAce.vue'
 import GPenroseDeuce from '~/components/geometry/GPenroseDeuce.vue'
 import GPenroseJack from '~/components/geometry/GPenroseJack.vue'
+import GPenroseQueen from '~/components/geometry/GPenroseQueen.vue'
 Vue.component('g-penrose-geometry', GPenroseGeometry)
 Vue.component('g-penrose-kite', GPenroseKite)
 Vue.component('g-penrose-dart', GPenroseDart)
@@ -46,3 +47,4 @@ Vue.component('g-penrose-star', GPenroseStar)
 Vue.component('g-penrose-ace', GPenroseAce)
 Vue.component('g-penrose-deuce', GPenroseDeuce)
 Vue.component('g-penrose-jack', GPenroseJack)
+Vue.component('g-penrose-queen', GPenroseQueen)
