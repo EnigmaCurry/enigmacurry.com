@@ -20,6 +20,8 @@ export default {
     } else if (this.origin === "left") {
     } else if (this.origin === "right") {
     } 
+    // Draw edges after translation is applied
+    this.drawEdges()    
   }
 }
 </script>

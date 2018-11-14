@@ -17,10 +17,13 @@ export default {
   mounted() {
     //Translate origin for rotation purposes:
     if (this.origin === "top") {
+      this.mesh.geometry.translate(0, -1 * this.dartDimensions.gnomonSide, 0)
     } else if (this.origin === "bottom") {
     } else if (this.origin === "left") {
     } else if (this.origin === "right") {
-    } 
+    }
+    // Draw edges after translation is applied
+    this.drawEdges()    
   }
 }
 </script>

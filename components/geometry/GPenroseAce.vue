@@ -24,7 +24,9 @@ export default {
     } else if (this.origin === "right") {
       // WARNING: Eyeballed
       this.mesh.geometry.translate(-0.809019, 0.587785, 0)
-    } 
+    }
+    // Draw edges after translation is applied
+    this.drawEdges()    
   }
 }
 </script>

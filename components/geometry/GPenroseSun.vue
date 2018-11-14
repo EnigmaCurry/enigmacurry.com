@@ -19,6 +19,8 @@ export default {
     if (this.origin === "top") {
       this.mesh.geometry.translate(0, -1 * this.kiteDimensions.height, 0)      
     }
+    // Draw edges after translation is applied
+    this.drawEdges()        
   }
 }
 </script>
