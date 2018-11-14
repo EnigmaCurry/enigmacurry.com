@@ -3,11 +3,13 @@ import Vue from 'vue'
 import GRenderer from '~/components/geometry/GRenderer.vue'
 import GCamera from '~/components/geometry/GCamera.vue'
 import GLight from '~/components/geometry/GLight.vue'
+import GMesh from '~/components/geometry/GMesh.vue'
 import GGeometry from '~/components/geometry/GGeometry.vue'
 import GGrid from '~/components/geometry/GGrid.vue'
 Vue.component('g-renderer', GRenderer)
 Vue.component('g-camera', GCamera)
 Vue.component('g-light', GLight)
+Vue.component('g-mesh', GMesh)
 Vue.component('g-geometry', GGeometry)
 Vue.component('g-grid', GGrid)
 
@@ -28,11 +30,13 @@ Vue.component('g-wireframe-material', GWireframeMaterial)
 import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
 
+import GPenroseDartGeometry from '~/components/geometry/GPenroseDartGeometry.vue'
 import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
 import GPenroseDart from '~/components/geometry/GPenroseDart.vue'
 import GPenroseSun from '~/components/geometry/GPenroseSun.vue'
 import GPenroseStar from '~/components/geometry/GPenroseStar.vue'
 import GPenroseAce from '~/components/geometry/GPenroseAce.vue'
+Vue.component('g-penrose-dart-geometry', GPenroseDartGeometry)
 Vue.component('g-penrose-kite', GPenroseKite)
 Vue.component('g-penrose-dart', GPenroseDart)
 Vue.component('g-penrose-sun', GPenroseSun)

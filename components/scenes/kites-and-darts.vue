@@ -6,9 +6,10 @@
       <g-grid :divisions="10"/>
       <!-- <g-grid :divisions="10" gridType="polar"/> -->
       <g-camera orthographic :zoomScale=2></g-camera>
+      <g-penrose-dart/>
       <!-- <g-penrose-sun /> -->
-      <!-- <g-penrose-star /> -->
-      <g-penrose-ace />
+      <!-- <g-penrose-star origin="top" :rotation="{z:Math.PI}"/> -->
+      <!-- <g-penrose-ace /> -->
     </scene>
   </g-renderer>
 </template>

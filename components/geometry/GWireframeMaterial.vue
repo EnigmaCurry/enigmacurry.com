@@ -16,7 +16,8 @@ export default {
     opacityMin: {type: Number, default: 0.25},
     opacityMax: {type: Number, default: 0.8},
     opacityCurve: {type: Number, default: 4},
-    brightnessMin: {type: Number, default: 0.5}
+    brightnessMin: {type: Number, default: 0.5},
+    rotation: {type: Object, default: () => {return {x:0,y:0,z:0}}}
   },
   data() {
     return {
