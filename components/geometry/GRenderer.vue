@@ -35,6 +35,7 @@ export default {
   },
   props: {
     obj: { type: Object },
+    animated: { type: Boolean, default: false },
     clearColor: { type: String, default: "#000000" },
     clearAlpha: { type: Number, default: 0.65 },
     antialias: { type: Boolean, default: true },
@@ -76,7 +77,9 @@ export default {
   mounted() {
     this.$refs.container.appendChild(this.curObj.domElement)
     this.onResize()
-    this.animate()
+    if (this.animated) {
+      this.animate()
+    }
     window.addEventListener('resize', this.onResize)
   },
   destroyed() {

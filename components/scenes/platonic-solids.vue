@@ -1,5 +1,5 @@
 <template>
-  <g-renderer class="renderer" ref="renderer">
+  <g-renderer animated class="renderer" ref="renderer">
     <scene>
       <g-camera orthographic :zoomScale=2></g-camera>
       <g-light :hex="0x0000ff" :intensity="0.2" :position="{ y: -10, z: 500 }"/>
