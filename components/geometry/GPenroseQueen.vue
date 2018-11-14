@@ -19,6 +19,7 @@ export default {
     if (this.origin === "top") {
       this.mesh.geometry.translate(0, -1 * this.dartDimensions.gnomonSide, 0)
     } else if (this.origin === "bottom") {
+      this.mesh.geometry.translate(0, this.kiteDimensions.height, 0)
     } else if (this.origin === "left") {
     } else if (this.origin === "right") {
     }

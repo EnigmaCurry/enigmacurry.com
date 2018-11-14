@@ -17,13 +17,13 @@ export default {
     if (this.origin === "top") {
       this.mesh.geometry.translate(0, -1 * this.dartDimensions.gnomonSide, 0)
     } else if (this.origin === "bottom") {
-      this.mesh.geometry.translate(0, this.dartDimensions.gnomonBase, 0)
+      this.mesh.geometry.translate(0, this.kiteDimensions.height, 0)
     } else if (this.origin === "left") {
       // WARNING: Eyeballed
-      this.mesh.geometry.translate(0.809019, 0.587785, 0)
+      //this.mesh.geometry.translate(0.809019, 0.587785, 0)
     } else if (this.origin === "right") {
       // WARNING: Eyeballed
-      this.mesh.geometry.translate(-0.809019, 0.587785, 0)
+      //this.mesh.geometry.translate(-0.809019, 0.587785, 0)
     }
     // Draw edges after translation is applied
     this.drawEdges()    

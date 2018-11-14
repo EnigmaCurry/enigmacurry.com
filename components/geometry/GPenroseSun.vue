@@ -20,7 +20,7 @@ export default {
       this.mesh.geometry.translate(0, -1 * this.kiteDimensions.height, 0)      
     }
     // Draw edges after translation is applied
-    this.drawEdges()        
+    this.drawEdges()    
   }
 }
 </script>

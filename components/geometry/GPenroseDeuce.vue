@@ -15,11 +15,9 @@ export default {
   mixins: [GPenroseTile],
   mounted() {
     //Translate origin for rotation purposes:
-    if (this.origin === "top") {
-    } else if (this.origin === "bottom") {
-    } else if (this.origin === "left") {
-    } else if (this.origin === "right") {
-    } 
+    if (this.origin === "bottom") {
+      this.mesh.geometry.translate(0, this.dartDimensions.gnomonSide + this.dartDimensions.gnomonBase, 0)
+    }
     // Draw edges after translation is applied
     this.drawEdges()    
   }

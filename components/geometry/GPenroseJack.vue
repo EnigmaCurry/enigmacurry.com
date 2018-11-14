@@ -17,7 +17,9 @@ export default {
   mounted() {
     //Translate origin for rotation purposes:
     if (this.origin === "top") {
+      this.mesh.geometry.translate(0, -1 * this.kiteDimensions.height, 0)
     } else if (this.origin === "bottom") {
+      this.mesh.geometry.translate(0, this.kiteDimensions.height, 0)
     } else if (this.origin === "left") {
     } else if (this.origin === "right") {
     } 

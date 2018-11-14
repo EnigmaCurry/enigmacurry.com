@@ -7,7 +7,7 @@
       <g-camera orthographic :zoomScale=2></g-camera>
 
       <!-- <g-penrose-sun /> -->
-      <g-penrose-queen />
+      <g-penrose-king origin="bottom" />
 
       <!-- <g-penrose-kite origin="top" :rotation="{z: Math.PI}"/> -->
       <!-- <g-penrose-kite origin="top" :rotation="{z: Math.PI + (72*(Math.PI/180))}"/> -->
@@ -28,6 +28,6 @@ export default {
       dartDimensions,
       kiteDimensions
     }
-  },  
+  }
 }
 </script>
