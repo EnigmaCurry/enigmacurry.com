@@ -1,6 +1,6 @@
 <template>
   <g-mesh>
-    <g-penrose-dart-geometry :origin="origin" :width="width"/>
+    <g-penrose-geometry proto-tile="dart" :origin="origin" :width="width"/>
     <g-wireframe-material wire-color="#fff"/>
   </g-mesh>
 </template>

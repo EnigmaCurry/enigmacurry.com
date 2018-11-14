@@ -8,11 +8,13 @@ import GGeometry from '~/components/geometry/GGeometry.vue'
 export default {
   mixins: [ GGeometry ],
   props: {
+    protoTile: {type: String},
     width: {type: Number, default: 1},
     origin: {type: String, default: "top"}, //top, bottom, left, right
   },
   data () {
-    let geometry = this.$geometry.penrose.dart(this.width, this.origin)
+    let func = this.$geometry.penrose[this.protoTile]
+    let geometry = func(this.width, this.origin)
     return { geometry }
   }
 }

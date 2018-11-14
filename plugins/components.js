@@ -30,13 +30,13 @@ Vue.component('g-wireframe-material', GWireframeMaterial)
 import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
 
-import GPenroseDartGeometry from '~/components/geometry/GPenroseDartGeometry.vue'
+import GPenroseGeometry from '~/components/geometry/GPenroseGeometry.vue'
 import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
 import GPenroseDart from '~/components/geometry/GPenroseDart.vue'
 import GPenroseSun from '~/components/geometry/GPenroseSun.vue'
 import GPenroseStar from '~/components/geometry/GPenroseStar.vue'
 import GPenroseAce from '~/components/geometry/GPenroseAce.vue'
-Vue.component('g-penrose-dart-geometry', GPenroseDartGeometry)
+Vue.component('g-penrose-geometry', GPenroseGeometry)
 Vue.component('g-penrose-kite', GPenroseKite)
 Vue.component('g-penrose-dart', GPenroseDart)
 Vue.component('g-penrose-sun', GPenroseSun)
