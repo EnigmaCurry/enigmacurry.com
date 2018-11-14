@@ -106,6 +106,7 @@ import MusicPlayer from '~/components/MusicPlayer.vue'
 import EventListener from '~/components/EventListener.vue'
 import ScrollbarHideListener from '~/components/ScrollbarHideListener.vue'
 import { mapState } from 'vuex'
+import * as FullscreenPolyfill from 'fullscreen-api-polyfill'
 
 export default {
   mixins: [EventListener, ActivityMonitor, ScrollbarHideListener],
@@ -130,6 +131,17 @@ export default {
     ...mapState({
       user_active: state => state.ui.user_active,
       music_player_show: state => state.ui.music_player_show
+    })
+  },
+  created() {
+    document.addEventListener('dblclick', () => {
+      if(document.fullscreenElement) {
+        document.exitFullscreen() 
+      } else if (document.fullscreenEnabled) {
+        document.body.requestFullscreen()
+      } else {
+        console.warn("Device doesn't support fullscreen")
+      }
     })
   },
   watch: {
