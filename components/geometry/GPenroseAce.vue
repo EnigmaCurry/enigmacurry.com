@@ -12,6 +12,9 @@ import * as Three from 'three'
 
 export default {
   mixins: [GPenroseTile],
+  props: {
+    color: {type: String, default: "red" }
+  },
   mounted() {
     //Translate origin for rotation purposes:
     if (this.origin === "top") {

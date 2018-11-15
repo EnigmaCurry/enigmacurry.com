@@ -5,11 +5,12 @@ import * as Three from 'three'
 export default {
   mixins: [GObject3D],
   props: {
-    color: {type: String, default: "orange"},
+    color: {type: String, default: "black"},
     origin: {type: String, default: "top"},
     rotation: {type: Object, default: () => {return {x:0,y:0,z:0}}},
     worldRotation: {type: Number, default: 0},
     worldOrigin: {type: Object, default: () => {return {x:0,y:0,z:0}}},
+    wireframe: {type: Boolean, default: false },
     wireColor: {type: String, default: "white"},
     wireWidth: {type: Number, default: 2}    
   },
@@ -27,7 +28,7 @@ export default {
   },
   mounted() {
     // Materials:
-    this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color), wireframe: true})
+    this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color), wireframe: this.wireframe})
     this.rotateWorld(new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z), this.worldRotation)
   },
   methods: {
