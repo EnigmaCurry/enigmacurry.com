@@ -1,6 +1,6 @@
 <template>
 <div ref="content" class="musicPlayer" v-bind:class="[{ musicFadeIn: music_player_show }, { musicFadeOut: !music_player_show }]">
-  <iframe width="100%" :height="getHeight()" scrolling="no" frameborder="no" :src="embed_url"></iframe>
+  <iframe id="soundcloud" width="100%" :height="getHeight()" scrolling="no" frameborder="no" :src="embed_url"></iframe>
 </div>
 </template>
 
@@ -10,10 +10,11 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 2;
+  z-index: -2;
 }
 .musicFadeIn {
   opacity: 0.85;
+  z-index: 2;
 }
 .musicFadeOut {
   opacity: 0;
@@ -57,13 +58,34 @@ export default {
     },
   },
   methods: {
-    getHeight: function() {
+    loadPlayerAPI() {
+      let script = document.createElement("script")
+      let head = document.head || document.getElementsByTagName('head')[0] || document.documentElement
+      script.src = "https://w.soundcloud.com/player/api.js"
+      script.onload = script.onreadystatechange = () => {
+        if(!script.readyState || /loaded|complete/.test( script.readyState ) ) {
+          script.onload = script.onreadystatechange = null
+          this.soundcloudAPI = SC.Widget(document.getElementById('soundcloud'))
+        }
+      }
+      head.insertBefore(script, head.firstChild)
+    },
+    getHeight() {
       return window.innerHeight - 64
+    },
+    setVolume(volume) {
+      if (typeof(this.soundcloudAPI != "undefined")) {
+        this.soundcloudAPI.setVolume(volume)
+      }
     }
   },
   created() {
     this.addEventListener(window, 'resize', () => {
       this.$forceUpdate()
+    })
+    this.loadPlayerAPI()
+    this.$bus.$on('music-volume-set', volume => {
+      this.setVolume(volume)
     })
   }
 }

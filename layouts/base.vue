@@ -3,7 +3,7 @@
     <div id="bg">
     </div>
     <music-player v-if="musicPlayerLoaded"/>
-    <v-app dark>
+    <v-app dark id="app">
       <v-navigation-drawer
         v-model="drawerShown"
         mini-variant
@@ -42,6 +42,14 @@
         <v-toolbar-side-icon @click="toggleDrawer" />
         <v-toolbar-title class="title" v-text="title"/>
         <v-spacer></v-spacer>
+        <v-slider
+          v-model="volume"
+          v-if="music_player_show"
+          color="white"
+          class="volumeSlider"
+          append-icon="volume_up"
+          prepend-icon="volume_down">
+        </v-slider>
         <v-btn icon v-bind:class="{ btnSelected: music_player_show }" @click="toggleMusicPlayer">
           <v-icon>queue_music</v-icon>
         </v-btn>
@@ -98,6 +106,11 @@ div#app {
 .navIcon {
   padding-top: 10px;
 }
+.volumeSlider {
+  padding-top: 20px;
+  padding-right: 10px;
+  max-width: 200px;
+}
 </style>
 
 <script>
@@ -106,7 +119,6 @@ import MusicPlayer from '~/components/MusicPlayer.vue'
 import EventListener from '~/components/EventListener.vue'
 import ScrollbarHideListener from '~/components/ScrollbarHideListener.vue'
 import { mapState } from 'vuex'
-import * as FullscreenPolyfill from 'fullscreen-api-polyfill'
 
 export default {
   mixins: [EventListener, ActivityMonitor, ScrollbarHideListener],
@@ -119,7 +131,9 @@ export default {
       headerShown: true,
       cursorShown: true,
       drawerShown: false,
+      volumeBarShown: false,
       musicPlayerLoaded: false,
+      volume: 100,
       title: 'EnigmaCurry',
       menuItems: [
         { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/flower-of-life' },
@@ -133,17 +147,6 @@ export default {
       music_player_show: state => state.ui.music_player_show
     })
   },
-  created() {
-    document.addEventListener('dblclick', () => {
-      if(document.fullscreenElement) {
-        document.exitFullscreen() 
-      } else if (document.fullscreenEnabled) {
-        document.body.requestFullscreen()
-      } else {
-        console.warn("Device doesn't support fullscreen")
-      }
-    })
-  },
   watch: {
     user_active(active) {
       if (active  || this.drawerShown || this.music_player_show) {
@@ -153,8 +156,11 @@ export default {
         this.headerShown = false
         this.cursorShown = false
       }
+    },
+    volume(volume) {
+      this.$bus.$emit('music-volume-set', volume)
     }
-  },    
+  },
   methods: {
     toggleMusicPlayer() {
       this.musicPlayerLoaded = true
@@ -164,6 +170,20 @@ export default {
       this.$store.commit('ui/music_player_show', false)
       this.drawerShown = !this.drawerShown
     }
+  },
+  mounted() {
+    document.addEventListener('dblclick', (e) => {
+      if(e.clientY > 100 && e.clientX > 100) { //User has to click roughly center
+        e.stopPropogation()
+        if(document.fullscreenElement) {
+          document.exitFullscreen() 
+        } else if (document.fullscreenEnabled) {
+          document.body.requestFullscreen()
+        } else {
+          console.warn("Device doesn't support fullscreen")
+        }
+      }
+    })
   }
 }
 </script>
