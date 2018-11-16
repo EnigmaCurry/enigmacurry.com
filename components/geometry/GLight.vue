@@ -23,7 +23,9 @@ export default {
   created() {
   },
   mounted() {
-    this.newColorInterval()
+    if (this.randomizeColor) {
+      this.newColorInterval()
+    }
   },
   methods: {
     tweenColor(toColor) {
