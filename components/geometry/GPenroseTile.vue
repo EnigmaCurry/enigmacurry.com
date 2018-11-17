@@ -30,10 +30,11 @@ export default {
     }
   },
   mounted() {
+    this.rotateWorld(new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z), this.worldRotation)
+
     // Materials:
     this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color), wireframe: this.wireframe})
-    this.rotateWorld(new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z), this.worldRotation)
-    
+
     //Animate world rotation
     let worldOrigin = new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z)
     //setInterval(() => {this.rotateWorld(worldOrigin, 0.11 * (Math.PI/180))}, 5)

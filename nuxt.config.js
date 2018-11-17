@@ -17,7 +17,6 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Doppio+One' }
-      
     ]
   },
 
@@ -42,6 +41,7 @@ module.exports = {
     '@/plugins/vuetify',
     '@/plugins/vue-threejs',
     '@/plugins/geometry',
+    '@/plugins/textures'
   ],
 
   /*
@@ -58,9 +58,6 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      
-
-
       // Run ESLint on save
       // if (ctx.isDev && ctx.isClient) {
       //   config.module.rules.push({

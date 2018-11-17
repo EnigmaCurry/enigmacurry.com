@@ -6,7 +6,7 @@
       <!-- <g-grid :divisions="10"/> -->
       <g-camera orthographic :zoomScale=5></g-camera>
 
-      <g-penrose-sun origin="center"/>
+      <g-penrose-sun origin="center" :rotation="{z: 36 * (Math.PI/180)}"/>
       <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: Math.PI}"/>
       <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 108 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
       <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 36 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
