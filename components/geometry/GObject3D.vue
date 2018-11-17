@@ -5,7 +5,6 @@ import * as THREE from 'three'
 export default {
   name: 'Object3D',
   mixins: [Base],
-  
   provide () {
     return {
       parentObj: this.curObj
@@ -87,7 +86,6 @@ export default {
       this.setScale(this.scale)
       this.setPosition(this.position)
       this.setRotation(this.rotation)
-      
       if (this.parentObj) {
         this.parentObj.add(obj)
       }

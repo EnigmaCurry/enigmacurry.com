@@ -119,6 +119,7 @@ import MusicPlayer from '~/components/MusicPlayer.vue'
 import EventListener from '~/components/EventListener.vue'
 import ScrollbarHideListener from '~/components/ScrollbarHideListener.vue'
 import { mapState } from 'vuex'
+import * as FullscreenPolyfill from 'fullscreen-api-polyfill'
 
 export default {
   mixins: [EventListener, ActivityMonitor, ScrollbarHideListener],
@@ -137,8 +138,9 @@ export default {
       title: 'EnigmaCurry',
       menuItems: [
         { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/flower-of-life' },
-        { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }
-      ],
+        { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }, 
+        { img: require('~/assets/img/icons/pentagon.png'), title: 'Penrose', to: '/geometry/penrose' }
+     ],
     }
   },
   computed: {
@@ -174,7 +176,7 @@ export default {
   mounted() {
     document.addEventListener('dblclick', (e) => {
       if(e.clientY > 100 && e.clientX > 100) { //User has to click roughly center
-        e.stopPropogation()
+        e.preventDefault()
         if(document.fullscreenElement) {
           document.exitFullscreen() 
         } else if (document.fullscreenEnabled) {

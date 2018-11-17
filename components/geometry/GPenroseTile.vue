@@ -1,6 +1,7 @@
 <script>
 import GObject3D from '~/components/geometry/GObject3D.vue'
 import * as Three from 'three'
+import * as TWEEN from '@tweenjs/tween.js'
 
 export default {
   mixins: [GObject3D],
@@ -12,7 +13,8 @@ export default {
     worldOrigin: {type: Object, default: () => {return {x:0,y:0,z:0}}},
     wireframe: {type: Boolean, default: false },
     wireColor: {type: String, default: "white"},
-    wireWidth: {type: Number, default: 2}    
+    wireWidth: {type: Number, default: 2},
+    animated: {type: Boolean, default: false},
   },
   provide () {
     return { meshParent: this }
@@ -23,13 +25,18 @@ export default {
     return {
       dartDimensions,
       kiteDimensions,
-      kiteTranslation: {x:0, y:-1 * dartDimensions.gnomonBase, z:0}
+      kiteTranslation: {x:0, y:-1 * dartDimensions.gnomonBase, z:0},
+      currentTweenDirection: 1
     }
   },
   mounted() {
     // Materials:
     this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color), wireframe: this.wireframe})
     this.rotateWorld(new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z), this.worldRotation)
+    
+    //Animate world rotation
+    let worldOrigin = new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z)
+    //setInterval(() => {this.rotateWorld(worldOrigin, 0.11 * (Math.PI/180))}, 5)
   },
   methods: {
     drawEdges() {

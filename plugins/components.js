@@ -7,6 +7,7 @@ import GLight from '~/components/geometry/GLight.vue'
 import GMesh from '~/components/geometry/GMesh.vue'
 import GGeometry from '~/components/geometry/GGeometry.vue'
 import GGrid from '~/components/geometry/GGrid.vue'
+import GGroup from '~/components/geometry/GGroup.vue'
 Vue.component('g-renderer', GRenderer)
 Vue.component('g-object-3D', GObject3D)
 Vue.component('g-camera', GCamera)
@@ -14,6 +15,7 @@ Vue.component('g-light', GLight)
 Vue.component('g-mesh', GMesh)
 Vue.component('g-geometry', GGeometry)
 Vue.component('g-grid', GGrid)
+Vue.component('g-group', GGroup)
 
 import GTetrahedron from '~/components/geometry/GTetrahedron.vue'
 import GCube from '~/components/geometry/GCube.vue'
@@ -52,3 +54,6 @@ Vue.component('g-penrose-deuce', GPenroseDeuce)
 Vue.component('g-penrose-jack', GPenroseJack)
 Vue.component('g-penrose-queen', GPenroseQueen)
 Vue.component('g-penrose-king', GPenroseKing)
+
+import GPenroseStarHalo from '~/components/geometry/GPenroseStarHalo.vue'
+Vue.component('g-penrose-star-halo', GPenroseStarHalo)
