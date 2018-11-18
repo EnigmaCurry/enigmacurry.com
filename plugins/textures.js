@@ -34,8 +34,8 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.tweenGroup = new TWEEN.Group()
     this.scale = 1
     this.circleWidth = circleWidth
-    this.circleMaterial = new Three.MeshPhysicalMaterial( { color: colors.circle} )
-    this.insideMaterial = new Three.MeshLambertMaterial( { color: colors.inside} )
+    this.circleMaterial = new Three.MeshPhysicalMaterial( { color: colors.circle, flatShading: true, depthFunc: Three.AlwaysDepth} )
+    this.insideMaterial = new Three.MeshPhongMaterial( { color: colors.inside, flatShading: true, depthFunc: Three.AlwaysDepth} )
     this.renderer.setClearColor(colors.outside)
   }
 
@@ -65,10 +65,12 @@ class PenroseTextureRenderer extends CanvasRenderer {
   }
 
   newColorInterval() {
+    let schemes = ['contrast', 'mono', 'triade', 'tetrade', 'analogic']
+    let variations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale']
     let scheme = new ColorScheme()
         .from_hue( Math.random() * 256 )
-        .scheme('contrast')
-        .variation('default')
+        .scheme(schemes[Math.floor(Math.random() * schemes.length)])
+        .variation(variations[Math.floor(Math.random() * variations.length)])
     let nextColors = { circle: new Three.Color("#" + scheme.colors()[0]),
                        inside: new Three.Color("#" + scheme.colors()[1]),
                        outside: new Three.Color("#" + scheme.colors()[2])}
@@ -113,7 +115,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
 
   newLightInterval() {
     let intensityMin = 10
-    let intensityMax = 20
+    let intensityMax = 15
     let intensity = Math.random() * (intensityMax - intensityMin) + intensityMin
     let color = new Three.Color(Math.random(), Math.random(), Math.random())
     this.tweenLight(intensity, color, () => {this.newLightInterval()})
@@ -183,8 +185,8 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
   }
 }
 
-let kiteTextureRenderer = new KiteTextureRenderer({size: 256})
-let dartTextureRenderer = new DartTextureRenderer({size: 256})
+let kiteTextureRenderer = new KiteTextureRenderer({size: 512})
+let dartTextureRenderer = new DartTextureRenderer({size: 512})
 
 Vue.prototype.$textures = {
   penroseKiteTexture: function() {
