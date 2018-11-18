@@ -1,6 +1,7 @@
 import * as Three from 'three'
 import Vue from 'vue'
 import * as TWEEN from '@tweenjs/tween.js'
+import ColorScheme from 'color-scheme'
 
 let kiteTexture = null
 let dartTexture = null
@@ -10,8 +11,10 @@ class CanvasRenderer {
     this.canvas = document.createElement('canvas')
     this.renderer = new Three.WebGLRenderer({canvas: this.canvas, antialias: true})
     this.renderer.setSize(size, size)
-
     this.scene = new Three.Scene()
+    this.light = new Three.PointLight(0xffffff, 10)
+    this.light.position.z = 10
+    this.scene.add(this.light)
     this.camera = new Three.OrthographicCamera(size / -2, size / 2, size / 2, size / -2, 1, 1000)
     this.camera.position.z = 10
     this.camera.lookAt(new Three.Vector3(0,0,0))
@@ -25,16 +28,16 @@ class CanvasRenderer {
 
 }
 
-
 class PenroseTextureRenderer extends CanvasRenderer {
   constructor ({size=256, circleWidth, colors={circle: 'white', inside: 'black', outside:'black'}} = {}) {
     super({size})
     this.scale = 1
     this.circleWidth = circleWidth
-    this.circleMaterial = new Three.MeshBasicMaterial( { color: colors.circle} )
-    this.insideMaterial = new Three.MeshBasicMaterial( { color: colors.inside} )
+    this.circleMaterial = new Three.MeshPhysicalMaterial( { color: colors.circle} )
+    this.insideMaterial = new Three.MeshLambertMaterial( { color: colors.inside} )
     this.renderer.setClearColor(colors.outside)
     this.newColorInterval()
+    this.newLightInterval()
   }
 
   tweenColors(to, callback, interval=10) {
@@ -43,13 +46,10 @@ class PenroseTextureRenderer extends CanvasRenderer {
       ir: this.insideMaterial.color.r, ig: this.insideMaterial.color.g, ib: this.insideMaterial.color.b,
       or: this.renderer.getClearColor().r, og: this.renderer.getClearColor().g, ob: this.renderer.getClearColor().b,
     }
-    let circleColor = new Three.Color(to.circle.r, to.circle.g, to.circle.b)
-    let insideColor = new Three.Color(to.inside.r, to.inside.g, to.inside.b)
-    let outsideColor = new Three.Color(to.outside.r, to.outside.g, to.outside.b)
     let toColors = {
-      cr: circleColor.r, cg: circleColor.g, cb: circleColor.b,
-      ir: insideColor.r, ig: insideColor.g, ib: insideColor.b,
-      or: outsideColor.r, og: outsideColor.g, ob: outsideColor.b
+      cr: to.circle.r, cg: to.circle.g, cb: to.circle.b,
+      ir: to.inside.r, ig: to.inside.g, ib: to.inside.b,
+      or: to.outside.r, og: to.outside.g, ob: to.outside.b
     }
     return new TWEEN.Tween(colors)
       .to(toColors, interval * 1000)
@@ -66,9 +66,13 @@ class PenroseTextureRenderer extends CanvasRenderer {
   }
 
   newColorInterval() {
-    let nextColors = { circle: {r: Math.random(), g: Math.random(), b: Math.random()},
-                       inside: {r: Math.random(), g: Math.random(), b: Math.random()},
-                       outside: {r: Math.random(), g: Math.random(), b: Math.random()} }
+    let scheme = new ColorScheme()
+        .from_hue( Math.random() * 256 )
+        .scheme('contrast')
+        .variation('default')
+    let nextColors = { circle: new Three.Color("#" + scheme.colors()[0]),
+                       inside: new Three.Color("#" + scheme.colors()[1]),
+                       outside: new Three.Color("#" + scheme.colors()[2])}
     this.tweenColors(nextColors, () => {this.newColorInterval()})
   }
 
@@ -92,6 +96,28 @@ class PenroseTextureRenderer extends CanvasRenderer {
     let max = 1.8
     let nextScale = Math.random() * (max - min) + min
     this.tweenScale(nextScale, () => {this.newScaleInterval()})
+  }
+
+  tweenLight(toIntensity, toColor, callback, interval=20) {
+    let toParams = {r: toColor.r, g: toColor.g, b: toColor.b, intensity: toIntensity}
+    let params = {r: this.light.color.r, g: this.light.color.g, b: this.light.color.b, intensity: this.light.intensity}
+    return new TWEEN.Tween(params)
+      .to(toParams, interval * 1000)
+      .easing(TWEEN.Easing.Quartic.InOut)
+      .onUpdate(() => {
+        this.light.color.setRGB(params.r, params.g, params.b)
+        this.light.intensity = params.intensity
+      })
+      .onComplete(callback)
+      .start()
+  }
+
+  newLightInterval() {
+    let intensityMin = 10
+    let intensityMax = 20
+    let intensity = Math.random() * (intensityMax - intensityMin) + intensityMin
+    let color = new Three.Color(Math.random(), Math.random(), Math.random())
+    this.tweenLight(intensity, color, () => {this.newLightInterval()})
   }
 }
 
