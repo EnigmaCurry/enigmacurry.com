@@ -1,11 +1,11 @@
 <template>
-  <g-renderer animated class="renderer" ref="renderer" :transparent="false" :antialias="true">
+  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="false" :antialias="true">
     <scene>
       <g-light :hex="0xffffff" :intensity="1" :position="{ z: 10 }"/>
 
       <!-- <g-grid :divisions="10"/> -->
-      <g-camera orthographic :zoomScale=6.5 />
-      <g-group :rotation="sceneRotation">
+      <g-camera orthographic :zoomScale="6.5"/>
+      <g-group :rotation="sceneRotation" :scale="scale">
         <g-penrose-sun origin="center" :rotation="{z: 36 * (Math.PI/180)}"/>
         <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: Math.PI}"/>
         <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 108 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
@@ -68,27 +68,61 @@ import * as TWEEN from '@tweenjs/tween.js'
 import * as Three from 'three'
 
 export default {
+  props: {
+    animated: {type: Boolean, default: true},
+  },
   data() {
     let dartDimensions = this.$geometry.penrose.dartDimensions()
     let kiteDimensions = this.$geometry.penrose.kiteDimensions()
     return {
       dartDimensions,
       kiteDimensions,
-      sceneRotation: new Three.Vector3(0,0,0)
+      sceneRotation: new Three.Vector3(0,0,0),
+      scale: {x: 1, y: 1, z: 1},
+      scaleInterval: 40,
     }
   },
-  methods: {
-    update() {
-      this.$textures.updatePenroseTweens()
-      this.sceneRotation.z += 0.0005
-    }
+  created() {
+    this.tweenGroup = new TWEEN.Group()
   },
   mounted() {
-    this.$textures.newPenroseTweens()
+    if (this.animated) {
+      this.$textures.newPenroseTweens()
+      this.newScaleInterval()
+    }
   },
   beforeDestroy() {
     console.log("cancelling penrose tweens")
+    this.tweenGroup.removeAll()
     this.$textures.cancelPenroseTweens()
-  }  
+  },
+  methods: {
+    update() {
+      if (this.animated) {
+        this.tweenGroup.update()
+        this.$textures.updatePenroseTweens()
+        this.sceneRotation.z += 0.0005
+      }
+    },
+    tweenScale(toScale) {
+      let scale = {value: this.scale.x}
+      return new TWEEN.Tween(scale, this.tweenGroup)
+        .to({value: toScale}, this.scaleInterval * 1000)
+        .easing(TWEEN.Easing.Quintic.InOut)
+        .onUpdate(() => {
+          this.scale.x = scale.value
+          this.scale.y = scale.value
+        })
+        .onComplete(this.newScaleInterval)
+        .start()
+    },
+    newScaleInterval() {
+      let min = 1
+      let max = 2
+      let nextScale = Math.random() * (max - min) + min
+      this.tweenScale(nextScale)
+    }
+  },
+  
 }
 </script>
