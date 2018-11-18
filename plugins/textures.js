@@ -29,6 +29,7 @@ class CanvasRenderer {
 class PenroseTextureRenderer extends CanvasRenderer {
   constructor ({size=256, circleWidth, colors={circle: 'white', inside: 'black', outside:'black'}} = {}) {
     super({size})
+    this.scale = 1
     this.circleWidth = circleWidth
     this.circleMaterial = new Three.MeshBasicMaterial( { color: colors.circle} )
     this.insideMaterial = new Three.MeshBasicMaterial( { color: colors.inside} )
@@ -70,6 +71,28 @@ class PenroseTextureRenderer extends CanvasRenderer {
                        outside: {r: Math.random(), g: Math.random(), b: Math.random()} }
     this.tweenColors(nextColors, () => {this.newColorInterval()})
   }
+
+  tweenScale(to, callback, interval=15) {
+    let scale = {value: this.scene.children[0].scale.x}
+    return new TWEEN.Tween(scale)
+      .to({value: to}, interval * 1000)
+      .easing(TWEEN.Easing.Quartic.InOut)
+      .onUpdate(() => {
+        for(let c=0; c < this.scene.children.length; c++) {
+          this.scene.children[c].scale.x = scale.value
+          this.scene.children[c].scale.y = scale.value
+        }
+      })
+      .onComplete(callback)
+      .start()
+  }
+
+  newScaleInterval() {
+    let min = 0.5
+    let max = 1.8
+    let nextScale = Math.random() * (max - min) + min
+    this.tweenScale(nextScale, () => {this.newScaleInterval()})
+  }
 }
 
 class DartTextureRenderer extends PenroseTextureRenderer {
@@ -96,6 +119,7 @@ class DartTextureRenderer extends PenroseTextureRenderer {
     this.scene.add(inside2)
 
     this.render()
+    this.newScaleInterval()
   }
 }
 
@@ -122,6 +146,7 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
     this.scene.add(inside2)
 
     this.render()
+    this.newScaleInterval()
   }
 }
 
