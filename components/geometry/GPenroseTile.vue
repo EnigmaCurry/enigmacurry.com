@@ -11,7 +11,6 @@ export default {
     rotation: {type: Object, default: () => {return {x:0,y:0,z:0}}},
     worldRotation: {type: Number, default: 0},
     worldOrigin: {type: Object, default: () => {return {x:0,y:0,z:0}}},
-    wireframe: {type: Boolean, default: false },
     wireColor: {type: String, default: "white"},
     wireWidth: {type: Number, default: 2},
     animated: {type: Boolean, default: false},
@@ -31,9 +30,6 @@ export default {
   },
   mounted() {
     this.rotateWorld(new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z), this.worldRotation)
-
-    // Materials:
-    this.mesh.material = new Three.MeshStandardMaterial({color: new Three.Color(this.color), wireframe: this.wireframe})
 
     //Animate world rotation
     let worldOrigin = new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z)

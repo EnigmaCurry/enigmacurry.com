@@ -1,5 +1,5 @@
 <template>
-  <g-renderer class="renderer" ref="renderer" :transparent="false" :antialias="true">
+  <g-renderer animated class="renderer" ref="renderer" :transparent="false" :antialias="true">
     <scene>
       <g-light :hex="0xffffff" :intensity="1" :position="{ z: 10 }"/>
 
