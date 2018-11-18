@@ -79,9 +79,16 @@ export default {
   },
   methods: {
     update() {
-      TWEEN.update()
+      this.$textures.updatePenroseTweens()
       this.sceneRotation.z += 0.0005
     }
-  }
+  },
+  mounted() {
+    this.$textures.newPenroseTweens()
+  },
+  beforeDestroy() {
+    console.log("cancelling penrose tweens")
+    this.$textures.cancelPenroseTweens()
+  }  
 }
 </script>

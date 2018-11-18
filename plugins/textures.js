@@ -31,13 +31,12 @@ class CanvasRenderer {
 class PenroseTextureRenderer extends CanvasRenderer {
   constructor ({size=256, circleWidth, colors={circle: 'white', inside: 'black', outside:'black'}} = {}) {
     super({size})
+    this.tweenGroup = new TWEEN.Group()
     this.scale = 1
     this.circleWidth = circleWidth
     this.circleMaterial = new Three.MeshPhysicalMaterial( { color: colors.circle} )
     this.insideMaterial = new Three.MeshLambertMaterial( { color: colors.inside} )
     this.renderer.setClearColor(colors.outside)
-    this.newColorInterval()
-    this.newLightInterval()
   }
 
   tweenColors(to, callback, interval=10) {
@@ -51,7 +50,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
       ir: to.inside.r, ig: to.inside.g, ib: to.inside.b,
       or: to.outside.r, og: to.outside.g, ob: to.outside.b
     }
-    return new TWEEN.Tween(colors)
+    return new TWEEN.Tween(colors, this.tweenGroup)
       .to(toColors, interval * 1000)
       .easing(TWEEN.Easing.Quartic.InOut)
       .onUpdate(() => {
@@ -78,7 +77,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
 
   tweenScale(to, callback, interval=9) {
     let scale = {value: this.scene.children[0].scale.x}
-    return new TWEEN.Tween(scale)
+    return new TWEEN.Tween(scale, this.tweenGroup)
       .to({value: to}, interval * 1000)
       .easing(TWEEN.Easing.Elastic.InOut)
       .onUpdate(() => {
@@ -101,7 +100,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
   tweenLight(toIntensity, toColor, callback, interval=20) {
     let toParams = {r: toColor.r, g: toColor.g, b: toColor.b, intensity: toIntensity}
     let params = {r: this.light.color.r, g: this.light.color.g, b: this.light.color.b, intensity: this.light.intensity}
-    return new TWEEN.Tween(params)
+    return new TWEEN.Tween(params, this.tweenGroup)
       .to(toParams, interval * 1000)
       .easing(TWEEN.Easing.Quartic.InOut)
       .onUpdate(() => {
@@ -118,6 +117,16 @@ class PenroseTextureRenderer extends CanvasRenderer {
     let intensity = Math.random() * (intensityMax - intensityMin) + intensityMin
     let color = new Three.Color(Math.random(), Math.random(), Math.random())
     this.tweenLight(intensity, color, () => {this.newLightInterval()})
+  }
+
+  newTweens() {
+    this.newScaleInterval()
+    this.newColorInterval()
+    this.newLightInterval()
+  }
+
+  cancelTweens() {
+    this.tweenGroup.removeAll()
   }
 }
 
@@ -145,7 +154,6 @@ class DartTextureRenderer extends PenroseTextureRenderer {
     this.scene.add(inside2)
 
     this.render()
-    this.newScaleInterval()
   }
 }
 
@@ -172,7 +180,6 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
     this.scene.add(inside2)
 
     this.render()
-    this.newScaleInterval()
   }
 }
 
@@ -185,5 +192,17 @@ Vue.prototype.$textures = {
   },
   penroseDartTexture: function() {
     return dartTextureRenderer.texture
+  },
+  newPenroseTweens() {
+    kiteTextureRenderer.newTweens()
+    dartTextureRenderer.newTweens()
+  },
+  updatePenroseTweens() {
+    kiteTextureRenderer.tweenGroup.update()
+    dartTextureRenderer.tweenGroup.update()
+  },
+  cancelPenroseTweens() {
+    kiteTextureRenderer.cancelTweens()
+    dartTextureRenderer.cancelTweens()
   }
 }
