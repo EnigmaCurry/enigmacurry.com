@@ -76,11 +76,11 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.tweenColors(nextColors, () => {this.newColorInterval()})
   }
 
-  tweenScale(to, callback, interval=15) {
+  tweenScale(to, callback, interval=9) {
     let scale = {value: this.scene.children[0].scale.x}
     return new TWEEN.Tween(scale)
       .to({value: to}, interval * 1000)
-      .easing(TWEEN.Easing.Quartic.InOut)
+      .easing(TWEEN.Easing.Elastic.InOut)
       .onUpdate(() => {
         for(let c=0; c < this.scene.children.length; c++) {
           this.scene.children[c].scale.x = scale.value

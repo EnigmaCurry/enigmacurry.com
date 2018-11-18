@@ -5,10 +5,12 @@
 
 <script>
 import * as Three from 'three'
+import GObject3D from '~/components/geometry/GObject3D.vue'
 
 export default {
   name: 'GCamera',
   inject: ['global'],
+  mixins: [GObject3D],
   props: {
     isGlobal: {type: Boolean, default: true},
     orthographic: {type: Boolean, default: false},
@@ -16,7 +18,8 @@ export default {
     position: {type: Object, default: () => {return {x: 0, y:0, z: -5}}},
     frustrum: {type: Object, default: () => {return {left:1, right:-1, top:1, bottom:-1}}},
     zoom: {type: Number, default: 1},
-    zoomScale: {type: Number, default: null}
+    zoomScale: {type: Number, default: null},
+    rotation: {type: Object, default: () => {return {x:0, y: 0, z:0}}}
   },
   data () {
     return {
@@ -25,7 +28,7 @@ export default {
       far: 1000
     }
   },
-  mounted () {
+  created () {
     if (!this._camera) {
       if (this.orthographic) {
         // Initial frustrum is recomputed again in onContainerResize
