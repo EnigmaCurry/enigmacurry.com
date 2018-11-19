@@ -24,6 +24,7 @@ export default {
     }
   },
   created() {
+    this.scalingTweenGroup = new TWEEN.Group()
     if (this.startScaling) {
       this.newScalingInterval()
     }
@@ -31,7 +32,7 @@ export default {
   methods: {
     tweenScaling(targetScaling, interval) {
       let scale = {value: this.curObj.scale.x}
-      return new TWEEN.Tween(scale)
+      return new TWEEN.Tween(scale, this.scalingTweenGroup)
         .to({value: targetScaling}, interval * 1000)
         .easing(this.scalingEasingChoices[Math.floor(Math.random() * this.scalingEasingChoices.length)])
         .onUpdate(() => {
@@ -46,7 +47,13 @@ export default {
       this.scalingIntervals += 1
       let scaling = (Math.random() * (this.scalingMax - this.scalingMin)) + this.scalingMin
       this.tweenScaling(scaling, this.scalingIntervalDuration)
-    }
+    },
+    animateScale(tt) {
+      this.scalingTweenGroup.update()
+    },
+    cleanupScaleTweens() {
+      this.scalingTweenGroup.removeAll()
+  },
   }
 }
 </script>

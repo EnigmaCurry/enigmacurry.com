@@ -47,14 +47,18 @@ export default {
     }
   },
   created() {
+    this.tweenGroup = new TWEEN.Group()
     this.newFlowerInterval({initial: true})
     setInterval(this.newFlowerInterval, this.flowerInterval * 1000)
     this.newMaterialTweenInterval()
     this.newMeshScaleTweenInterval()
   },
+  beforeDestroy() {
+    this.tweenGroup.removeAll()
+  },
   methods: {
     animate(tt) {
-      TWEEN.update()
+      this.tweenGroup.update()
       this.curObj.rotation.z += 0.0002
     },
     newFlowerInterval({initial=false} = {}) {
@@ -114,7 +118,7 @@ export default {
       let materialColor = this._materials[level % this._materials.length].color
       toColor = {r: toColor.r, g: toColor.g, b: toColor.b}
       let c = { r: materialColor.r, g: materialColor.g, b: materialColor.b }
-      return new TWEEN.Tween(c)
+      return new TWEEN.Tween(c, this.tweenGroup)
         .to(toColor, duration * 1000)
         .easing(easing==="random" ? this.easingChoices[Math.floor(Math.random() * this.easingChoices.length)] : easing)
         .onComplete(onComplete)
@@ -144,7 +148,7 @@ export default {
     },
     tweenMeshScales(toScale, duration=10, onComplete=function(){}, easing="random") {
       let scale = {value: this._meshes[0].scale.x}
-      return new TWEEN.Tween(scale)
+      return new TWEEN.Tween(scale, this.tweenGroup)
         .to({value: toScale}, duration * 1000)
         .easing(easing==="random" ? this.easingChoices[Math.floor(Math.random() * this.easingChoices.length)]: easing)
         .onComplete(onComplete)

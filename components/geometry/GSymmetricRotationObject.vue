@@ -24,6 +24,7 @@ export default {
     }
   },
   created() {
+    this.symmetricRotationTweenGroup = new TWEEN.Group()
     if (this.startSymmetricRotations) {
       this.newSymmetricRotationInterval()
     }
@@ -43,7 +44,7 @@ export default {
     },
     tweenSymmetricRotation(targetRotation, interval) {
       let rot = {x: this.curObj.rotation.x, y: this.curObj.rotation.y, z: this.curObj.rotation.z}
-      return new TWEEN.Tween(rot)
+      return new TWEEN.Tween(rot, this.symmetricRotationTweenGroup)
         .to(targetRotation, interval * 1000)
         .easing(this.symmetricRotationEasingChoices[Math.floor(Math.random() * this.symmetricRotationEasingChoices.length)])
         .onUpdate(() => {
@@ -71,9 +72,13 @@ export default {
         this.symmetricRotationIntervalDuration
       )
     },
-    animate(tt) {
-      TWEEN.update()
-    }
+    animateRotation(tt) {
+      this.symmetricRotationTweenGroup.update()
+    },
+    cleanupRotationTweens() {
+      this.symmetricRotationTweenGroup.removeAll()
+    },
+
   }
 }
 </script>

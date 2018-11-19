@@ -4,7 +4,8 @@
       <g-geometry type="Dodecahedron" :args="[radius]" />
       <g-wireframe-material wire-color="#fff"/>
     </mesh>
-    <animation :fn="animate" :speed="speed" />
+    <animation :fn="animateRotation" :speed="speed" />
+    <animation :fn="animateScale" :speed="speed" />
   </div>
 </template>
 
@@ -22,6 +23,10 @@ export default {
     startSymmetricRotations: {type: Boolean, default: false},
     startScaling: {type: Boolean, default: false}
   },
+  beforeDestroy() {
+    this.cleanupRotationTweens()
+    this.cleanupScaleTweens()
+  }, 
   data() {
     return {
       symmetricRotations: [
