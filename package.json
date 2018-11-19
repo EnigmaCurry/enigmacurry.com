@@ -23,6 +23,7 @@
     "nuxt": "^2.0.0",
     "oimo": "^1.0.9",
     "three": "^0.97.0",
+    "underscore": "^1.9.1",
     "vue-threejs": "^0.1.1",
     "vuetify": "^1.2.4"
   },

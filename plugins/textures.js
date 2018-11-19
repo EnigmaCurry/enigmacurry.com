@@ -2,6 +2,7 @@ import * as Three from 'three'
 import Vue from 'vue'
 import * as TWEEN from '@tweenjs/tween.js'
 import ColorScheme from 'color-scheme'
+import {shuffle} from 'underscore'
 
 let kiteTexture = null
 let dartTexture = null
@@ -71,9 +72,10 @@ class PenroseTextureRenderer extends CanvasRenderer {
         .from_hue( Math.random() * 256 )
         .scheme(schemes[Math.floor(Math.random() * schemes.length)])
         .variation(variations[Math.floor(Math.random() * variations.length)])
-    let nextColors = { circle: new Three.Color("#" + scheme.colors()[0]),
-                       inside: new Three.Color("#" + scheme.colors()[1]),
-                       outside: new Three.Color("#" + scheme.colors()[2])}
+    let colors = shuffle(scheme.colors())
+    let nextColors = { circle: new Three.Color("#" + colors[0]),
+                       inside: new Three.Color("#" + colors[1]),
+                       outside: new Three.Color("#" + colors[2])}
     this.tweenColors(nextColors, () => {this.newColorInterval()})
   }
 
