@@ -58,3 +58,7 @@ Vue.component('g-penroseV1-jack', GPenroseJack)
 Vue.component('g-penroseV1-queen', GPenroseQueen)
 Vue.component('g-penroseV1-king', GPenroseKing)
 Vue.component('g-penroseV1-star-halo', GPenroseStarHalo)
+
+import GPenroseP3Geometry from '~/components/geometry/GPenroseP3Geometry.vue'
+Vue.component('g-penrose-p3-geometry', GPenroseP3Geometry)
+

@@ -1,6 +1,7 @@
 import * as Three from 'three';
 import Vue from 'vue';
 import assert from 'assert'
+import * as math from 'mathjs'
 
 Vue.prototype.$geometry = { }
 
@@ -70,4 +71,69 @@ Vue.prototype.$geometry.areaOfTriangleBySides = (sideA, sideB, sideC) => {
   assert((sideC + sideA) > sideB)
   let s = 0.5 * (sideA + sideB + sideC)
   return Math.sqrt(s * (s-sideA) * (s-sideB) * (s-sideC))
+}
+
+// Penrose P3 tiling - Subdivide list of golden triangles and gnomon coordinates
+// https://preshing.com/20110831/penrose-tiling-explained/
+const penroseP3Subdivision = Vue.prototype.$geometry.penroseP3Subdivision = (triangles, iterations=1) => {
+  let goldenRatio = (1 + Math.sqrt(5)) / 2
+  let subdivide = (triangles) => {
+    let subdivisions = []
+    for (let t = 0; t < triangles.length; t++) {
+      let [triangleType, A, B, C] = triangles[t]
+      if (triangleType === "golden") {
+        let P = math.add(A, math.divide(math.subtract(B, A), goldenRatio))
+        subdivisions.push(["golden", C, P, B])
+        subdivisions.push(["gnomon", P, C, A])
+      } else if (triangleType === "gnomon"){
+        let Q = math.add(B, math.divide(math.subtract(A, B), goldenRatio))
+        let R = math.add(B, math.divide(math.subtract(C, B), goldenRatio))
+        subdivisions.push(["gnomon", R, C, A])
+        subdivisions.push(["gnomon", Q, R, B])
+        subdivisions.push(["golden", R, Q, A])
+      } else {
+        console.error("Unknown triangle type", triangleType)
+      }
+    }
+    return subdivisions
+  }
+
+  let result = triangles
+  for (let i=0; i < iterations; i++) {
+    result = subdivide(result)
+  }
+  return result
+}
+
+// Penrose P3 tiling - 
+// Specify initial triangles as list of type and coordinates [(type, A, B, C), ...]
+// types must be either 'golden' or 'gnomon'
+// Coordinates must be math.js complex numbers where real component is X coordinate and imaginary is Y coordinate
+// Will start with a decagon of 10 golden triangles if none are specified
+const penroseP3Geometry = Vue.prototype.$geometry.penroseP3Geometry = (iterations=1, initialTriangles) => {
+  if (typeof(initialTriangles) === "undefined" || initialTriangles.length === 0) {
+    initialTriangles = []
+    for (let i=0; i < 10; i++) {
+      let B = math.complex({r: 1, phi: (2*i - 1) * Math.PI / 10})
+      let C = math.complex({r: 1, phi: (2*i + 1) * math.PI / 10})
+      if (i % 2 === 0) {
+        //Mirror every second triangle:
+        [B, C] = [C, B]
+      }
+      initialTriangles.push(['golden', math.complex(0), B, C])
+    }
+  }
+  let coordinates = penroseP3Subdivision(initialTriangles, iterations)
+  let geometry = new Three.Geometry()
+  for (let c=0; c < coordinates.length; c++) {
+    let [triangleType, A, B, C] = coordinates[c]
+    geometry.vertices.push(new Three.Vector3(A.re, A.im, 0))
+    geometry.vertices.push(new Three.Vector3(B.re, B.im, 0))
+    geometry.vertices.push(new Three.Vector3(C.re, C.im, 0))
+  }
+  for (let f=0; f < geometry.vertices.length; f+=3) {
+    geometry.faces.push(new Three.Face3(f, f+1, f+2))
+  }
+  geometry.elementsNeedUpdate = true
+  return geometry
 }

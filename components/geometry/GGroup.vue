@@ -5,6 +5,9 @@ import * as Three from 'three'
 export default {
   name: 'g-group',
   mixins: [GObject3D],
+  provide () {
+    return { meshParent: this }
+  },
   props: {
     worldRotation: {type: Number, default: 0},
     worldOrigin: {type: Object, default: () => {return {x:0,y:0,z:0}}},    

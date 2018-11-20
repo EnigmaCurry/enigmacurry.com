@@ -22,7 +22,7 @@ export default {
     this.geometry.rotateY(this.rotation.y || 0)
     this.geometry.rotateZ(this.rotation.z || 0)
     this.geometry.translate(this.translate.x, this.translate.y, this.translate.z)
-    
+
     let mesh = this.meshVm.curObj
     this.geometry.__is_g_geometry = true
     // Replace the existing placeholder geometry, or merge with an existing g-geometry:
