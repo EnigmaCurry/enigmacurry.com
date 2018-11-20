@@ -60,5 +60,7 @@ Vue.component('g-penroseV1-king', GPenroseKing)
 Vue.component('g-penroseV1-star-halo', GPenroseStarHalo)
 
 import GPenroseGeometry from '~/components/geometry/GPenroseGeometry.vue'
+import GPenroseMesh from '~/components/geometry/GPenroseMesh.vue'
 Vue.component('g-penrose-geometry', GPenroseGeometry)
+Vue.component('g-penrose-mesh', GPenroseMesh)
 

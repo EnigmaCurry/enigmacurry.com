@@ -88,8 +88,8 @@ const penroseP2Subdivision = Vue.prototype.$geometry.penroseP2Subdivision = (tri
         subdivisions.push(["gnomon", Q, A, R])
       } else if (triangleType === "gnomon"){
         let P = math.add(B, math.divide(math.subtract(C, B), goldenRatio))
-        subdivisions.push(["golden", A, B, P])
-        subdivisions.push(["gnomon", A, C, P])
+        subdivisions.push(["golden", B,P,A])
+        subdivisions.push(["gnomon", P,C,A])
       } else {
         console.error("Unknown triangle type", triangleType)
       }
@@ -164,13 +164,20 @@ const penroseTileGeometry = Vue.prototype.$geometry.penroseTileGeometry = (tileT
   let geometry = new Three.Geometry()
   for (let c=0; c < coordinates.length; c++) {
     let [triangleType, A, B, C] = coordinates[c]
+    let v = geometry.vertices.length
     geometry.vertices.push(new Three.Vector3(A.re, A.im, 0))
     geometry.vertices.push(new Three.Vector3(B.re, B.im, 0))
     geometry.vertices.push(new Three.Vector3(C.re, C.im, 0))
+    geometry.faces.push(new Three.Face3(v+2, v+1, v, null, null, triangleType=="golden" ? 1 : 0))
   }
-  for (let f=0; f < geometry.vertices.length; f+=3) {
-    geometry.faces.push(new Three.Face3(f, f+1, f+2))
+  // Replace faces that are faceing the wrong way with opposide vertex winding:
+  geometry.computeFaceNormals()
+  for(let f=0; f<geometry.faces.length; f++){
+    let face = geometry.faces[f]
+    if(face.normal.z < 0) {
+      let [a, b, c, material] = [face.a, face.b, face.c, face.materialIndex + 2]
+      geometry.faces[f] = new Three.Face3(c, b, a, null, null, material)
+    }
   }
-  geometry.elementsNeedUpdate = true
   return geometry
 }

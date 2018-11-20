@@ -2,11 +2,8 @@
   <g-renderer class="renderer" ref="renderer" :transparent="false" :antialias="true">
     <scene>
       <g-camera orthographic :zoomScale="1"/>
-      <g-group>
-        <g-mesh>
-          <g-penrose-geometry :tileType="tileType" :iterations="iterations" />
-          <material type="MeshBasic" :options="{wireframe: wireframe, side: materialSide}"/>
-        </g-mesh>
+      <g-group :rotation="{y: 2*Math.PI}">
+        <g-penrose-mesh :tileType="tileType" :iterations="iterations" :wireframe="wireframe"/>
       </g-group>
     </scene>
   </g-renderer>
@@ -17,10 +14,9 @@ import * as Three from 'three'
 
 export default {
   props: {
-    tileType: {type: String, default: "p2"},
-    iterations: {type: Number, default: 2},
-    wireframe: {type: Boolean, default: true},
-    materialSide: {type: Number, default: Three.DoubleSide},
+    tileType: {type: String, default: "p3"},
+    iterations: {type: Number, default: 5},
+    wireframe: {type: Boolean, default: false},
   },
   created() {
 
