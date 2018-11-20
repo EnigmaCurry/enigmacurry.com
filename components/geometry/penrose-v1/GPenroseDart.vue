@@ -1,15 +1,15 @@
 <template>
   <g-mesh>
-    <g-penrose-geometry proto-tile="dart" :origin="origin" />
+    <g-penroseV1-geometry proto-tile="dart" :origin="origin" />
   </g-mesh>
 </template>
 
 <script>
 import * as Three from 'three'
-import GPenroseTile from '~/components/geometry/GPenroseTile.vue'
+import GPenroseTile from '~/components/geometry/penrose-v1/GPenroseTile.vue'
 
 export default {
-  name: 'g-penrose-dart',
+  name: 'g-penroseV1-dart',
   mixins: [GPenroseTile],
   props: {
     color: {type: String, default: 'green'}

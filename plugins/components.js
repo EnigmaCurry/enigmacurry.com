@@ -34,26 +34,27 @@ Vue.component('g-wireframe-material', GWireframeMaterial)
 import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
 
-import GPenroseGeometry from '~/components/geometry/GPenroseGeometry.vue'
-import GPenroseKite from '~/components/geometry/GPenroseKite.vue'
-import GPenroseDart from '~/components/geometry/GPenroseDart.vue'
-import GPenroseSun from '~/components/geometry/GPenroseSun.vue'
-import GPenroseStar from '~/components/geometry/GPenroseStar.vue'
-import GPenroseAce from '~/components/geometry/GPenroseAce.vue'
-import GPenroseDeuce from '~/components/geometry/GPenroseDeuce.vue'
-import GPenroseJack from '~/components/geometry/GPenroseJack.vue'
-import GPenroseQueen from '~/components/geometry/GPenroseQueen.vue'
-import GPenroseKing from '~/components/geometry/GPenroseKing.vue'
-Vue.component('g-penrose-geometry', GPenroseGeometry)
-Vue.component('g-penrose-kite', GPenroseKite)
-Vue.component('g-penrose-dart', GPenroseDart)
-Vue.component('g-penrose-sun', GPenroseSun)
-Vue.component('g-penrose-star', GPenroseStar)
-Vue.component('g-penrose-ace', GPenroseAce)
-Vue.component('g-penrose-deuce', GPenroseDeuce)
-Vue.component('g-penrose-jack', GPenroseJack)
-Vue.component('g-penrose-queen', GPenroseQueen)
-Vue.component('g-penrose-king', GPenroseKing)
 
-import GPenroseStarHalo from '~/components/geometry/GPenroseStarHalo.vue'
-Vue.component('g-penrose-star-halo', GPenroseStarHalo)
+// PenroseV1 tiles
+import GPenroseGeometry from '~/components/geometry/penrose-v1/GPenroseGeometry.vue'
+import GPenroseKite from '~/components/geometry/penrose-v1/GPenroseKite.vue'
+import GPenroseDart from '~/components/geometry/penrose-v1/GPenroseDart.vue'
+import GPenroseSun from '~/components/geometry/penrose-v1/GPenroseSun.vue'
+import GPenroseStar from '~/components/geometry/penrose-v1/GPenroseStar.vue'
+import GPenroseAce from '~/components/geometry/penrose-v1/GPenroseAce.vue'
+import GPenroseDeuce from '~/components/geometry/penrose-v1/GPenroseDeuce.vue'
+import GPenroseJack from '~/components/geometry/penrose-v1/GPenroseJack.vue'
+import GPenroseQueen from '~/components/geometry/penrose-v1/GPenroseQueen.vue'
+import GPenroseKing from '~/components/geometry/penrose-v1/GPenroseKing.vue'
+import GPenroseStarHalo from '~/components/geometry/penrose-v1/GPenroseStarHalo.vue'
+Vue.component('g-penroseV1-geometry', GPenroseGeometry)
+Vue.component('g-penroseV1-kite', GPenroseKite)
+Vue.component('g-penroseV1-dart', GPenroseDart)
+Vue.component('g-penroseV1-sun', GPenroseSun)
+Vue.component('g-penroseV1-star', GPenroseStar)
+Vue.component('g-penroseV1-ace', GPenroseAce)
+Vue.component('g-penroseV1-deuce', GPenroseDeuce)
+Vue.component('g-penroseV1-jack', GPenroseJack)
+Vue.component('g-penroseV1-queen', GPenroseQueen)
+Vue.component('g-penroseV1-king', GPenroseKing)
+Vue.component('g-penroseV1-star-halo', GPenroseStarHalo)

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import GPenroseGroup from '~/components/geometry/GPenroseGroup.vue'
+import GPenroseGroup from '~/components/geometry/penrose-v1/GPenroseGroup.vue'
 import * as Three from 'three'
 
 export default {

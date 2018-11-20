@@ -1,15 +1,15 @@
 <template>
   <g-mesh>
-    <g-penrose-geometry proto-tile="kite" origin="top" :rotation="{z: 216 * (Math.PI/180)}" />
-    <g-penrose-geometry proto-tile="kite" origin="top" :rotation="{z: 144 * (Math.PI/180)}" />
-    <g-penrose-geometry proto-tile="dart" origin="right" :rotation="{z: 216 * (Math.PI/180)}" />
-    <g-penrose-geometry proto-tile="dart" origin="left" :rotation="{z: 144 * (Math.PI/180)}" />
-    <g-penrose-geometry proto-tile="kite" origin="bottom" :rotation="{z: Math.PI}" />
+    <g-penroseV1-geometry proto-tile="kite" origin="top" :rotation="{z: 216 * (Math.PI/180)}" />
+    <g-penroseV1-geometry proto-tile="kite" origin="top" :rotation="{z: 144 * (Math.PI/180)}" />
+    <g-penroseV1-geometry proto-tile="dart" origin="right" :rotation="{z: 216 * (Math.PI/180)}" />
+    <g-penroseV1-geometry proto-tile="dart" origin="left" :rotation="{z: 144 * (Math.PI/180)}" />
+    <g-penroseV1-geometry proto-tile="kite" origin="bottom" :rotation="{z: Math.PI}" />
   </g-mesh>
 </template>
 
 <script>
-import GPenroseTile from '~/components/geometry/GPenroseTile.vue'
+import GPenroseTile from '~/components/geometry/penrose-v1/GPenroseTile.vue'
 import * as Three from 'three'
 
 export default {

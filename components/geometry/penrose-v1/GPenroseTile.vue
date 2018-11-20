@@ -19,8 +19,8 @@ export default {
     return { meshParent: this }
   },
   data() {
-    let dartDimensions = this.$geometry.penrose.dartDimensions()
-    let kiteDimensions = this.$geometry.penrose.kiteDimensions()
+    let dartDimensions = this.$penroseV1.penroseV1.dartDimensions()
+    let kiteDimensions = this.$penroseV1.penroseV1.kiteDimensions()
     return {
       dartDimensions,
       kiteDimensions,

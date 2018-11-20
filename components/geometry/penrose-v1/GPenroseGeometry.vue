@@ -13,7 +13,7 @@ export default {
     origin: {type: String, default: "top"}, //top, bottom, left, right
   },
   data () {
-    let func = this.$geometry.penrose[this.protoTile]
+    let func = this.$penroseV1.penroseV1[this.protoTile]
     let geometry = func(this.width, this.origin)
     return { geometry }
   }

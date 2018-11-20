@@ -6,57 +6,57 @@
       <!-- <g-grid :divisions="10"/> -->
       <g-camera orthographic :zoomScale="6.5"/>
       <g-group :rotation="sceneRotation" :scale="scale">
-        <g-penrose-sun origin="center" :rotation="{z: 36 * (Math.PI/180)}"/>
-        <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: Math.PI}"/>
-        <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 108 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 36 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 324 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 252 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-sun origin="center" :rotation="{z: 36 * (Math.PI/180)}"/>
+        <g-penroseV1-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: Math.PI}"/>
+        <g-penroseV1-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 108 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 36 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 324 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: 1*kiteDimensions.height+dartDimensions.gnomonSide}" :rotation="{z: 252 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
   
-        <g-penrose-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}"/>
-        <g-penrose-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}"/>
+        <g-penroseV1-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-sun origin="bottom" :position="{y: 2*kiteDimensions.height + dartDimensions.gnomonSide}" :worldRotation="288 * (Math.PI/180)"/>
   
-        <g-penrose-ace :rotation="{z: Math.PI}" :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}"/>
-        <g-penrose-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 108 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 36 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 324 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 252 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-ace :rotation="{z: Math.PI}" :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}"/>
+        <g-penroseV1-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 108 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 36 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 324 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-ace :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 252 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
   
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 72 * (Math.PI/180)}" />
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: -72 * (Math.PI/180)}" />
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 216 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: -72 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 144 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 72 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 216 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
-        <g-penrose-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 144 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 72 * (Math.PI/180)}" />
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: -72 * (Math.PI/180)}" />
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 216 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: -72 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 144 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 72 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 216 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-dart :position="{y: -2 * kiteDimensions.height - dartDimensions.gnomonSide}" :rotation="{z: 144 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
   
-        <g-penrose-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" />
-        <g-penrose-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="288 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" />
-        <g-penrose-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="288 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" />
+        <g-penroseV1-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: -3 * kiteDimensions.height - 2*dartDimensions.gnomonSide}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" />
+        <g-penroseV1-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-star-halo :position="{y: 4 * kiteDimensions.height + 2*dartDimensions.gnomonSide}" :worldRotation="72 * (Math.PI/180)"/>
   
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 144 * (Math.PI/180)}"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 216 * (Math.PI/180)}"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 72 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 144 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 72 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 288 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 216 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
-        <g-penrose-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 288 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 144 * (Math.PI/180)}"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 216 * (Math.PI/180)}"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 72 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 144 * (Math.PI/180)}" :worldRotation="72 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 72 * (Math.PI/180)}" :worldRotation="144 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 288 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 0 * (Math.PI/180)}" :worldRotation="216 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:0.5}" :rotation="{z: 216 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
+        <g-penroseV1-dart origin="bottom" :position="{y: 3 * kiteDimensions.height + dartDimensions.gnomonSide - kiteDimensions.bottom, x:-0.5}" :rotation="{z: 288 * (Math.PI/180)}" :worldRotation="288 * (Math.PI/180)"/>
       </g-group>
       <animation :fn="update"/>
     </scene>
@@ -72,8 +72,8 @@ export default {
     animated: {type: Boolean, default: true},
   },
   data() {
-    let dartDimensions = this.$geometry.penrose.dartDimensions()
-    let kiteDimensions = this.$geometry.penrose.kiteDimensions()
+    let dartDimensions = this.$penroseV1.penroseV1.dartDimensions()
+    let kiteDimensions = this.$penroseV1.penroseV1.kiteDimensions()
     return {
       dartDimensions,
       kiteDimensions,
