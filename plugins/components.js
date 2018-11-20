@@ -36,7 +36,7 @@ Vue.component('g-flower', GFlower)
 
 
 // PenroseV1 tiles
-import * as GPenroseV1Geometry from '~/components/geometry/penrose-v1/GPenroseGeometry.vue'
+import GPenroseV1Geometry from '~/components/geometry/penrose-v1/GPenroseV1Geometry.vue'
 import GPenroseKite from '~/components/geometry/penrose-v1/GPenroseKite.vue'
 import GPenroseDart from '~/components/geometry/penrose-v1/GPenroseDart.vue'
 import GPenroseSun from '~/components/geometry/penrose-v1/GPenroseSun.vue'
