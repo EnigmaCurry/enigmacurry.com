@@ -36,7 +36,7 @@ Vue.component('g-flower', GFlower)
 
 
 // PenroseV1 tiles
-import GPenroseGeometry from '~/components/geometry/penrose-v1/GPenroseGeometry.vue'
+import * as GPenroseV1Geometry from '~/components/geometry/penrose-v1/GPenroseGeometry.vue'
 import GPenroseKite from '~/components/geometry/penrose-v1/GPenroseKite.vue'
 import GPenroseDart from '~/components/geometry/penrose-v1/GPenroseDart.vue'
 import GPenroseSun from '~/components/geometry/penrose-v1/GPenroseSun.vue'
@@ -47,7 +47,7 @@ import GPenroseJack from '~/components/geometry/penrose-v1/GPenroseJack.vue'
 import GPenroseQueen from '~/components/geometry/penrose-v1/GPenroseQueen.vue'
 import GPenroseKing from '~/components/geometry/penrose-v1/GPenroseKing.vue'
 import GPenroseStarHalo from '~/components/geometry/penrose-v1/GPenroseStarHalo.vue'
-Vue.component('g-penroseV1-geometry', GPenroseGeometry)
+Vue.component('g-penroseV1-geometry', GPenroseV1Geometry)
 Vue.component('g-penroseV1-kite', GPenroseKite)
 Vue.component('g-penroseV1-dart', GPenroseDart)
 Vue.component('g-penroseV1-sun', GPenroseSun)
@@ -59,6 +59,6 @@ Vue.component('g-penroseV1-queen', GPenroseQueen)
 Vue.component('g-penroseV1-king', GPenroseKing)
 Vue.component('g-penroseV1-star-halo', GPenroseStarHalo)
 
-import GPenroseP3Geometry from '~/components/geometry/GPenroseP3Geometry.vue'
-Vue.component('g-penrose-p3-geometry', GPenroseP3Geometry)
+import GPenroseGeometry from '~/components/geometry/GPenroseGeometry.vue'
+Vue.component('g-penrose-geometry', GPenroseGeometry)
 
