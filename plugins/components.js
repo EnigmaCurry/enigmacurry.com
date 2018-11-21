@@ -29,7 +29,9 @@ Vue.component('g-dodecahedron', GDodecahedron)
 Vue.component('g-icosahedron', GIcosahedron)
 
 import GWireframeMaterial from '~/components/geometry/GWireframeMaterial.vue'
+import GCanvasMaterial from '~/components/geometry/GCanvasMaterial.vue'
 Vue.component('g-wireframe-material', GWireframeMaterial)
+Vue.component('g-canvas-material', GCanvasMaterial)
 
 import GFlower from '~/components/geometry/GFlower.vue'
 Vue.component('g-flower', GFlower)
