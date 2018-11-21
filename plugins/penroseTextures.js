@@ -138,7 +138,7 @@ class DartTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb}} = {}) {
     super({size, circleWidth, colors})
 
-    let circle1Size = 0.25 * size
+    let circle1Size = 0.251 * size
     let circle1Geometry = new Three.CircleGeometry( circle1Size, 512 )
     let inside1Geometry = new Three.CircleGeometry( circle1Size - circleWidth, 512 )
     let circle1 = new Three.Mesh( circle1Geometry, this.circleMaterial )
@@ -165,7 +165,7 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000}} = {}) {
     super({size, circleWidth, colors})
 
-    let circle1Size = 0.298 * size
+    let circle1Size = 0.30 * size
     let circle1Geometry = new Three.CircleGeometry( circle1Size, 512 )
     let inside1Geometry = new Three.CircleGeometry( circle1Size - circleWidth, 512 )
     let circle1 = new Three.Mesh( circle1Geometry, this.circleMaterial )
@@ -173,7 +173,7 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
     this.scene.add(circle1)
     this.scene.add(inside1)
 
-    let circle2Size = 0.42 * size
+    let circle2Size = 0.414 * size
     let circle2Geometry = new Three.CircleGeometry( circle2Size, 512 )
     let inside2Geometry = new Three.CircleGeometry( circle2Size - circleWidth, 512 )
     let circle2 = new Three.Mesh( circle2Geometry, this.circleMaterial )
@@ -187,26 +187,36 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
   }
 }
 
-let kiteTextureRenderer = new KiteTextureRenderer({size: 512})
-let dartTextureRenderer = new DartTextureRenderer({size: 512})
+let kiteTextureRenderer
+let dartTextureRenderer
 
 Vue.prototype.$penroseTextures = {
   penroseKiteTexture: function() {
+    kiteTextureRenderer = new KiteTextureRenderer({size: 512})
     return kiteTextureRenderer.texture
   },
   penroseDartTexture: function() {
+    dartTextureRenderer = new DartTextureRenderer({size: 512})
     return dartTextureRenderer.texture
   },
-  newPenroseTweens() {
-    kiteTextureRenderer.newTweens()
-    dartTextureRenderer.newTweens()
+  newPenroseTweens(tileType) {
+    if (tileType == "p2") {
+      kiteTextureRenderer.newTweens()
+      dartTextureRenderer.newTweens()
+    }
   },
-  updatePenroseTweens() {
-    kiteTextureRenderer.tweenGroup.update()
-    dartTextureRenderer.tweenGroup.update()
+  updatePenroseTweens(tileType) {
+    if (tileType == "p2") {
+      kiteTextureRenderer.tweenGroup.update()
+      dartTextureRenderer.tweenGroup.update()
+    }
   },
   cancelPenroseTweens() {
-    kiteTextureRenderer.cancelTweens()
-    dartTextureRenderer.cancelTweens()
+    if (typeof(kiteTextureRender) != "undefined") {
+      kiteTextureRenderer.cancelTweens()
+    }
+    if (typeof(dartTextureRender) != "undefined") {
+      dartTextureRenderer.cancelTweens()
+    }
   }
 }

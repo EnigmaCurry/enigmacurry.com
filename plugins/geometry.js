@@ -181,9 +181,9 @@ const penroseTileGeometry = Vue.prototype.$geometry.penroseTileGeometry = (tileT
     } else {
       geometry.faces.push(face)
       geometry.faceVertexUvs[0].push([
-        new Three.Vector2(0, 0),
         new Three.Vector2(1.13, 0.14),
-        new Three.Vector2(0.5, 0.5)
+        new Three.Vector2(0, 0),
+        new Three.Vector2(0.5, 0.5),
       ])
     }
   }
@@ -206,8 +206,8 @@ const penroseTileGeometry = Vue.prototype.$geometry.penroseTileGeometry = (tileT
       } else {
         geometry.faceVertexUvs[0][f] = [
           new Three.Vector2(0.5, 0.5),
-          new Three.Vector2(1.13, 0.14),
           new Three.Vector2(0, 0),
+          new Three.Vector2(1.13, 0.14),
         ]
       }
     }
