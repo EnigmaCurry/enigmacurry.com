@@ -2,6 +2,7 @@
   <div ref="renderer" class="g-renderer">
     <slot></slot>
     <div ref="container"></div>
+    <div ref="offscreen" class="offscreen"></div>
   </div>
 </template>
 
@@ -17,10 +18,13 @@
   width: 100vw;
   height: 100vh;  
 }
+.g-renderer .offscreen {
+  display: none;
+}
 </style>
 
 <script>
-import { PerspectiveCamera, OrthographicCamera } from 'three'
+import * as Three from 'three'
 import Vue from 'vue'
 import { WebGLRenderer } from 'three'
 
@@ -46,27 +50,28 @@ export default {
   data () {
     let curObj = this.obj
     let isGlobal = this.toCanvasId === null
-    let canvas
+    let canvas, texture
     if (!curObj) {
       let renderParams = { antialias: this.antialias, alpha: this.transparent }
       if(!isGlobal) {
         canvas = document.createElement('canvas')
         canvas.id = this.toCanvasId
         renderParams.canvas = canvas
-        console.log(renderParams)
       }
       curObj = new WebGLRenderer(renderParams)
       curObj.setClearColor(this.clearColor, this.clearAlpha)
       if(!isGlobal) {
         curObj.setSize(this.canvasSize.width, this.canvasSize.height)
+        texture = new Three.CanvasTexture(canvas)
       }
     }
     curObj.name = curObj.name || curObj.type
-    return { curObj, global: {}, isGlobal, canvas }
+    return { curObj, global: {}, isGlobal, texture }
   },
   methods: {
-    onResize: function(toSize) {
-      if (toSize) {
+    onResize: function(e, toSize) {
+      if (typeof(toSize) != "undefined") {
+        console.log(toSize)
         this.size = {width: toSize.width, height: toSize.height}
       } else {
         this.size = {width: this.$el.clientWidth, height: this.$el.clientHeight}
@@ -82,6 +87,9 @@ export default {
       } else {
         this._animationRequestID = requestAnimationFrame(this.animate)
         this.curObj.render(this.global.scene, this.global.camera)
+        if (!this.isGlobal) {
+          this.texture.needsUpdate = true
+        }
       }
     }
   },
@@ -90,8 +98,11 @@ export default {
     this.size = {width: 0, height: 0}
     this.curObj.setSize(this.size.width, this.size.height)
     if(this.isGlobal) {
+      window.offscreenCanvasTextures = {}
       this.global.rendererSize = this.size
       this.global.rendererDom = this.curObj.domElement
+    } else {
+      window.offscreenCanvasTextures[this.toCanvasId] = this.texture
     }
   },
   mounted() {
@@ -100,7 +111,7 @@ export default {
       this.onResize()
       window.addEventListener('resize', this.onResize)
     } else {
-      this.onResize(this.canvasSize)
+      this.onResize(null, this.canvasSize)
     }
     if (this.animated) {
       this.animate()
@@ -108,6 +119,7 @@ export default {
   },
   destroyed() {
     if (this.isGlobal) {
+      window.offscreenCanvasTextures = {}
       window.removeEventListener('resize', this.onResize)
     }
     this.animate({kill: true})
