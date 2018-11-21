@@ -17,7 +17,7 @@ export default {
   mounted() {
     
     let uvTestTexture = new Three.TextureLoader().load(require("~/assets/img/texture/uv-test.jpg"))
-    let kiteTexture = this.$textures.penroseKiteTexture()
+    let kiteTexture = this.$penroseV1Textures.penroseKiteTexture()
     
     this.mesh.material = new Three.MeshBasicMaterial({map: kiteTexture, side: Three.DoubleSide})
     let uvs = this.mesh.geometry.faceVertexUvs[0]

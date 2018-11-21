@@ -87,20 +87,20 @@ export default {
   },
   mounted() {
     if (this.animated) {
-      this.$textures.newPenroseTweens()
+      this.$penroseV1Textures.newPenroseTweens()
       this.newScaleInterval()
     }
   },
   beforeDestroy() {
     console.log("cancelling penrose tweens")
     this.tweenGroup.removeAll()
-    this.$textures.cancelPenroseTweens()
+    this.$penroseV1Textures.cancelPenroseTweens()
   },
   methods: {
     update() {
       if (this.animated) {
         this.tweenGroup.update()
-        this.$textures.updatePenroseTweens()
+        this.$penroseV1Textures.updatePenroseTweens()
         this.sceneRotation.z += 0.0005
       }
     },

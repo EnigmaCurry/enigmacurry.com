@@ -162,21 +162,102 @@ const penroseTileGeometry = Vue.prototype.$geometry.penroseTileGeometry = (tileT
   }
   let coordinates = subdivisionFunc(initialTriangles, iterations)
   let geometry = new Three.Geometry()
+  geometry.faceVertexUvs = [[],[],[],[]]
   for (let c=0; c < coordinates.length; c++) {
     let [triangleType, A, B, C] = coordinates[c]
     let v = geometry.vertices.length
     geometry.vertices.push(new Three.Vector3(A.re, A.im, 0))
     geometry.vertices.push(new Three.Vector3(B.re, B.im, 0))
     geometry.vertices.push(new Three.Vector3(C.re, C.im, 0))
-    geometry.faces.push(new Three.Face3(v+2, v+1, v, null, null, triangleType=="golden" ? 1 : 0))
+    let face = new Three.Face3(v+2, v+1, v, null, null, triangleType === "golden" ? 0 : 1)
+    face.triangleType = triangleType
+    if (triangleType === "golden") {
+      geometry.faces.push(face)
+      geometry.faceVertexUvs[0].push([
+        new Three.Vector2(0.5, 0.5),
+        new Three.Vector2(0.69, 0.1),
+        new Three.Vector2(0, 0),
+      ])
+    } else {
+      geometry.faces.push(face)
+      geometry.faceVertexUvs[0].push([
+        new Three.Vector2(0, 0),
+        new Three.Vector2(1.13, 0.14),
+        new Three.Vector2(0.5, 0.5)
+      ])
+    }
   }
+  geometry.uvsNeedUpdate = true
+
   // Replace faces that are faceing the wrong way with opposide vertex winding:
   geometry.computeFaceNormals()
   for(let f=0; f<geometry.faces.length; f++){
     let face = geometry.faces[f]
     if(face.normal.z < 0) {
-      let [a, b, c, material] = [face.a, face.b, face.c, face.materialIndex + 2]
-      geometry.faces[f] = new Three.Face3(c, b, a, null, null, material)
+      let [a, b, c, material, triangleType] = [face.a, face.b, face.c, face.materialIndex, face.triangleType]
+      face = geometry.faces[f] = new Three.Face3(c, b, a, null, null, material)
+      face.triangleType = triangleType + "-left"
+      if (triangleType === 'golden') {
+        geometry.faceVertexUvs[0][f] = [
+          new Three.Vector2(0, 0),
+          new Three.Vector2(0.69, 0.1),
+          new Three.Vector2(0.5, 0.5),
+        ]
+      } else {
+        geometry.faceVertexUvs[0][f] = [
+          new Three.Vector2(0.5, 0.5),
+          new Three.Vector2(1.13, 0.14),
+          new Three.Vector2(0, 0),
+        ]
+      }
+    }
+  }
+  return geometry
+}
+
+// Create outline geometry for an existing penrose P2 geometry
+// The faces must have the triangleType property set as above.
+const penroseTileP2OutlineGeometry = Vue.prototype.$geometry.penroseTileP2OutlineGeometry = (penroseGeometry) => {
+  let geometry = new Three.Geometry()
+  for(let f=0; f < penroseGeometry.faces.length; f++){
+    let face = penroseGeometry.faces[f]
+    if(face.triangleType === 'golden' || face.triangleType == 'golden-left') {
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+      geometry.vertices.push(penroseGeometry.vertices[face.b])
+      geometry.vertices.push(penroseGeometry.vertices[face.b])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+    } else if(face.triangleType === 'gnomon') {
+      //Right gnomon
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+      geometry.vertices.push(penroseGeometry.vertices[face.b])
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+    } 
+  }
+  return geometry
+}
+
+// Create outline geometry for an existing penrose P3 geometry
+// The faces must have the triangleType property set as above.
+const penroseTileP3OutlineGeometry = Vue.prototype.$geometry.penroseTileP3OutlineGeometry = (penroseGeometry) => {
+  let geometry = new Three.Geometry()
+  for(let f=0; f < penroseGeometry.faces.length; f++){
+    let face = penroseGeometry.faces[f]
+    if(face.triangleType === 'golden' ) {
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+      geometry.vertices.push(penroseGeometry.vertices[face.b])
+    } else if(face.triangleType === 'golden-left') {
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+      geometry.vertices.push(penroseGeometry.vertices[face.b])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+    } else if(face.triangleType == 'gnomon') {
+      geometry.vertices.push(penroseGeometry.vertices[face.a])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+      geometry.vertices.push(penroseGeometry.vertices[face.c])
+      geometry.vertices.push(penroseGeometry.vertices[face.b])
     }
   }
   return geometry

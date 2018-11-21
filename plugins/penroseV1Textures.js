@@ -190,7 +190,7 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
 let kiteTextureRenderer = new KiteTextureRenderer({size: 512})
 let dartTextureRenderer = new DartTextureRenderer({size: 512})
 
-Vue.prototype.$textures = {
+Vue.prototype.$penroseV1Textures = {
   penroseKiteTexture: function() {
     return kiteTextureRenderer.texture
   },

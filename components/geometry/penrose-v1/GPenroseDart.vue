@@ -20,7 +20,7 @@ export default {
     }
     
     //let uvTestTexture = new Three.TextureLoader().load(require("~/assets/img/texture/uv-test.jpg"))    
-    let dartTexture = this.$textures.penroseDartTexture()
+    let dartTexture = this.$penroseV1Textures.penroseDartTexture()
     this.mesh.material = new Three.MeshBasicMaterial({map: dartTexture, side: Three.DoubleSide})
 
     let uvs = this.mesh.geometry.faceVertexUvs[0]
