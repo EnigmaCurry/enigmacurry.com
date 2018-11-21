@@ -39,23 +39,41 @@ export default {
     clearColor: { type: String, default: "#000000" },
     clearAlpha: { type: Number, default: 0.65 },
     antialias: { type: Boolean, default: true },
-    transparent: { type: Boolean, default: true }
+    transparent: { type: Boolean, default: true },
+    toCanvasId: {type: String, default: null},
+    canvasSize: {type: Object, default: () => {return {width: 512, height: 512}}}
   },
   data () {
     let curObj = this.obj
+    let isGlobal = this.toCanvasId === null
+    let canvas
     if (!curObj) {
-      curObj = new WebGLRenderer({ antialias: this.antialias, alpha: this.transparent })
+      let renderParams = { antialias: this.antialias, alpha: this.transparent }
+      if(!isGlobal) {
+        canvas = document.createElement('canvas')
+        canvas.id = this.toCanvasId
+        renderParams.canvas = canvas
+        console.log(renderParams)
+      }
+      curObj = new WebGLRenderer(renderParams)
       curObj.setClearColor(this.clearColor, this.clearAlpha)
+      if(!isGlobal) {
+        curObj.setSize(this.canvasSize.width, this.canvasSize.height)
+      }
     }
     curObj.name = curObj.name || curObj.type
-    return { curObj, global: {} }
+    return { curObj, global: {}, isGlobal, canvas }
   },
   methods: {
-    onResize: function() {
-      this.size = {w: this.$el.clientWidth, h: this.$el.clientHeight}
-      this.curObj.setSize(this.size.w, this.size.h)
+    onResize: function(toSize) {
+      if (toSize) {
+        this.size = {width: toSize.width, height: toSize.height}
+      } else {
+        this.size = {width: this.$el.clientWidth, height: this.$el.clientHeight}
+      }
+      this.curObj.setSize(this.size.width, this.size.height)
       this.global.rendererSize = this.size
-      this.global.camera.onContainerResize(this.size.w, this.size.h)
+      this.global.camera.onContainerResize(this.size.width, this.size.height)
       this.curObj.render(this.global.scene, this.global.camera)
     },
     animate: function ({kill=false} = {}) {
@@ -69,21 +87,29 @@ export default {
   },
   created() {
     // An initial size has to be set, this is immediately resized again in mount()
-    this.size = {w: 0, h: 0}
-    this.curObj.setSize(this.size.w, this.size.h)
-    this.global.rendererSize = this.size
-    this.global.rendererDom = this.curObj.domElement
+    this.size = {width: 0, height: 0}
+    this.curObj.setSize(this.size.width, this.size.height)
+    if(this.isGlobal) {
+      this.global.rendererSize = this.size
+      this.global.rendererDom = this.curObj.domElement
+    }
   },
   mounted() {
-    this.$refs.container.appendChild(this.curObj.domElement)
-    this.onResize()
+    if(this.isGlobal) {
+      this.$refs.container.appendChild(this.curObj.domElement)
+      this.onResize()
+      window.addEventListener('resize', this.onResize)
+    } else {
+      this.onResize(this.canvasSize)
+    }
     if (this.animated) {
       this.animate()
     }
-    window.addEventListener('resize', this.onResize)
   },
   destroyed() {
-    window.removeEventListener('resize', this.onResize)
+    if (this.isGlobal) {
+      window.removeEventListener('resize', this.onResize)
+    }
     this.animate({kill: true})
   }
 }
