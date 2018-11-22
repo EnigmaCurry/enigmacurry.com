@@ -30,13 +30,13 @@ import PenrosePentagram from '~/components/scenes/penrose-pentagram.vue'
 export default {
   components: {PenrosePentagram},
   props: {
-    iterations: {type: Number, default: 11},
+    iterations: {type: Number, default: 5},
     wireframe: {type: Boolean, default: false},
     animated: {type: Boolean, default: true},
     penrosePentagramCanvas: {type: String, default: "penrose-pentagram-canvas"},
     textureSize: {type: Number, default: 1024},
-    initialZoom: {type: Number, default: 5000},
-    zoomInterval: {type: Number, default: 45},
+    initialZoom: {type: Number, default: 30},
+    zoomInterval: {type: Number, default: 120},
   },
   data() {
     let phi = (1 + Math.sqrt(5)) / 2

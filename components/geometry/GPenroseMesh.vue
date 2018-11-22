@@ -27,8 +27,8 @@ export default {
         let dartMaterial = new Three.MeshBasicMaterial({map: this.$penroseTextures.penroseDartTexture()})
         group.add(new Three.Mesh(geometry, [kiteMaterial, dartMaterial ]))
       } else {
-        let material1 = new Three.MeshBasicMaterial({color:0x330000})
-        let material2 = new Three.MeshBasicMaterial({color:0xaa0000})
+        let material1 = new Three.MeshBasicMaterial({color:0x333333})
+        let material2 = new Three.MeshBasicMaterial({color:0x111111})
         group.add(new Three.Mesh(geometry, [material1, material2]))
       }
       
