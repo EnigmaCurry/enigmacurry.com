@@ -192,13 +192,13 @@ let dartTextureRenderer
 
 Vue.prototype.$penroseTextures = {
   penroseKiteTexture: function() {
-    if (typeof(kiteTextureRenderer) == "undefined") {
+    if (typeof(kiteTextureRenderer) === "undefined") {
       kiteTextureRenderer = new KiteTextureRenderer({size: 512})
     }
     return kiteTextureRenderer.texture
   },
   penroseDartTexture: function() {
-    if (typeof(dartTextureRenderer) == "undefined") {
+    if (typeof(dartTextureRenderer) === "undefined") {
       dartTextureRenderer = new DartTextureRenderer({size: 512})
     }
     return dartTextureRenderer.texture
@@ -216,10 +216,10 @@ Vue.prototype.$penroseTextures = {
     }
   },
   cancelPenroseTweens() {
-    if (typeof(kiteTextureRender) != "undefined") {
+    if (typeof(kiteTextureRenderer) != "undefined") {
       kiteTextureRenderer.cancelTweens()
     }
-    if (typeof(dartTextureRender) != "undefined") {
+    if (typeof(dartTextureRenderer) != "undefined") {
       dartTextureRenderer.cancelTweens()
     }
   }
