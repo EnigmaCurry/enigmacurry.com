@@ -4,7 +4,13 @@
       <g-camera orthographic :zoomScale="1"/>
 
       <!-- <g-grid :divisions="10"/> -->
-      <g-penrose-mesh :rotation="sceneRotation" :scale="scale" :tileType="tileType" :iterations="iterations" :wireframe="wireframe"/>
+
+      <!-- P3 Background -->
+
+      <!-- P2 Forground -->
+      <g-penrose-mesh tileType="p3" :scale="2" :position="{x:-0}" :rotation="rotation1" :iterations="8" :wireframe="wireframe"/>
+      <g-penrose-mesh tileType="p2" :scale="scale" :position="{x:0}" :rotation="rotation2" :iterations="iterations" :wireframe="wireframe" :kite-opacity="kiteOpacity" :dart-opacity="dartOpacity"/>
+
       <animation :fn="animate" />
     </scene>
   </g-renderer>
@@ -16,25 +22,29 @@ import * as TWEEN from '@tweenjs/tween.js'
 
 export default {
   props: {
-    tileType: {type: String, default: "p2"},
-    wireframe: {type: Boolean, default: true},
+    wireframe: {type: Boolean, default: false},
     animated: {type: Boolean, default: true},
     scaleInterval: {type: Number, default: 30},
+    maxScale: {type: Number, default: 8},
+    minScale: {type: Number, default: 0.5},
+    dartOpacity: {type: Number, default: 0.6},
+    kiteOpacity: {type: Number, default: 0.6}
   },
   data() {
     return {
-      iterations: 6,
+      iterations: 5,
       tweenGroup: new TWEEN.Group(),
-      scale: {x: 8, y: 8, z: 1},
-      sceneRotation: new Three.Vector3()
+      scale: this.maxScale,
+      rotation1: new Three.Vector3(),
+      rotation2: new Three.Vector3()
     }
   },
   created() {
-
+    
   },  
   mounted() {
     if (this.animated) {
-      this.$penroseTextures.newPenroseTweens(this.tileType)
+      this.$penroseTextures.newPenroseTweens('p2')
       this.newScaleInterval()
     }    
   },
@@ -45,25 +55,23 @@ export default {
   methods: {
     animate(tt) {
       this.tweenGroup.update()      
-      this.$penroseTextures.updatePenroseTweens(this.tileType)
-      this.sceneRotation.z += 0.0005      
+      this.$penroseTextures.updatePenroseTweens('p2')
+      this.rotation1.z += 0.0005
+      this.rotation2.z -= 0.0005
     },
     tweenScale(toScale) {
-      let scale = {value: this.scale.x}
+      let scale = {value: this.scale}
       return new TWEEN.Tween(scale, this.tweenGroup)
         .to({value: toScale}, this.scaleInterval * 1000)
         .easing(TWEEN.Easing.Quintic.InOut)
         .onUpdate(() => {
-          this.scale.x = scale.value
-          this.scale.y = scale.value
+          this.scale = scale.value
         })
         .onComplete(this.newScaleInterval)
         .start()
     },
     newScaleInterval() {
-      let min = 1
-      let max = 5
-      let nextScale = Math.random() * (max - min) + min
+      let nextScale = Math.random() * (this.maxScale - this.minScale) + this.minScale
       this.tweenScale(nextScale)
     }    
   }

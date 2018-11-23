@@ -2,7 +2,7 @@
 import {Object3D} from 'vue-threejs'
 
 export default {
-  name: 'Mesh',
+  name: 'GMesh',
   mixins: [Object3D],
   inject: ['meshParent'],
   props: {
