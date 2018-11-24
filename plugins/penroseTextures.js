@@ -30,7 +30,7 @@ class CanvasRenderer {
 }
 
 class PenroseTextureRenderer extends CanvasRenderer {
-  constructor ({size=256, circleWidth, colors={circle: 'white', inside: 'black', outside:'black'}} = {}) {
+  constructor ({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments} = {}) {
     super({size})
     this.tweenGroup = new TWEEN.Group()
     this.scale = 1
@@ -38,6 +38,30 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.circleMaterial = new Three.MeshPhysicalMaterial( { color: colors.circle, flatShading: true, depthFunc: Three.AlwaysDepth} )
     this.insideMaterial = new Three.MeshPhongMaterial( { color: colors.inside, flatShading: true, depthFunc: Three.AlwaysDepth} )
     this.renderer.setClearColor(colors.outside)
+
+    this.scaleMin = scaleMin
+    this.scaleMax = scaleMax
+
+    circle1Size = circle1Size * size
+    let circle1Geometry = new Three.CircleGeometry( circle1Size, circleSegments )
+    let inside1Geometry = new Three.CircleGeometry( circle1Size - circleWidth, circleSegments )
+    let circle1 = new Three.Mesh( circle1Geometry, this.circleMaterial )
+    let inside1 = new Three.Mesh( inside1Geometry, this.insideMaterial )
+    this.scene.add(circle1)
+    this.scene.add(inside1)
+
+    circle2Size = circle2Size * size
+    let circle2Geometry = new Three.CircleGeometry( circle2Size, circleSegments )
+    let inside2Geometry = new Three.CircleGeometry( circle2Size - circleWidth, circleSegments )
+    let circle2 = new Three.Mesh( circle2Geometry, this.circleMaterial )
+    let inside2 = new Three.Mesh( inside2Geometry, this.insideMaterial )
+    circle2.position.y = inside2.position.y = -0.5 * size
+    circle2.position.x = inside2.position.x = -0.5 * size
+    this.scene.add(circle2)
+    this.scene.add(inside2)
+
+    this.render()
+
   }
 
   tweenColors(to, callback, interval=10) {
@@ -95,11 +119,10 @@ class PenroseTextureRenderer extends CanvasRenderer {
   }
 
   newScaleInterval() {
-    let min = 0.5
-    let max = 1.8
-    let nextScale = Math.random() * (max - min) + min
+    let nextScale = Math.random() * (this.scaleMax - this.scaleMin) + this.scaleMin
     this.tweenScale(nextScale, () => {this.newScaleInterval()})
   }
+
 
   tweenLight(toIntensity, toColor, callback, interval=20) {
     let toParams = {r: toColor.r, g: toColor.g, b: toColor.b, intensity: toIntensity}
@@ -135,60 +158,40 @@ class PenroseTextureRenderer extends CanvasRenderer {
 }
 
 class DartTextureRenderer extends PenroseTextureRenderer {
-  constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb}} = {}) {
-    super({size, circleWidth, colors})
-
-    let circle1Size = 0.251 * size
-    let circle1Geometry = new Three.CircleGeometry( circle1Size, 512 )
-    let inside1Geometry = new Three.CircleGeometry( circle1Size - circleWidth, 512 )
-    let circle1 = new Three.Mesh( circle1Geometry, this.circleMaterial )
-    let inside1 = new Three.Mesh( inside1Geometry, this.insideMaterial )
-    circle1.position.x = inside1.position.x = 0
-    this.scene.add(circle1)
-    this.scene.add(inside1)
-
-    let circle2Size = 0.48 * size
-    let circle2Geometry = new Three.CircleGeometry( circle2Size, 512 )
-    let inside2Geometry = new Three.CircleGeometry( circle2Size - circleWidth, 512 )
-    let circle2 = new Three.Mesh( circle2Geometry, this.circleMaterial )
-    let inside2 = new Three.Mesh( inside2Geometry, this.insideMaterial )
-    circle2.position.y = inside2.position.y = -0.5 * size
-    circle2.position.x = inside2.position.x = -0.5 * size
-    this.scene.add(circle2)
-    this.scene.add(inside2)
-
-    this.render()
+  constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
+               scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=512} = {}) {
+    super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments})
   }
 }
 
 class KiteTextureRenderer extends PenroseTextureRenderer {
-  constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000}} = {}) {
-    super({size, circleWidth, colors})
+  constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
+               scaleMin=0.5, scaleMax=1.8, circle1Size=0.30, circle2Size=0.414, circleSegments=512} = {}) {
+    super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments})
+  }
 
-    let circle1Size = 0.30 * size
-    let circle1Geometry = new Three.CircleGeometry( circle1Size, 512 )
-    let inside1Geometry = new Three.CircleGeometry( circle1Size - circleWidth, 512 )
-    let circle1 = new Three.Mesh( circle1Geometry, this.circleMaterial )
-    let inside1 = new Three.Mesh( inside1Geometry, this.insideMaterial )
-    this.scene.add(circle1)
-    this.scene.add(inside1)
+}
 
-    let circle2Size = 0.414 * size
-    let circle2Geometry = new Three.CircleGeometry( circle2Size, 512 )
-    let inside2Geometry = new Three.CircleGeometry( circle2Size - circleWidth, 512 )
-    let circle2 = new Three.Mesh( circle2Geometry, this.circleMaterial )
-    let inside2 = new Three.Mesh( inside2Geometry, this.insideMaterial )
-    circle2.position.y = inside2.position.y = -0.5 * size
-    circle2.position.x = inside2.position.x = -0.5 * size
-    this.scene.add(circle2)
-    this.scene.add(inside2)
+class ThinRhombTextureRenderer extends PenroseTextureRenderer {
+  constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
+               scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=3} = {}) {
+    super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments})
+  }
 
-    this.render()
+}
+
+class ThickRhombTextureRenderer extends PenroseTextureRenderer {
+  constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
+               scaleMin=1.5, scaleMax=2.8, circle1Size=0.3, circle2Size=0.414, circleSegments=3} = {}) {
+    super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments})
   }
 }
 
 let kiteTextureRenderer
 let dartTextureRenderer
+let thinRhombTextureRenderer
+let thickRhombTextureRenderer
+
 
 Vue.prototype.$penroseTextures = {
   penroseKiteTexture: function() {
@@ -203,16 +206,34 @@ Vue.prototype.$penroseTextures = {
     }
     return dartTextureRenderer.texture
   },
+  penroseThinRhombTexture: function() {
+    if (typeof(thinRhombTextureRenderer) === "undefined") {
+      thinRhombTextureRenderer = new ThinRhombTextureRenderer({size: 512})
+    }
+    return thinRhombTextureRenderer.texture
+  },
+  penroseThickRhombTexture: function() {
+    if (typeof(thickRhombTextureRenderer) === "undefined") {
+      thickRhombTextureRenderer = new ThickRhombTextureRenderer({size: 512})
+    }
+    return thickRhombTextureRenderer.texture
+  },
   newPenroseTweens(tileType) {
     if (tileType == "p2") {
       kiteTextureRenderer.newTweens()
       dartTextureRenderer.newTweens()
+    } else if (tileType == "p3") {
+      thinRhombTextureRenderer.newTweens()
+      thickRhombTextureRenderer.newTweens()
     }
   },
   updatePenroseTweens(tileType) {
     if (tileType == "p2") {
       kiteTextureRenderer.tweenGroup.update()
       dartTextureRenderer.tweenGroup.update()
+    } else if (tileType == "p3") {
+      thinRhombTextureRenderer.tweenGroup.update()
+      thickRhombTextureRenderer.tweenGroup.update()
     }
   },
   cancelPenroseTweens() {
@@ -221,6 +242,12 @@ Vue.prototype.$penroseTextures = {
     }
     if (typeof(dartTextureRenderer) != "undefined") {
       dartTextureRenderer.cancelTweens()
+    }
+    if (typeof(thinRhombTextureRenderer) != "undefined") {
+      thinRhombTextureRenderer.cancelTweens()
+    }
+    if (typeof(thickRhombTextureRenderer) != "undefined") {
+      thickRhombTextureRenderer.cancelTweens()
     }
   }
 }

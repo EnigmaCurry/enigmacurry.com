@@ -11,6 +11,8 @@ export default {
     initialTriangles: {type: Array, default: () => {return []}},
     dartOpacity: {type: Number, default: 1},
     kiteOpacity: {type: Number, default: 1},
+    thinRhombOpacity: {type: Number, default: 1},
+    thickRhombOpacity: {type: Number, default: 1},
   },
   watch: {
     iterations: {
@@ -31,8 +33,10 @@ export default {
           map: this.$penroseTextures.penroseDartTexture(), transparent: this.dartOpacity < 1, opacity: this.dartOpacity})
         group.add(new Three.Mesh(geometry, [kiteMaterial, dartMaterial ]))
       } else {
-        let material1 = new Three.MeshBasicMaterial({color: 0x333333})
-        let material2 = new Three.MeshBasicMaterial({color: 0x111111})
+        let material1 = new Three.MeshBasicMaterial({
+          map: this.$penroseTextures.penroseThinRhombTexture(), transparent: this.thinRhombOpacity < 1, opacity: this.thinRhombOpacity})
+        let material2 = new Three.MeshBasicMaterial({
+          map: this.$penroseTextures.penroseThickRhombTexture(), transparent: this.thickRhombOpacity < 1, opacity: this.thickRhombOpacity})
         group.add(new Three.Mesh(geometry, [material1, material2]))
       }
 
