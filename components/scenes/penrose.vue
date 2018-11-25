@@ -74,9 +74,8 @@ export default {
         .onUpdate(() => {
           this.scale = scale.value
         })
-        .onComplete(() => {
-          setTimeout(() => {this.newScaleInterval()}, this.scaleInterval * 1000)
-        })
+        .delay(this.scaleInterval * 1000)
+        .onComplete(() => { this.newScaleInterval() })
         .start()
     },
     newScaleInterval() {
