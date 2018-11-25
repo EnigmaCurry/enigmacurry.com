@@ -21,7 +21,7 @@ export default {
     animated: {type: Boolean, default: true},
     scaleInterval: {type: Number, default: 10},
     maxIterations: {type: Number, default: 5},
-    newMeshInterval: {type: Number, default: 30},
+    newMeshInterval: {type: Number, default: 90},
   },
   data() {
     return {
