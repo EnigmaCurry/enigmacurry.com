@@ -30,7 +30,9 @@ class CanvasRenderer {
 }
 
 class PenroseTextureRenderer extends CanvasRenderer {
-  constructor ({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments} = {}) {
+  constructor ({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments,
+                colorSchemes=['contrast', 'mono', 'triade', 'tetrade', 'analogic'],
+                colorVariations=['default', 'pastel', 'soft', 'light', 'hard', 'pale']} = {}) {
     super({size})
     this.tweenGroup = new TWEEN.Group()
     this.scale = 1
@@ -41,6 +43,8 @@ class PenroseTextureRenderer extends CanvasRenderer {
 
     this.scaleMin = scaleMin
     this.scaleMax = scaleMax
+    this.colorSchemes = colorSchemes
+    this.colorVariations = colorVariations
 
     circle1Size = circle1Size * size
     let circle1Geometry = new Three.CircleGeometry( circle1Size, circleSegments )
@@ -89,18 +93,23 @@ class PenroseTextureRenderer extends CanvasRenderer {
       .start()
   }
 
-  newColorInterval() {
-    let schemes = ['contrast', 'mono', 'triade', 'tetrade', 'analogic']
-    let variations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale']
+  newColorInterval(initialInterval=10) {
     let scheme = new ColorScheme()
         .from_hue( Math.random() * 256 )
-        .scheme(schemes[Math.floor(Math.random() * schemes.length)])
-        .variation(variations[Math.floor(Math.random() * variations.length)])
+        .scheme(this.colorSchemes[Math.floor(Math.random() * this.colorSchemes.length)])
+        .variation(this.colorVariations[Math.floor(Math.random() * this.colorVariations.length)])
     let colors = shuffle(scheme.colors())
     let nextColors = { circle: new Three.Color("#" + colors[0]),
                        inside: new Three.Color("#" + colors[1]),
                        outside: new Three.Color("#" + colors[2])}
-    this.tweenColors(nextColors, () => {this.newColorInterval()})
+    this.tweenColors(nextColors, () => {this.newColorInterval()}, initialInterval)
+  }
+
+  fadeToBlack(onComplete, interval) {
+    let nextColors = { circle: new Three.Color(0x000000),
+                       inside: new Three.Color(0x000000),
+                       outside: new Three.Color(0x000000)}
+    this.tweenColors(nextColors, onComplete ? onComplete : () => {}, interval)
   }
 
   tweenScale(to, callback, interval=9) {
@@ -118,9 +127,9 @@ class PenroseTextureRenderer extends CanvasRenderer {
       .start()
   }
 
-  newScaleInterval() {
+  newScaleInterval(initialInterval=9) {
     let nextScale = Math.random() * (this.scaleMax - this.scaleMin) + this.scaleMin
-    this.tweenScale(nextScale, () => {this.newScaleInterval()})
+    this.tweenScale(nextScale, () => {this.newScaleInterval()}, initialInterval)
   }
 
 
@@ -138,18 +147,18 @@ class PenroseTextureRenderer extends CanvasRenderer {
       .start()
   }
 
-  newLightInterval() {
+  newLightInterval(initialInterval=20) {
     let intensityMin = 10
     let intensityMax = 15
     let intensity = Math.random() * (intensityMax - intensityMin) + intensityMin
     let color = new Three.Color(Math.random(), Math.random(), Math.random())
-    this.tweenLight(intensity, color, () => {this.newLightInterval()})
+    this.tweenLight(intensity, color, () => {this.newLightInterval()}, initialInterval)
   }
 
-  newTweens() {
-    this.newScaleInterval()
-    this.newColorInterval()
-    this.newLightInterval()
+  newTweens(initialInterval=0) {
+    this.newScaleInterval(initialInterval)
+    this.newColorInterval(initialInterval)
+    this.newLightInterval(initialInterval)
   }
 
   cancelTweens() {
@@ -183,7 +192,12 @@ class ThinRhombTextureRenderer extends PenroseTextureRenderer {
 class ThickRhombTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
                scaleMin=1.5, scaleMax=2.8, circle1Size=0.3, circle2Size=0.414, circleSegments=3} = {}) {
-    super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments})
+    //let colorSchemes = ['contrast', 'mono', 'triade', 'tetrade', 'analogic']
+    let colorSchemes = ['contrast']
+    //let colorVariations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale']
+    let colorVariations = ['hard']
+    super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments,
+           colorSchemes, colorVariations})
   }
 }
 
@@ -234,6 +248,19 @@ Vue.prototype.$penroseTextures = {
     } else if (tileType == "p3") {
       thinRhombTextureRenderer.tweenGroup.update()
       thickRhombTextureRenderer.tweenGroup.update()
+    }
+  },
+  fadeToBlack(tileType, onComplete, interval=2) {
+    if (tileType == "p2") {
+      kiteTextureRenderer.cancelTweens()
+      kiteTextureRenderer.fadeToBlack(null, interval)
+      dartTextureRenderer.cancelTweens()
+      dartTextureRenderer.fadeToBlack(onComplete, interval)
+    } else if (tileType == "p3") {
+      thinRhombTextureRenderer.cancelTweens()
+      thinRhombTextureRenderer.fadeToBlack(null, interval)
+      thickRhombTextureRenderer.cancelTweens()
+      thickRhombTextureRenderer.fadeToBlack(onComplete, interval)
     }
   },
   cancelPenroseTweens() {

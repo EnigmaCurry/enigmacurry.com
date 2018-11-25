@@ -20,16 +20,17 @@ export default {
     wireframe: {type: Boolean, default: true},
     animated: {type: Boolean, default: true},
     scaleInterval: {type: Number, default: 30},
-    maxScale: {type: Number, default: 4},
-    minScale: {type: Number, default: 0.5},
-    dartOpacity: {type: Number, default: 0.6},
-    kiteOpacity: {type: Number, default: 0.6}
   },
   data() {
+    let iterations = 3
+    let maxScale = iterations
+    let minScale = 1
     return {
-      iterations: 5,
+      iterations,
+      maxScale,
+      minScale,
       tweenGroup: new TWEEN.Group(),
-      scale: this.maxScale,
+      scale: maxScale,
       rotation1: new Three.Vector3(),
     }
   },

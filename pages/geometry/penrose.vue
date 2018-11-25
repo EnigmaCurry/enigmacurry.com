@@ -1,14 +1,13 @@
 <template>
-  <kites-and-darts />
+  <penrose />
 </template>
 
 <script>
 import ScrollbarHide from '~/components/ScrollbarHide.vue'
-import KitesAndDarts from '~/components/scenes/kites-and-darts.vue'
-import KitesAndDartsVariation from '~/components/scenes/kites-and-darts-variation.vue'
+import Penrose from '~/components/scenes/penrose.vue'
 
 export default {
   mixins: [ ScrollbarHide ],
-  components: { KitesAndDarts, KitesAndDartsVariation }
+  components: { Penrose }
 }
 </script>
