@@ -2,7 +2,7 @@
   <div>
     <mesh name="GCube">
       <g-geometry type="Box" :args="[size, size, size]" />
-      <g-wireframe-material wire-color="#440922" />
+      <g-wireframe-material wire-color="#006600" />
     </mesh>
     <animation :fn="animateRotation" :speed="speed" />
     <animation :fn="animateScale" :speed="speed" />
