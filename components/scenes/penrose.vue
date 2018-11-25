@@ -96,7 +96,7 @@ export default {
           this.tweenGroup.removeAll()
           this.$penroseTextures.fadeToBlack(this.tileType, () => {
             this.$penroseTextures.newPenroseTweens(this.tileType)
-            this.tileType = Math.random() > 0.5 ? "p2" : "p3"
+            this.tileType = this.tileType === "p2" ? "p3" : "p2"
             this.iterations  = Math.floor(Math.random() * this.maxIterations) + 1
             this.maxScale = this.scale = this.iterations > 1 ? this.iterations - 1 : 1
             this.wireColor = new Three.Color(255,255,255)
