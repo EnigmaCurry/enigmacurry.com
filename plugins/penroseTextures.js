@@ -160,6 +160,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.newScaleInterval(initialInterval)
     this.newColorInterval(initialInterval)
     this.newLightInterval(initialInterval)
+    this.render()
   }
 
   cancelTweens() {
