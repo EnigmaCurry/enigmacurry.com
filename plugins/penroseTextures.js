@@ -184,7 +184,7 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
 }
 
 class ThinRhombTextureRenderer extends PenroseTextureRenderer {
-  constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
+  constructor({size=256, circleWidth=15, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
                scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=3} = {}) {
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments})
   }
@@ -192,7 +192,7 @@ class ThinRhombTextureRenderer extends PenroseTextureRenderer {
 }
 
 class ThickRhombTextureRenderer extends PenroseTextureRenderer {
-  constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
+  constructor({size=256, circleWidth=15, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
                scaleMin=1.5, scaleMax=2.8, circle1Size=0.3, circle2Size=0.414, circleSegments=3} = {}) {
     //let colorSchemes = ['contrast', 'mono', 'triade', 'tetrade', 'analogic']
     let colorSchemes = ['contrast']
