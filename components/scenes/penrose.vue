@@ -43,16 +43,18 @@ export default {
     this.$penroseTextures.penroseDartTexture()    
     this.$penroseTextures.penroseThinRhombTexture()    
     this.$penroseTextures.penroseThickRhombTexture()    
-  },  
-  mounted() {
     if (this.animated) {
       this.$penroseTextures.newPenroseTweens('p2')
       this.$penroseTextures.newPenroseTweens('p3')
-      this.newScaleInterval()
     }
-    setInterval(() => {
-      this.newPenroseMeshInterval()
-    }, this.newMeshInterval * 1000)
+  },
+  mounted() {
+    if (this.animated) {
+      this.newScaleInterval()
+      setInterval(() => {
+        this.newPenroseMeshInterval()
+      }, this.newMeshInterval * 1000)
+    }
   },
   beforeDestroy() {
     this.tweenGroup.removeAll()

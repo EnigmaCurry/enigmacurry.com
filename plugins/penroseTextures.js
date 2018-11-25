@@ -110,6 +110,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
                        inside: new Three.Color(0x000000),
                        outside: new Three.Color(0x000000)}
     this.tweenColors(nextColors, onComplete ? onComplete : () => {}, interval)
+    this.tweenLight(0, {r:0, g:0, b:0}, ()=>{}, interval)
   }
 
   tweenScale(to, callback, interval=9) {
