@@ -43,7 +43,8 @@ export default {
         {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},       
         {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
         {circleSegments: 3, unitRadius: 1, shapeRadius: 6.6, numLevels: 25},
-      ]
+      ],
+      rotationRate: 0.0002
     }
   },
   created() {
@@ -59,7 +60,7 @@ export default {
   methods: {
     animate(tt) {
       this.tweenGroup.update()
-      this.curObj.rotation.z += 0.0002
+      this.curObj.rotation.z += this.rotationRate
     },
     newFlowerInterval({initial=false} = {}) {
       const interval = ({paramsIndex}) => {
@@ -112,6 +113,8 @@ export default {
         mesh.position.copy(pattern[p])
         this._meshes.push(mesh)
         group.add(mesh)
+
+        this.rotationRate = -1 * this.rotationRate
       }
     },
     tweenMaterial(level, toColor, duration=10, onComplete=function(){}, easing="random") {

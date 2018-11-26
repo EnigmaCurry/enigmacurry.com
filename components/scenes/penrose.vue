@@ -35,6 +35,7 @@ export default {
       tweenGroup: new TWEEN.Group(),
       scale: 5,
       rotation1: new Three.Vector3(),
+      rotationRate: 0.0005
     }
   },
   created() {
@@ -64,7 +65,7 @@ export default {
     animate(tt) {
       this.tweenGroup.update()
       this.$penroseTextures.updatePenroseTweens(this.tileType)
-      this.rotation1.z += 0.0005
+      this.rotation1.z += this.rotationRate
     },
     tweenScale(toScale) {
       let scale = {value: this.scale}
@@ -100,7 +101,8 @@ export default {
             this.maxScale = this.scale = this.iterations > 1 ? this.iterations - 1 : 1
             this.wireColor = new Three.Color(255,255,255)
             this.wireOpacity = 1
-            this.newScaleInterval()            
+            this.newScaleInterval()
+            this.rotationRate = -1 * this.rotationRate
           })
         })
         .start()
