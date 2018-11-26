@@ -71,8 +71,17 @@
   height: 100vh;
   background-size: cover;
   background-position: center center;
+  background-color: #000;
+}
+
+#bg.fov-bearing {
   background-image: url(~assets/img/fractal/fov-bearing.1024.jpg);
 }
+
+#bg.nine-pow-cantor-general {
+  background-image: url(~assets/img/fractal/9pow-cantor-general.iter-cantor.2048.jpg);
+}
+
 div#app {
   background: transparent;
 }
@@ -139,7 +148,8 @@ export default {
       menuItems: [
         { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/flower-of-life' },
         { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }, 
-        { img: require('~/assets/img/icons/pentagon.png'), title: 'Penrose', to: '/geometry/penrose' }
+        { img: require('~/assets/img/icons/pentagon.png'), title: 'Penrose', to: '/geometry/penrose' },
+        { img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' }
      ],
     }
   },

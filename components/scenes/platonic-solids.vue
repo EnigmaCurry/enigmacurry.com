@@ -15,3 +15,16 @@
   </g-renderer>
 </template>
 
+<script>
+export default {
+  props: {
+    backgroundClass: {type: String, default: "fov-bearing"}
+  },
+  mounted() {
+    document.getElementById('bg').classList.add(this.backgroundClass)
+  },
+  beforeDestroy() {
+    document.getElementById('bg').classList.remove(this.backgroundClass)
+  },  
+}
+</script>

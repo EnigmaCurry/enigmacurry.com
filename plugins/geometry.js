@@ -136,6 +136,37 @@ const penroseP3Subdivision = Vue.prototype.$geometry.penroseP3Subdivision = (tri
   return result
 }
 
+const enigmacurryEC1Subdivision = Vue.prototype.$geometry.enigmacurryEC1Subdivision = (triangles, iterations=1) => {
+  let ratio = (1 + Math.sqrt(8)) / 2
+  let subdivide = (triangles) => {
+    let subdivisions = []
+    for (let t = 0; t < triangles.length; t++) {
+      let [triangleType, A, B, C] = triangles[t]
+      if (triangleType === "golden") {
+        let Q = math.add(C, math.divide(math.add(A, B), ratio))
+        let R = math.add(A, math.divide(math.add(C, A), ratio))
+        subdivisions.push(["golden", C, B, R])
+        subdivisions.push(["golden", B, Q, R])
+        subdivisions.push(["gnomon", A, Q, R])
+      } else if (triangleType === "gnomon"){
+        let P = math.add(B, math.divide(math.subtract(C, B), ratio))
+        subdivisions.push(["golden", P,B,A])
+        subdivisions.push(["gnomon", C,P,A])
+      } else {
+        console.error("Unknown triangle type", triangleType)
+      }
+    }
+    return subdivisions
+  }
+
+  let result = triangles
+  for (let i=0; i < iterations; i++) {
+    result = subdivide(result)
+  }
+  return result
+}
+
+
 // Penrose Tiling for p2 or p3
 // Specify initial triangles as list of type and coordinates [(type, A, B, C), ...]
 // types must be either 'golden' or 'gnomon'
@@ -159,6 +190,8 @@ const penroseTileGeometry = Vue.prototype.$geometry.penroseTileGeometry = (tileT
     subdivisionFunc = penroseP2Subdivision
   } else if (tileType === 'p3') {
     subdivisionFunc = penroseP3Subdivision
+  } else if (tileType === "ec1") {
+    subdivisionFunc = enigmacurryEC1Subdivision
   }
   let coordinates = subdivisionFunc(initialTriangles, iterations)
   let geometry = new Three.Geometry()
