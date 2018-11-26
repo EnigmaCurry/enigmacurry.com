@@ -28,6 +28,22 @@ class CanvasRenderer {
     this.renderer.render(this.scene, this.camera)
   }
 
+  tweenCameraY(to, callback, interval=5) {
+    let pos = {value: this.camera.position.y}
+    return new TWEEN.Tween(pos, this.tweenGroup)
+      .to({value: to}, interval * 1000)
+      .easing(TWEEN.Easing.Quintic.InOut)
+      .onUpdate(() => {
+        this.camera.position.y = pos.value
+      })
+      .onComplete(callback)
+      .start()
+  }
+
+  newCameraInterval(initialInterval=9) {
+    let nextPos = Math.random() * 255
+    this.tweenCameraY(nextPos, () => {this.newCameraInterval()}, initialInterval)
+  }
 }
 
 class PenroseTextureRenderer extends CanvasRenderer {
@@ -162,6 +178,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.newScaleInterval(initialInterval)
     this.newColorInterval(initialInterval)
     this.newLightInterval(initialInterval)
+    this.newCameraInterval(initialInterval)
     this.render()
   }
 
@@ -173,7 +190,8 @@ class PenroseTextureRenderer extends CanvasRenderer {
 class DartTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
                scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=512} = {}) {
-    let cameraY = shuffle([0, 15, 25])[0]
+    //let cameraY = shuffle([0, 15, 25])[0]
+    let cameraY = 0
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments, cameraY})
   }
 }
@@ -181,7 +199,8 @@ class DartTextureRenderer extends PenroseTextureRenderer {
 class KiteTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
                scaleMin=0.5, scaleMax=1.8, circle1Size=0.30, circle2Size=0.414, circleSegments=512} = {}) {
-    let cameraY = shuffle([0, 15, 25])[0]
+    //let cameraY = shuffle([0, 15, 25])[0]
+    let cameraY = 0
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments, cameraY})
   }
 
@@ -190,7 +209,8 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
 class ThinRhombTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=15, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
                scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=3} = {}) {
-    let cameraY = shuffle([0, 10, 15])[0]
+    //let cameraY = shuffle([0, 10, 15])[0]
+    let cameraY = 0
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments, cameraY})
   }
 
@@ -203,7 +223,8 @@ class ThickRhombTextureRenderer extends PenroseTextureRenderer {
     let colorSchemes = ['contrast']
     //let colorVariations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale']
     let colorVariations = ['hard']
-    let cameraY = shuffle([0, 10, 15])[0]
+    //let cameraY = shuffle([0, 10, 15])[0]
+    let cameraY = 0
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments,
            colorSchemes, colorVariations, cameraY})
   }
