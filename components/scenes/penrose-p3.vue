@@ -39,7 +39,7 @@ export default {
   },  
   mounted() {
     if (this.animated) {
-      this.$penroseTextures.newPenroseTweens('p3')
+      this.$penroseTextures.newPenroseTweens({tileType: 'p3'})
       this.newScaleInterval()
     }    
   },

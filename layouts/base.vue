@@ -149,7 +149,7 @@ export default {
         { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/flower-of-life' },
         { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }, 
         { img: require('~/assets/img/icons/pentagon.png'), title: 'Penrose', to: '/geometry/penrose' },
-        // { img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' }
+        { img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' }
      ],
     }
   },

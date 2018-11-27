@@ -34,7 +34,7 @@ export default {
   },  
   mounted() {
     if (this.animated) {
-      this.$penroseTextures.newPenroseTweens(this.tileType)
+      this.$penroseTextures.newPenroseTweens({tileType: this.tileType})
       this.newScaleInterval()
     }    
   },

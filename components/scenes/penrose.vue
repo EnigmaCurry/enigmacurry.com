@@ -40,13 +40,14 @@ export default {
   },
   created() {
     //Preallocate textures:
+    this.$penroseTextures.deleteRenderers()
     this.$penroseTextures.penroseKiteTexture()    
     this.$penroseTextures.penroseDartTexture()    
     this.$penroseTextures.penroseThinRhombTexture()    
     this.$penroseTextures.penroseThickRhombTexture()    
     if (this.animated) {
-      this.$penroseTextures.newPenroseTweens('p2')
-      this.$penroseTextures.newPenroseTweens('p3')
+      this.$penroseTextures.newPenroseTweens({tileType: 'p2'})
+      this.$penroseTextures.newPenroseTweens({tileType: 'p3'})
     }
   },
   mounted() {
@@ -95,7 +96,7 @@ export default {
         .onComplete(() => {
           this.tweenGroup.removeAll()
           this.$penroseTextures.fadeToBlack(this.tileType, () => {
-            this.$penroseTextures.newPenroseTweens(this.tileType)
+            this.$penroseTextures.newPenroseTweens({tileType: this.tileType})
             this.tileType = this.tileType === "p2" ? "p3" : "p2"
             this.iterations  = Math.floor(Math.random() * this.maxIterations) + 1
             this.maxScale = this.scale = this.iterations > 1 ? this.iterations - 1 : 1

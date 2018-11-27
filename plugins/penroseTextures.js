@@ -50,7 +50,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
   constructor ({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments,
                 colorSchemes=['contrast', 'mono', 'triade', 'tetrade', 'analogic'],
                 colorVariations=['default', 'pastel', 'soft', 'light', 'hard', 'pale'],
-                cameraY=0} = {}) {
+                cameraY=0, colorInterval=10, scaleInterval=9, lightInterval=20} = {}) {
     super({size, cameraY})
     this.tweenGroup = new TWEEN.Group()
     this.scale = 1
@@ -63,6 +63,12 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.scaleMax = scaleMax
     this.colorSchemes = colorSchemes
     this.colorVariations = colorVariations
+    this.colorInterval = colorInterval
+    this.scaleInterval = scaleInterval
+    this.lightInterval = lightInterval
+    this.colorEasing = TWEEN.Easing.Quartic.InOut
+    this.lightEasing = TWEEN.Easing.Quartic.InOut
+    this.scaleEasing = TWEEN.Easing.Elastic.InOut
 
     circle1Size = circle1Size * size
     let circle1Geometry = new Three.CircleGeometry( circle1Size, circleSegments )
@@ -86,7 +92,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
 
   }
 
-  tweenColors(to, callback, interval=10) {
+  tweenColors(to, callback, interval) {
     let colors = {
       cr: this.circleMaterial.color.r, cg: this.circleMaterial.color.g, cb: this.circleMaterial.color.b,
       ir: this.insideMaterial.color.r, ig: this.insideMaterial.color.g, ib: this.insideMaterial.color.b,
@@ -98,8 +104,8 @@ class PenroseTextureRenderer extends CanvasRenderer {
       or: to.outside.r, og: to.outside.g, ob: to.outside.b
     }
     return new TWEEN.Tween(colors, this.tweenGroup)
-      .to(toColors, interval * 1000)
-      .easing(TWEEN.Easing.Quartic.InOut)
+      .to(toColors, (typeof(interval) === "undefined" ? this.colorInterval : interval) * 1000)
+      .easing(this.colorEasing)
       .onUpdate(() => {
         this.circleMaterial.color.setRGB(colors.cr, colors.cg, colors.cb)
         this.insideMaterial.color.setRGB(colors.ir, colors.ig, colors.ib)
@@ -111,11 +117,11 @@ class PenroseTextureRenderer extends CanvasRenderer {
       .start()
   }
 
-  newColorInterval(initialInterval=10) {
+  newColorInterval(initialInterval) {
     let scheme = new ColorScheme()
-        .from_hue( Math.random() * 256 )
-        .scheme(this.colorSchemes[Math.floor(Math.random() * this.colorSchemes.length)])
-        .variation(this.colorVariations[Math.floor(Math.random() * this.colorVariations.length)])
+      .from_hue( Math.random() * 256 )
+      .scheme(this.colorSchemes[Math.floor(Math.random() * this.colorSchemes.length)])
+      .variation(this.colorVariations[Math.floor(Math.random() * this.colorVariations.length)])
     let colors = shuffle(scheme.colors())
     let nextColors = { circle: new Three.Color("#" + colors[0]),
                        inside: new Three.Color("#" + colors[1]),
@@ -131,11 +137,11 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.tweenLight(0, {r:0, g:0, b:0}, ()=>{}, interval)
   }
 
-  tweenScale(to, callback, interval=9) {
+  tweenScale(to, callback, interval) {
     let scale = {value: this.scene.children[0].scale.x}
     return new TWEEN.Tween(scale, this.tweenGroup)
-      .to({value: to}, interval * 1000)
-      .easing(TWEEN.Easing.Elastic.InOut)
+      .to({value: to}, (typeof(interval) === "undefined" ? this.colorInterval : interval) * 1000)
+      .easing(this.scaleEasing)
       .onUpdate(() => {
         for(let c=0; c < this.scene.children.length; c++) {
           this.scene.children[c].scale.x = scale.value
@@ -146,18 +152,18 @@ class PenroseTextureRenderer extends CanvasRenderer {
       .start()
   }
 
-  newScaleInterval(initialInterval=9) {
+  newScaleInterval(initialInterval) {
     let nextScale = Math.random() * (this.scaleMax - this.scaleMin) + this.scaleMin
     this.tweenScale(nextScale, () => {this.newScaleInterval()}, initialInterval)
   }
 
 
-  tweenLight(toIntensity, toColor, callback, interval=20) {
+  tweenLight(toIntensity, toColor, callback, interval) {
     let toParams = {r: toColor.r, g: toColor.g, b: toColor.b, intensity: toIntensity}
     let params = {r: this.light.color.r, g: this.light.color.g, b: this.light.color.b, intensity: this.light.intensity}
     return new TWEEN.Tween(params, this.tweenGroup)
-      .to(toParams, interval * 1000)
-      .easing(TWEEN.Easing.Quartic.InOut)
+      .to(toParams, (typeof(interval) === "undefined" ? this.colorInterval : interval) * 1000)
+      .easing(this.lightEasing)
       .onUpdate(() => {
         this.light.color.setRGB(params.r, params.g, params.b)
         this.light.intensity = params.intensity
@@ -166,7 +172,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
       .start()
   }
 
-  newLightInterval(initialInterval=20) {
+  newLightInterval(initialInterval) {
     let intensityMin = 10
     let intensityMax = 15
     let intensity = Math.random() * (intensityMax - intensityMin) + intensityMin
@@ -174,11 +180,35 @@ class PenroseTextureRenderer extends CanvasRenderer {
     this.tweenLight(intensity, color, () => {this.newLightInterval()}, initialInterval)
   }
 
-  newTweens(initialInterval=0) {
-    this.newScaleInterval(initialInterval)
-    this.newColorInterval(initialInterval)
-    this.newLightInterval(initialInterval)
-    this.newCameraInterval(initialInterval)
+  newTweens({colorInterval, scaleInterval, lightInterval, colorEasing, scaleEasing, lightEasing, colorSchemes, colorVariations} = {}) {
+    if ( colorInterval ) {
+      this.colorInterval = colorInterval
+    }
+    if ( scaleInterval ) {
+      this.scaleInterval = scaleInterval
+    }
+    if ( lightInterval ) {
+      this.lightInterval = lightInterval
+    }
+    if ( colorSchemes ) {
+      this.colorSchemes = colorSchemes
+    }
+    if ( colorVariations ) {
+      this.colorVariations = colorVariations
+    }
+    if ( colorEasing ) {
+      this.colorEasing = colorEasing
+    }
+    if ( scaleEasing ) {
+      this.scaleEasing = scaleEasing
+    }
+    if ( lightEasing ) {
+      this.lightEasing = lightEasing
+    }
+    this.newScaleInterval(0)
+    this.newColorInterval(0)
+    this.newLightInterval(0)
+    this.newCameraInterval(0)
     this.render()
   }
 
@@ -189,18 +219,16 @@ class PenroseTextureRenderer extends CanvasRenderer {
 
 class DartTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=9, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
-               scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=512} = {}) {
-    //let cameraY = shuffle([0, 15, 25])[0]
-    let cameraY = 0
+               scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=512,
+               cameraY=0} = {}) {
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments, cameraY})
   }
 }
 
 class KiteTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=5, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
-               scaleMin=0.5, scaleMax=1.8, circle1Size=0.30, circle2Size=0.414, circleSegments=512} = {}) {
-    //let cameraY = shuffle([0, 15, 25])[0]
-    let cameraY = 0
+               scaleMin=0.5, scaleMax=1.8, circle1Size=0.30, circle2Size=0.414, circleSegments=512,
+               cameraY=0} = {}) {
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments, cameraY})
   }
 
@@ -208,9 +236,8 @@ class KiteTextureRenderer extends PenroseTextureRenderer {
 
 class ThinRhombTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=15, colors={circle: 0x00ff00, inside: 0x004400, outside:0x0033bb},
-               scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=3} = {}) {
-    //let cameraY = shuffle([0, 10, 15])[0]
-    let cameraY = 0
+               scaleMin=0.5, scaleMax=1.8, circle1Size=0.251, circle2Size=0.48, circleSegments=3,
+               cameraY=0} = {}) {
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments, cameraY})
   }
 
@@ -218,13 +245,10 @@ class ThinRhombTextureRenderer extends PenroseTextureRenderer {
 
 class ThickRhombTextureRenderer extends PenroseTextureRenderer {
   constructor({size=256, circleWidth=15, colors={circle: 0xff0000, inside: 0x332233, outside:0x660000},
-               scaleMin=1.5, scaleMax=2.8, circle1Size=0.3, circle2Size=0.414, circleSegments=3} = {}) {
-    //let colorSchemes = ['contrast', 'mono', 'triade', 'tetrade', 'analogic']
+               scaleMin=1.5, scaleMax=2.8, circle1Size=0.3, circle2Size=0.414, circleSegments=3,
+               cameraY=0} = {}) {
     let colorSchemes = ['contrast']
-    //let colorVariations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale']
     let colorVariations = ['hard']
-    //let cameraY = shuffle([0, 10, 15])[0]
-    let cameraY = 0
     super({size, circleWidth, colors, scaleMin, scaleMax, circle1Size, circle2Size, circleSegments,
            colorSchemes, colorVariations, cameraY})
   }
@@ -261,13 +285,19 @@ Vue.prototype.$penroseTextures = {
     }
     return thickRhombTextureRenderer.texture
   },
-  newPenroseTweens(tileType) {
+  deleteRenderers() {
+    kiteTextureRenderer = undefined
+    dartTextureRenderer = undefined
+    thinRhombTextureRenderer = undefined
+    thickRhombTextureRenderer = undefined
+  },
+  newPenroseTweens({tileType, colorInterval, scaleInterval, lightInterval, colorSchemes, colorVariations} = {}) {
     if (tileType == "p2") {
-      kiteTextureRenderer.newTweens()
-      dartTextureRenderer.newTweens()
+      kiteTextureRenderer.newTweens({colorInterval, scaleInterval, lightInterval, colorSchemes, colorVariations})
+      dartTextureRenderer.newTweens({colorInterval, scaleInterval, lightInterval, colorSchemes, colorVariations})
     } else if (tileType == "p3") {
-      thinRhombTextureRenderer.newTweens()
-      thickRhombTextureRenderer.newTweens()
+      thinRhombTextureRenderer.newTweens({colorInterval, scaleInterval, lightInterval, colorSchemes, colorVariations})
+      thickRhombTextureRenderer.newTweens({colorInterval, scaleInterval, lightInterval, colorSchemes, colorVariations})
     }
   },
   updatePenroseTweens(tileType) {
