@@ -26,11 +26,15 @@ export default {
         [ 'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet' ],
         [ 0xBF0B2C, 0x02173D, 0x0AA38C, 0xF5900F, 0xF24E13, 0x011627, 0xf71735, 0x41ead4, 0xfdfffc, 0xff9f1c ],
         [ 0x515e6b, 0xb2b5be, 0x40434a, 0xd0cfd4, 0x43525c, 0x670bf3, 0xffe400, 0xff1053, 0x390099, 0xffae03 ],
+        [ 0x1C1933, 0xFF800C, 0xFFF7EA, 0x6D8FCC, 0x6AFAB5 ],
+        [ 0x285A78, 0x287A72, 0xF2AA2E, 0x46254F, 0xA6271E ],
+        [ 0x036169, 0x045659, 0x588C8F, 0x96BEC0, 0xEDF4F5 ],
+        [ 0x3D3C40, 0x575559, 0x6D6E70, 0xA2A3A5, 0xDBD9D1 ]
       ],
       easingChoices: [
-        TWEEN.Easing.Sinusoidal.InOut,
+        //TWEEN.Easing.Sinusoidal.InOut,
         // TWEEN.Easing.Quartic.InOut,
-        // TWEEN.Easing.Quintic.InOut,
+        TWEEN.Easing.Quintic.InOut,
         // TWEEN.Easing.Exponential.InOut,
         // TWEEN.Easing.Elastic.In
       ],
@@ -64,7 +68,8 @@ export default {
     newFlowerInterval({initial=false} = {}) {
       const interval = ({paramsIndex}) => {
         this._currentParamsIndex = paramsIndex
-        this.newFlower({...this.params[paramsIndex], colors: this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]})
+        let colors = this.colorChoices[Math.floor(Math.random() * this.colorChoices.length)]
+        this.newFlower({...this.params[paramsIndex], colors })
       }
       if (initial) {
         interval({paramsIndex: 0})
