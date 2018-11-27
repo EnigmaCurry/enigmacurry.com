@@ -36,13 +36,12 @@ export default {
       ],
       params: [
         {circleSegments: 64, unitRadius: 3, shapeRadius: 7, numLevels: 9},
-        {circleSegments: 4, unitRadius: 1, shapeRadius: 5, numLevels: 5},
-        {circleSegments: 10, unitRadius: 3, shapeRadius: 11, numLevels: 9},
-        {circleSegments: 6, unitRadius: 1, shapeRadius: 5.2, numLevels: 9},
         {circleSegments: 12, unitRadius: 2, shapeRadius: 8, numLevels: 5},
-        {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},       
-        {circleSegments: 3, unitRadius: 1, shapeRadius: 5.2, numLevels: 19},
+        {circleSegments: 6, unitRadius: 1, shapeRadius: 5.2, numLevels: 9},
+        {circleSegments: 4, unitRadius: 1, shapeRadius: 5, numLevels: 5},
         {circleSegments: 3, unitRadius: 1, shapeRadius: 6.6, numLevels: 25},
+        {circleSegments: 6, unitRadius: 5, shapeRadius: 7, numLevels: 5},       
+        {circleSegments: 10, unitRadius: 3, shapeRadius: 11, numLevels: 9},
       ],
       rotationRate: 0.0002
     }
@@ -70,12 +69,8 @@ export default {
       if (initial) {
         interval({paramsIndex: 0})
       } else {
-        let paramsIndex = this._currentParamsIndex
-        // Don't choose the same params twice in a row:
-        while(paramsIndex == this._currentParamsIndex) {
-          paramsIndex = Math.floor(Math.random() * this.params.length)
-        }
-        this.fadeMaterialsToBlack(() => {interval({paramsIndex})})
+        this._currentParamsIndex = (this._currentParamsIndex + 1) % this.params.length
+        this.fadeMaterialsToBlack(() => {interval({paramsIndex: this._currentParamsIndex})})
       }
     },
     newFlower({numLevels, colors, unitRadius, shapeRadius, circleSegments}) {
