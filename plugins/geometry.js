@@ -295,3 +295,21 @@ const penroseTileP3OutlineGeometry = Vue.prototype.$geometry.penroseTileP3Outlin
   }
   return geometry
 }
+
+
+//Epicycle function generator, which calculates the orbit of an orbit (of an orbit...) recursively as a function of time
+const epicycle = Vue.prototype.$geometry.epicycle = (orbitRadius, orbitPeriod, centerFunc) => {
+  // Center position of the orbit is calculated by time, or assumed to be 0,0 if not given:
+  if (typeof(centerFunc) === 'undefined') {
+    centerFunc = (time) => {return {x: 0, y: 0}}
+  }
+  // Return a new function that uses centerFunc and calculates the nested orbit position based on time:
+  return (time) => {
+    let center = centerFunc(time)
+    let t = time % orbitPeriod
+    let angle = t === 0 ? 0 : 360 / (orbitPeriod / t)
+    let x = center.x + orbitRadius * math.cos(math.unit(angle, "deg"))
+    let y = center.y + orbitRadius * math.sin(math.unit(angle, "deg"))
+    return {x, y}
+  }
+}
