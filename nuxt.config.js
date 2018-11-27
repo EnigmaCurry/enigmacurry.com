@@ -18,6 +18,9 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Doppio+One' }
+    ],
+    script: [
+      { async: true, src: "https://www.googletagmanager.com/gtag/js?id=UA-129894901-1"}
     ]
   },
 

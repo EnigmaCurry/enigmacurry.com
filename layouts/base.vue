@@ -60,6 +60,13 @@
         </v-container>
       </v-content>
     </v-app>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-129894901-1');
+    </script>
   </div>
 </template>
 
