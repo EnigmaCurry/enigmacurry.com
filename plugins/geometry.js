@@ -313,3 +313,117 @@ const epicycle = Vue.prototype.$geometry.epicycle = (orbitRadius, orbitPeriod, c
     return {x, y, revolutions}
   }
 }
+
+// Regular tiling polygons
+// https://morphingtiling.wordpress.com/2010/12/27/regular-and-semi-regular-tilings/
+const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
+  triangle: (repeatX=1, repeatY=1) => {
+    let normal = new Three.Vector3(0, 0, 0)
+    let yellow = new Three.Color("yellow")
+    let blue = new Three.Color("blue")
+    let g = new Three.Geometry()
+    g.vertices[0] = new Three.Vector3(0, 0, 0)
+    g.vertices[1] = new Three.Vector3(Math.sqrt(3), -1, 0)
+    g.vertices[2] = new Three.Vector3(0, -2, 0)
+    g.faces[0] = new Three.Face3(2, 1, 0, normal, yellow, 0)
+    g.vertices[3] = new Three.Vector3(Math.sqrt(3), -3, 0)
+    g.faces[1] = new Three.Face3(2, 3, 1, normal, blue, 1)
+    g.vertices[4] = new Three.Vector3(2*Math.sqrt(3), -2, 0)
+    g.faces[2] = new Three.Face3(3, 4, 1, normal, yellow, 0)
+    g.vertices[5] = new Three.Vector3(2*Math.sqrt(3), 0, 0)
+    g.faces[3] = new Three.Face3(1, 4, 5, normal, blue, 1)
+
+    let xTranslate = 2 * Math.sqrt(3)
+    let yTranslate = -2
+    let geometry = new Three.Geometry()
+    for (let x=0; x < repeatX; x++) {
+      for (let y=0; y < repeatY; y++) {
+        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
+      }
+    }
+    geometry.computeBoundingBox()
+    return geometry
+ },
+  square: (repeatX=1, repeatY=1) => {
+    let normal = new Three.Vector3(0, 0, 0)
+    let yellow = new Three.Color("yellow")
+    let red = new Three.Color("red")
+
+    let square = (color, translateX=0, translateY=0) => {
+      let s = new Three.Geometry()
+      let materialIndex = color === red ? 1 : 0
+      s.vertices[0] = new Three.Vector3(0 + translateX, 0 + translateY, 0)
+      s.vertices[1] = new Three.Vector3(2 + translateX, 0 + translateY, 0)
+      s.vertices[2] = new Three.Vector3(2 + translateX, -2 + translateY, 0)
+      s.faces[0] = new Three.Face3(2, 1, 0, normal, color, materialIndex)
+      s.vertices[3] = new Three.Vector3(0 + translateX, -2 + translateY, 0)
+      s.faces[1] = new Three.Face3(3, 2, 0, normal, color, materialIndex)
+      return s
+    }
+
+    let g = new Three.Geometry()
+    g.merge(square(yellow))
+    g.merge(square(red, 0, -2))
+    g.merge(square(yellow, 2, -2))
+    g.merge(square(red, 2, 0))
+
+    let xTranslate = 4
+    let yTranslate = -4
+    let geometry = new Three.Geometry()
+    for (let x=0; x < repeatX; x++) {
+      for (let y=0; y < repeatY; y++) {
+        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
+      }
+    }
+    geometry.computeBoundingBox()
+    return geometry
+  },
+  hexagon: (repeatX, repeatY) => {
+    let normal = new Three.Vector3(0, 0, 0)
+    let red = new Three.Color("red")
+    let blue = new Three.Color("blue")
+    let yellow = new Three.Color("yellow")
+
+    let triangle = (color, translateX=0, translateY=0) => {
+      let t = new Three.Geometry()
+      let materialIndex
+      if (color === red) { materialIndex = 0 }
+      else if (color === blue) { materialIndex = 1 }
+      else if (color === yellow) { materialIndex = 2 }
+      t.vertices[0] = new Three.Vector3(0 + translateX, 0 + translateY, 0)
+      t.vertices[1] = new Three.Vector3(Math.sqrt(3) + translateX, 1 + translateY, 0)
+      t.vertices[2] = new Three.Vector3(Math.sqrt(3) + translateX, -1 + translateY, 0)
+      t.faces[0] = new Three.Face3(2, 1, 0, normal, color, materialIndex)
+      return t
+    }
+
+    let hexagon = (color, translateX=0, translateY=0) => {
+      let h = new Three.Geometry()
+      let angle = 0
+      for (let a=0; a < 6; a++) {
+        let t = triangle(color)
+        t.rotateZ(angle * (Math.PI/180))
+        h.merge(t)
+        angle += 60
+      }
+      return h
+    }
+
+    let xTranslate = 6 * Math.sqrt(3)
+    let yTranslate = -6
+    let geometry = new Three.Geometry()
+    for (let x=0; x < repeatX; x++) {
+      for (let y=0; y < repeatY; y++) {
+        geometry.merge(hexagon(red).translate(x * xTranslate, y * yTranslate, 0))
+        geometry.merge(hexagon(blue).translate(x * xTranslate + 2*Math.sqrt(3), y * yTranslate, 0)) 
+        geometry.merge(hexagon(yellow).translate(x * xTranslate + 4*Math.sqrt(3), y * yTranslate, 0))
+        geometry.merge(hexagon(yellow).translate(x * xTranslate + Math.sqrt(3), y * yTranslate - 3, 0))
+        geometry.merge(hexagon(red).translate(x * xTranslate + 3*Math.sqrt(3), y * yTranslate - 3, 0))
+        geometry.merge(hexagon(blue).translate(x * xTranslate + 5*Math.sqrt(3), y * yTranslate - 3, 0))
+     }
+    }
+    geometry.computeBoundingBox()
+    return geometry
+
+  }
+}
