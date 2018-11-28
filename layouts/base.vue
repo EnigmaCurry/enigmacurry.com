@@ -89,6 +89,10 @@
   background-image: url(~assets/img/fractal/9pow-cantor-general.iter-cantor.2048.jpg);
 }
 
+#bg.deepfield-halfoct-ngon4 {
+  background-image: url(~assets/img/fractal/deepfield-halfoct-ngon4.gimp.jpg);
+}
+
 div#app {
   background: transparent;
 }
@@ -156,7 +160,8 @@ export default {
         { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/flower-of-life' },
         { img: require('~/assets/img/icons/icosahedron.png'), title: 'Platonic Solids', to: '/geometry/platonic-solids' }, 
         { img: require('~/assets/img/icons/pentagon.png'), title: 'Penrose', to: '/geometry/penrose' },
-        { img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' }
+        { img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' },
+        { img: require('~/assets/img/icons/epicycle.png'), title: 'Epicycles', to: '/geometry/epicycles' },
      ],
     }
   },

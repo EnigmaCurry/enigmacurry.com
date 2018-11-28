@@ -28,6 +28,14 @@ export default {
       far: 1000
     }
   },
+  watch: {
+    zoomScale: {
+      deep: true,
+      handler (v) {
+        this.onContainerResize(this.global.rendererSize.width, this.global.rendererSize.height)
+      }
+    },
+  },
   created () {
     if (!this._camera) {
       if (this.orthographic) {
