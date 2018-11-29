@@ -556,6 +556,60 @@ const semiRegularTilingGeometry = Vue.prototype.$geometry.semiRegularTilingGeome
     geometry.computeBoundingBox()
     geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
     return new Three.BufferGeometry().fromGeometry(geometry)
+  },
+  trianglesSquares2: (repeatX=1, repeatY=1) => {
+    let blue = new Three.Color("blue")
+    let yellow = new Three.Color("yellow")
+    let red = new Three.Color("red")
+    let unitSide = 1
+    let blueSquare = new Three.PlaneGeometry(unitSide, unitSide)
+    blueSquare.translate(0.5*unitSide, 0.5*unitSide)
+    let yellowSquare = blueSquare.clone()
+    let redSquare = blueSquare.clone()
+    let triUnit = unitSide / Math.sqrt(3)
+    let triApothem = triUnit * Math.cos((180*(Math.PI/180)) / 3)
+    let blueTri = new Three.CircleGeometry( triUnit, 3)
+    blueTri.translate(triApothem,0.5*unitSide,0)
+    let redTri = blueTri.clone()
+    let yellowTri = blueTri.clone()
 
+    for(let f=0; f < blueSquare.faces.length; f++) {
+      blueSquare.faces[f].color = blue
+      blueSquare.faces[f].materialIndex = 0
+      yellowSquare.faces[f].color = yellow
+      yellowSquare.faces[f].materialIndex = 1
+      redSquare.faces[f].color = red
+      redSquare.faces[f].materialIndex = 2
+    }
+    for(let f=0; f < blueTri.faces.length; f++) {
+      blueTri.faces[f].color = blue
+      blueTri.faces[f].materialIndex = 0
+      yellowTri.faces[f].color = yellow
+      yellowTri.faces[f].materialIndex = 1
+      redTri.faces[f].color = red
+      redTri.faces[f].materialIndex = 2
+    }
+
+    let g = new Three.Geometry()
+    g.merge(blueSquare)
+    g.merge(yellowSquare.clone().translate(unitSide, 0, 0))
+    g.merge(redSquare.clone().translate(2 * unitSide, 0, 0))
+    g.merge(redTri.clone().rotateZ(-90 * (Math.PI/180)))
+    g.merge(yellowTri.clone().rotateZ(-150 * (Math.PI/180)).translate(unitSide, 0, 0))
+    g.merge(blueTri.clone().rotateZ(-90 * (Math.PI/180)).translate(unitSide, 0, 0))
+    g.merge(redTri.clone().rotateZ(-150 * (Math.PI/180)).translate(2*unitSide, 0, 0))
+    g.merge(yellowTri.clone().rotateZ(-90 * (Math.PI/180)).translate(2*unitSide, 0, 0))
+    g.merge(blueTri.clone().rotateZ(-150 * (Math.PI/180)).translate(3*unitSide, 0, 0))
+    g.merge(g.clone().translate(0.5 * unitSide, (-1 * unitSide) - (unitSide * (Math.sqrt(3)/2)), 0))
+
+    let geometry = new Three.Geometry()
+    for(let x=0; x < repeatX; x++) {
+      for(let y=0; y < repeatY; y++) {
+        geometry.merge(g.clone().translate(x*3*unitSide + y*unitSide, y*(-2*unitSide - 2*unitSide*(Math.sqrt(3)/2)), 0))
+      }
+    }
+    geometry.computeBoundingBox()
+    geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
   }
 }
