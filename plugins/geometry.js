@@ -65,12 +65,19 @@ Vue.prototype.$geometry.flowerPattern = (origin, unitRadius, levels, rotation=0)
 }
 
 // Heron's formula for calculating area of triangle from the three side lengths:
-Vue.prototype.$geometry.areaOfTriangleBySides = (sideA, sideB, sideC) => {
+let areaOfTriangleBySides = Vue.prototype.$geometry.areaOfTriangleBySides = (sideA, sideB, sideC) => {
   assert((sideA + sideB) > sideC)
   assert((sideB + sideC) > sideA)
   assert((sideC + sideA) > sideB)
   let s = 0.5 * (sideA + sideB + sideC)
   return Math.sqrt(s * (s-sideA) * (s-sideB) * (s-sideC))
+}
+
+let pointOnCircle = Vue.prototype.$geometry.pointOnCircle = ({x, y}, radius, degrees) => {
+  return {
+    x: x + radius * Math.cos(degrees * (Math.PI/180)),
+    y: y + radius * Math.sin(degrees * (Math.PI/180))
+  }
 }
 
 // Penrose P2 tiling - Subdivide list of golden triangles and gnomon coordinates
@@ -317,7 +324,7 @@ const epicycle = Vue.prototype.$geometry.epicycle = (orbitRadius, orbitPeriod, c
 // Regular tiling polygons
 // https://morphingtiling.wordpress.com/2010/12/27/regular-and-semi-regular-tilings/
 const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
-  triangle: (repeatX=1, repeatY=1) => {
+  triangles: (repeatX=1, repeatY=1) => {
     let normal = new Three.Vector3(0, 0, 0)
     let yellow = new Three.Color("yellow")
     let blue = new Three.Color("blue")
@@ -342,9 +349,10 @@ const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
       }
     }
     geometry.computeBoundingBox()
-    return geometry
+    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
  },
-  square: (repeatX=1, repeatY=1) => {
+  squares: (repeatX=1, repeatY=1) => {
     let normal = new Three.Vector3(0, 0, 0)
     let yellow = new Three.Color("yellow")
     let red = new Three.Color("red")
@@ -376,9 +384,10 @@ const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
       }
     }
     geometry.computeBoundingBox()
-    return geometry
+    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
   },
-  hexagon: (repeatX, repeatY) => {
+  hexagons: (repeatX, repeatY) => {
     let normal = new Three.Vector3(0, 0, 0)
     let red = new Three.Color("red")
     let blue = new Three.Color("blue")
@@ -423,7 +432,130 @@ const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
      }
     }
     geometry.computeBoundingBox()
-    return geometry
+    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
+  }
+}
+
+// Regular tiling polygons
+// https://morphingtiling.wordpress.com/2010/12/27/regular-and-semi-regular-tilings/
+const semiRegularTilingGeometry = Vue.prototype.$geometry.semiRegularTilingGeometry = {
+  hexagonsTriangles: (repeatX=1, repeatY=1) => {
+    let red = new Three.Color("red")
+    let yellow = new Three.Color("yellow")
+    let hexUnit = 1
+    let hex = new Three.CircleGeometry(hexUnit, 6)
+    let hexApothem = hexUnit * Math.cos((180*(Math.PI/180)) / 6)
+    let hexSide = hexApothem * 2 * Math.tan((180*(Math.PI/180)) / 6)
+    let triUnit = hexApothem * (2/3)
+    let tri = new Three.CircleGeometry(triUnit, 3)
+    let triApothem = triUnit * Math.cos((180*(Math.PI/180)) / 3)
+    let triSide = triApothem * 2 * Math.tan((180*(Math.PI/180)) / 3)
+    tri.rotateZ(-30 * (Math.PI/180))
+    tri.translate(0, triApothem + hexApothem, 0)
+
+    for(let f=0; f < hex.faces.length; f++) {
+      hex.faces[f].color = red
+      hex.faces[f].materialIndex = 0
+    }
+    for(let f=0; f < tri.faces.length; f++) {
+      tri.faces[f].color = yellow
+      tri.faces[f].materialIndex = 1
+    }
+
+    let g = new Three.Geometry()
+    g.merge(hex)
+    g.merge(tri.clone())
+    g.merge(tri.clone().rotateZ(60 * (Math.PI/180)))
+    g.merge(g.clone().translate(hexUnit, -2*hexApothem))
+
+    let xTranslate = 2*hexUnit
+    let yTranslate = -4*hexApothem
+    let geometry = new Three.Geometry()
+    for (let x=0; x < repeatX; x++) {
+      for (let y=0; y < repeatY; y++) {
+        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
+      }
+    }
+    geometry.computeBoundingBox()
+    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
+  },
+  trianglesSquares1: (repeatX=1, repeatY=1) => {
+    let red = new Three.Color("red")
+    let yellow = new Three.Color("yellow")
+    let blue = new Three.Color("blue")
+    let unitSide = 1
+    let square = new Three.PlaneGeometry(unitSide, unitSide)
+    square.translate(0.5*unitSide, 0.5*unitSide)
+    let triUnit = unitSide / Math.sqrt(3)
+    let triApothem = triUnit * Math.cos((180*(Math.PI/180)) / 3)
+    let blueTri = new Three.CircleGeometry( triUnit, 3)
+    blueTri.translate(triApothem,0.5*unitSide,0)
+    let redTri = blueTri.clone()
+
+    for(let f=0; f < square.faces.length; f++) {
+      square.faces[f].color = yellow
+      square.faces[f].materialIndex = 0
+    }
+    for(let f=0; f < blueTri.faces.length; f++) {
+      blueTri.faces[f].color = blue
+      blueTri.faces[f].materialIndex = 1
+      redTri.faces[f].color = red
+      redTri.faces[f].materialIndex = 2
+    }
+
+    let g = new Three.Geometry()
+    g.merge(square)
+    g.merge(redTri.clone().rotateZ(60 * (Math.PI/180)))
+    g.merge(square.clone().rotateZ(150 * (Math.PI/180)))
+    g.merge(redTri.clone().rotateZ(-90 * (Math.PI/180)))
+    g.merge(blueTri.clone().rotateZ(-150 * (Math.PI/180)))
+    g.merge(blueTri.clone().translate(unitSide,0,0))
+    g.merge(redTri.clone().rotateZ(-60 * (Math.PI/180)).translate(unitSide,0,0))
+    g.merge(square.clone().rotateZ(-120 * (Math.PI/180)).translate(unitSide, 0, 0))
+    let p1 = pointOnCircle({x:unitSide, y:0}, unitSide, -30)
+    g.merge(square.clone().translate(p1.x, p1.y, 0))
+    g.merge(blueTri.clone().rotateZ(-90 * (Math.PI/180)).translate(p1.x, p1.y, 0))
+    g.merge(redTri.clone().rotateZ(-150 * (Math.PI/180)).translate(p1.x, p1.y, 0))
+    let p2 = pointOnCircle({x:0, y:0}, unitSide, -120)
+    g.merge(square.clone().rotateZ(-90 * (Math.PI/180)).translate(p2.x, p2.y, 0))
+    g.merge(redTri.clone().rotateZ(180 * (Math.PI/180)).translate(p2.x, p2.y, 0))
+    g.merge(blueTri.clone().rotateZ(120 * (Math.PI/180)).translate(p2.x, p2.y, 0))
+    let p3 = pointOnCircle({x:0, y:0}, unitSide, -60)
+    g.merge(blueTri.clone().rotateZ(-120 * (Math.PI/180)).translate(p3.x, p3.y, 0))
+    let p4 = pointOnCircle(p2, unitSide, -90)
+    g.merge(redTri.clone().rotateZ(-90 * (Math.PI/180)).translate(p4.x, p4.y, 0))
+    g.merge(blueTri.clone().rotateZ(-150 * (Math.PI/180)).translate(p4.x, p4.y, 0))
+    g.merge(square.clone().rotateZ(-210 * (Math.PI/180)).translate(p4.x, p4.y, 0))
+    let p5 = pointOnCircle(p3, unitSide, -30)
+    let p6 = pointOnCircle(p2, unitSide, -150 )
+    let p7 = {x: p1.x + unitSide, y: p1.y}
+    let p8 = pointOnCircle(p6, unitSide, -120)
+    let p9 = {x: unitSide, y: unitSide}
+
+    let translateDownRight = (new Three.Vector2(0, -1 * unitSide, 0)).add(new Three.Vector2(p5.x, p5.y))
+    let translateUpRight = (new Three.Vector2(p7.x, p7.y)).sub(new Three.Vector2(p6.x, p6.y))
+    let translateDownLeft = (new Three.Vector2(p8.x, p8.y)).sub(new Three.Vector2(p9.x, p9.y))
+
+    let geometry = new Three.Geometry()
+    let xPos = new Three.Vector2()
+    for(let x=0; x < repeatX; x++) {
+      if (x % 2 === 0) {
+        xPos.add(translateUpRight)
+      } else {
+        xPos.add(translateDownRight)
+      }
+      geometry.merge(g.clone().translate(xPos.x, xPos.y, 0))
+    }
+    let xGeometry = geometry.clone()
+    for(let y=1; y < repeatY; y++) {
+      geometry.merge(xGeometry.clone().translate(y * translateDownLeft.x, y * translateDownLeft.y, 0))
+    }
+
+    geometry.computeBoundingBox()
+    geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
 
   }
 }
