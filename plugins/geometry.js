@@ -440,47 +440,6 @@ const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
 // Regular tiling polygons
 // https://morphingtiling.wordpress.com/2010/12/27/regular-and-semi-regular-tilings/
 const semiRegularTilingGeometry = Vue.prototype.$geometry.semiRegularTilingGeometry = {
-  hexagonsTriangles: (repeatX=1, repeatY=1) => {
-    let red = new Three.Color("red")
-    let yellow = new Three.Color("yellow")
-    let hexUnit = 1
-    let hex = new Three.CircleGeometry(hexUnit, 6)
-    let hexApothem = hexUnit * Math.cos((180*(Math.PI/180)) / 6)
-    let hexSide = hexApothem * 2 * Math.tan((180*(Math.PI/180)) / 6)
-    let triUnit = hexApothem * (2/3)
-    let tri = new Three.CircleGeometry(triUnit, 3)
-    let triApothem = triUnit * Math.cos((180*(Math.PI/180)) / 3)
-    let triSide = triApothem * 2 * Math.tan((180*(Math.PI/180)) / 3)
-    tri.rotateZ(-30 * (Math.PI/180))
-    tri.translate(0, triApothem + hexApothem, 0)
-
-    for(let f=0; f < hex.faces.length; f++) {
-      hex.faces[f].color = red
-      hex.faces[f].materialIndex = 0
-    }
-    for(let f=0; f < tri.faces.length; f++) {
-      tri.faces[f].color = yellow
-      tri.faces[f].materialIndex = 1
-    }
-
-    let g = new Three.Geometry()
-    g.merge(hex)
-    g.merge(tri.clone())
-    g.merge(tri.clone().rotateZ(60 * (Math.PI/180)))
-    g.merge(g.clone().translate(hexUnit, -2*hexApothem))
-
-    let xTranslate = 2*hexUnit
-    let yTranslate = -4*hexApothem
-    let geometry = new Three.Geometry()
-    for (let x=0; x < repeatX; x++) {
-      for (let y=0; y < repeatY; y++) {
-        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
-      }
-    }
-    geometry.computeBoundingBox()
-    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
-    return new Three.BufferGeometry().fromGeometry(geometry)
-  },
   trianglesSquares1: (repeatX=1, repeatY=1) => {
     let red = new Three.Color("red")
     let yellow = new Three.Color("yellow")
@@ -611,5 +570,99 @@ const semiRegularTilingGeometry = Vue.prototype.$geometry.semiRegularTilingGeome
     geometry.computeBoundingBox()
     geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
     return new Three.BufferGeometry().fromGeometry(geometry)
-  }
+  },
+  squaresOctagons: (repeatX=1, repeatY=1) => {
+    let red = new Three.Color("red")
+    let yellow = new Three.Color("yellow")
+    let blue = new Three.Color("blue")
+
+    let unitSide = 1
+    let blueSquare = new Three.PlaneGeometry(unitSide, unitSide)
+    let octagonRadius = unitSide / (2*Math.sin(180 * (Math.PI/180) / 8))
+    let octagonApothem = octagonRadius * Math.cos(180 * (Math.PI/180) / 8)
+    console.log(octagonApothem)
+    let redOctagon = new Three.CircleGeometry(octagonRadius, 8)
+    redOctagon.rotateZ(22.5 * (Math.PI/180))
+    let yellowOctagon = redOctagon.clone()
+
+    for(let f=0; f < blueSquare.faces.length; f++) {
+      blueSquare.faces[f].color = blue
+      blueSquare.faces[f].materialIndex = 0
+    }
+    for(let f=0; f < redOctagon.faces.length; f++) {
+      redOctagon.faces[f].color = red
+      redOctagon.faces[f].materialIndex = 1
+      yellowOctagon.faces[f].color = yellow
+      yellowOctagon.faces[f].materialIndex = 2
+    }
+
+    let g = new Three.Geometry()
+    g.merge(redOctagon)
+    g.merge(blueSquare.clone().translate(octagonApothem + 0.5 * unitSide, 0, 0))
+    g.merge(blueSquare.clone().translate(0, -1 * (octagonApothem + 0.5 * unitSide), 0))
+    g.merge(yellowOctagon.clone().translate(octagonApothem + 0.5 * unitSide, (-0.5 * unitSide) + (-1 * octagonApothem), 0))
+
+    let geometry = new Three.Geometry()
+    for(let x=0; x < repeatX; x++) {
+      geometry.merge(g.clone().translate(x * (2 * octagonApothem + unitSide), 0, 0))
+    }
+    let geometryX = geometry.clone()
+    for(let y=1; y < repeatY; y++) {
+      geometry.merge(geometryX.clone().translate(0, -1 * y * (2 * octagonApothem + unitSide), 0))
+    }
+    geometry.computeBoundingBox()
+    geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
+  },
+  hexagonsTriangles1: (repeatX=1, repeatY=1) => {
+    let red = new Three.Color("red")
+    let yellow = new Three.Color("yellow")
+    let hexUnit = 1
+    let hex = new Three.CircleGeometry(hexUnit, 6)
+    let hexApothem = hexUnit * Math.cos((180*(Math.PI/180)) / 6)
+    let hexSide = hexApothem * 2 * Math.tan((180*(Math.PI/180)) / 6)
+    let triUnit = hexApothem * (2/3)
+    let tri = new Three.CircleGeometry(triUnit, 3)
+    let triApothem = triUnit * Math.cos((180*(Math.PI/180)) / 3)
+    let triSide = triApothem * 2 * Math.tan((180*(Math.PI/180)) / 3)
+    tri.rotateZ(-30 * (Math.PI/180))
+    tri.translate(0, triApothem + hexApothem, 0)
+
+    for(let f=0; f < hex.faces.length; f++) {
+      hex.faces[f].color = red
+      hex.faces[f].materialIndex = 0
+    }
+    for(let f=0; f < tri.faces.length; f++) {
+      tri.faces[f].color = yellow
+      tri.faces[f].materialIndex = 1
+    }
+
+    let g = new Three.Geometry()
+    g.merge(hex)
+    g.merge(tri.clone())
+    g.merge(tri.clone().rotateZ(60 * (Math.PI/180)))
+    g.merge(g.clone().translate(hexUnit, -2*hexApothem))
+
+    let xTranslate = 2*hexUnit
+    let yTranslate = -4*hexApothem
+    let geometry = new Three.Geometry()
+    for (let x=0; x < repeatX; x++) {
+      for (let y=0; y < repeatY; y++) {
+        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
+      }
+    }
+    geometry.computeBoundingBox()
+    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+    return new Three.BufferGeometry().fromGeometry(geometry)
+  },
+  hexagonsTriangles2: (repeatX=1, repeatY=1) => {
+  },
+  hexagonsTriangles3: (repeatX=1, repeatY=1) => {
+  },
+  hexagonsSquares: (repeatX=1, repeatY=1) => {
+  },
+  dodecagonsSquaresHexagons: (repeatX=1, repeatY=1) => {
+  },
+  dodecagonsTriangles: (repeatX=1, repeatY=1) => {
+  },
 }

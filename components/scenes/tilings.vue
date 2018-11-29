@@ -18,10 +18,10 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: true},
-    zoom: {type: Number, default: 15},
-    repeatX: {type: Number, default: 10},
-    repeatY: {type: Number, default: 10},
-    tileType: {type: String, default: 'trianglesSquares2'},
+    zoom: {type: Number, default: 10},
+    repeatX: {type: Number, default: 5},
+    repeatY: {type: Number, default: 5},
+    tileType: {type: String, default: 'squaresOctagons'},
     tileScale: {type: Number, default: 1}
   },
   data() {
@@ -41,12 +41,14 @@ export default {
         tilingFunc = this.$geometry.regularTilingGeometry.squares
       } else if (type === 'hexagons') {
         tilingFunc = this.$geometry.regularTilingGeometry.hexagons
-      } else if (type === 'hexagonsTriangles') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles
       } else if (type === 'trianglesSquares1') {
         tilingFunc = this.$geometry.semiRegularTilingGeometry.trianglesSquares1
       } else if (type === 'trianglesSquares2') {
         tilingFunc = this.$geometry.semiRegularTilingGeometry.trianglesSquares2
+      } else if (type === 'squaresOctagons') {
+        tilingFunc = this.$geometry.semiRegularTilingGeometry.squaresOctagons
+      } else if (type === 'hexagonsTriangles1') {
+        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles1
       }
       let tileGeometry = tilingFunc(repeatX, repeatY)
       tileGeometry.scale(scale, scale, scale)
