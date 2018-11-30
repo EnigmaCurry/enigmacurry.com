@@ -574,7 +574,7 @@ const semiRegularTrianglesSquares2 = Vue.prototype.$geometry.semiRegularTilingGe
   return new Three.BufferGeometry().fromGeometry(geometry)
 }
 
-const semiRegularSquaresOctagons = Vue.prototype.$geometry.semiRegularTilingGeometry.sqauresOctagons = (repeatX=1, repeatY=1) => {
+const semiRegularSquaresOctagons = Vue.prototype.$geometry.semiRegularTilingGeometry.squaresOctagons = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let yellow = new Three.Color("yellow")
   let blue = new Three.Color("blue")
@@ -583,7 +583,6 @@ const semiRegularSquaresOctagons = Vue.prototype.$geometry.semiRegularTilingGeom
   let blueSquare = new Three.PlaneGeometry(unitSide, unitSide)
   let octagonRadius = unitSide / (2*Math.sin(180 * (Math.PI/180) / 8))
   let octagonApothem = octagonRadius * Math.cos(180 * (Math.PI/180) / 8)
-  console.log(octagonApothem)
   let redOctagon = new Three.CircleGeometry(octagonRadius, 8)
   redOctagon.rotateZ(22.5 * (Math.PI/180))
   let yellowOctagon = redOctagon.clone()
@@ -753,13 +752,220 @@ const semiRegularHexagonsTriangles3 = Vue.prototype.$geometry.semiRegularTilingG
   return geometry
 }
 
-const semiRegularHexagonsSquares = Vue.prototype.$geometry.semiRegularTilingGeometry.hexagonsSquares = (repeatX=1, repeatY=1) => {
+const semiRegularHexagonsSquaresTriangles = Vue.prototype.$geometry.semiRegularTilingGeometry.hexagonsSquaresTriangles = (repeatX=1, repeatY=1) => {
+  let red = new Three.Color("red")
+  let blue = new Three.Color("blue")
+  let yellow = new Three.Color("yellow")
+  let unitSide = 1
+  let hex = new Three.CircleGeometry(unitSide, 6)
+  let hexApothem = unitSide * Math.cos((180*(Math.PI/180)) / 6)
+  let hexSide = hexApothem * 2 * Math.tan((180*(Math.PI/180)) / 6)
+  let square = new Three.PlaneGeometry(unitSide, unitSide)
+  square.translate(0.5*unitSide, 0.5*unitSide)
+  let triUnit = hexApothem * (2/3)
+  let tri = new Three.CircleGeometry(triUnit, 3)
+  let triApothem = triUnit * Math.cos((180*(Math.PI/180)) / 3)
+  let triSide = triApothem * 2 * Math.tan((180*(Math.PI/180)) / 3)
+  tri.rotateZ(-30 * (Math.PI/180))
+  tri.translate(0.5 * unitSide, triApothem, 0)
 
+  for(let f=0; f < hex.faces.length; f++) {
+    hex.faces[f].color = red
+    hex.faces[f].materialIndex = 0
+  }
+  for(let f=0; f < square.faces.length; f++) {
+    square.faces[f].color = blue
+    square.faces[f].materialIndex = 1
+  }
+  for(let f=0; f < tri.faces.length; f++) {
+    tri.faces[f].color = yellow
+    tri.faces[f].materialIndex = 2
+  }
+
+  let g = new Three.Geometry()
+  g.merge(hex)
+  g.merge(tri.clone().rotateZ(-30 * (Math.PI/180)).translate(unitSide,0,0))
+  g.merge(tri.clone().rotateZ(150 * (Math.PI/180)).translate(-unitSide,0,0))
+  g.merge(square.clone().rotateZ(60 * (Math.PI/180)).translate(-unitSide,0,0))
+  g.merge(square.clone().rotateZ(30 * (Math.PI/180)).translate(unitSide,0,0))
+  g.merge(square.clone().rotateZ(-120 * (Math.PI/180)).translate(unitSide,0,0))
+  g.merge(square.clone().rotateZ(-150 * (Math.PI/180)).translate(-unitSide,0,0))
+  g.merge(square.clone().translate(-0.5 * unitSide, -1*hexApothem-unitSide, 0))
+  g.merge(tri.clone().rotateZ(-150 * (Math.PI/180)).translate(-0.5*unitSide, -1*hexApothem,0))
+  g.merge(tri.clone().rotateZ(-90 * (Math.PI/180)).translate(0.5*unitSide, -1*hexApothem,0))
+  g.merge(square.clone().translate(unitSide+hexApothem,-0.5*unitSide,0))
+  g.merge(square.clone().translate(-2*unitSide-hexApothem,-0.5*unitSide,0))
+  g.merge(tri.clone().rotateZ(90 * (Math.PI/180)).translate(-2*unitSide-hexApothem,-0.5*unitSide,0))
+  g.merge(square.clone().rotateZ(150 * (Math.PI/180)).translate(-2*unitSide-hexApothem,-0.5*unitSide,0))
+  g.merge(square.clone().rotateZ(120 * (Math.PI/180)).translate(-2*unitSide-hexApothem,-0.5*unitSide-2*hexApothem,0))
+  g.merge(tri.clone().rotateZ(210 * (Math.PI/180)).translate(-2*unitSide-hexApothem,-0.5*unitSide-2*hexApothem,0))
+  g.merge(tri.clone().rotateZ(150 * (Math.PI/180)).translate(-2.5*unitSide-hexApothem,-1*hexApothem-0.5*unitSide,0))
+  g.merge(hex.clone().translate(-1*hexApothem-1.5*unitSide, -1*hexApothem - 0.5*unitSide))
+  g.merge(hex.clone().translate(1*hexApothem+1.5*unitSide, -1*hexApothem - 0.5*unitSide))
+  g.merge(square.clone().rotateZ(-120 * (Math.PI/180)).translate(-0.5*unitSide-1*hexApothem,-1*hexApothem-0.5*unitSide,0))
+  g.merge(square.clone().rotateZ(-150 * (Math.PI/180)).translate(0.5*unitSide+1*hexApothem,-1*hexApothem-0.5*unitSide,0))
+  g.merge(hex.clone().translate(0, -2*hexApothem-unitSide,0))
+  g.merge(square.clone().translate(-2*unitSide-hexApothem, -2*hexApothem-1.5*unitSide,0))
+  g.merge(square.clone().translate(1*unitSide+hexApothem, -2*hexApothem-1.5*unitSide,0))
+  g.merge(tri.clone().rotateZ(-30 * (Math.PI/180)).translate(unitSide, -2*hexApothem-unitSide))
+  g.merge(tri.clone().rotateZ(150 * (Math.PI/180)).translate(-unitSide, -2*hexApothem-unitSide))
+  g.merge(square.clone().rotateZ(-120 * (Math.PI/180)).translate(unitSide, -2*hexApothem-unitSide))
+  g.merge(square.clone().rotateZ(-150 * (Math.PI/180)).translate(-unitSide, -2*hexApothem-unitSide))
+  g.merge(square.clone().translate(-0.5*unitSide, -3*hexApothem-2*unitSide,0))
+  g.merge(tri.clone().rotateZ(90 * (Math.PI/180)).translate(-0.5*unitSide, -3*hexApothem-2*unitSide,0))
+  g.merge(tri.clone().rotateZ(30 * (Math.PI/180)).translate(0.5*unitSide, -3*hexApothem-2*unitSide,0))
+  g.merge(hex.clone().translate(-1*hexApothem-1.5*unitSide, -3*hexApothem - 1.5*unitSide))
+  g.merge(square.clone().rotateZ(60 * (Math.PI/180)).translate(-1*hexApothem-2.5*unitSide, -3*hexApothem - 1.5*unitSide))
+  g.merge(square.clone().rotateZ(210 * (Math.PI/180)).translate(-1*hexApothem-2.5*unitSide, -3*hexApothem - 1.5*unitSide))
+  g.merge(tri.clone().rotateZ(150 * (Math.PI/180)).translate(-1*hexApothem-2.5*unitSide, -3*hexApothem - 1.5*unitSide))
+  g.merge(hex.clone().translate(1*hexApothem+1.5*unitSide, -3*hexApothem - 1.5*unitSide))
+
+  let geometry = new Three.Geometry()
+  for(let y=0; y < repeatY; y++) {
+    geometry.merge(g.clone().translate(0, y * (-4*hexApothem-2*unitSide), 0))
+  }
+  let geometryY = geometry.clone()
+  for(let x=1; x < repeatX; x++) {
+    geometry.merge(geometryY.clone().translate(x * (4.5*unitSide+3*hexApothem),x * (-0.5 * unitSide - hexApothem),0))
+  }
+  geometry.computeBoundingBox()
+  geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
+  return new Three.BufferGeometry().fromGeometry(geometry)
 }
+
 const semiRegularDodecagonsSquaresHexagons = Vue.prototype.$geometry.semiRegularTilingGeometry.dodecagonsSquaresHexagons = (repeatX=1, repeatY=1) => {
+  let red = new Three.Color("red")
+  let blue = new Three.Color("blue")
+  let yellow = new Three.Color("yellow")
+  let unitSide = 1
 
+  let dodecaRadius = unitSide / (2*Math.sin(180 * (Math.PI/180) / 12))
+  let dodecaApothem = dodecaRadius * Math.cos(180 * (Math.PI/180) / 12)
+  let dodeca = new Three.CircleGeometry(dodecaRadius, 12)
+  dodeca.rotateZ(15 * (Math.PI/180))
+  let hexRadius = unitSide / (2*Math.sin(180 * (Math.PI/180) / 6))
+  let hexApothem = hexRadius * Math.cos(180 * (Math.PI/180) / 6)
+  let hex = new Three.CircleGeometry(hexRadius, 6)
+  let square = new Three.PlaneGeometry(unitSide, unitSide)
+
+
+  for(let f=0; f < dodeca.faces.length; f++) {
+    dodeca.faces[f].color = red
+    dodeca.faces[f].materialIndex = 0
+  }
+  for(let f=0; f < square.faces.length; f++) {
+    square.faces[f].color = blue
+    square.faces[f].materialIndex = 1
+  }
+  for(let f=0; f < hex.faces.length; f++) {
+    hex.faces[f].color = yellow
+    hex.faces[f].materialIndex = 2
+  }
+
+
+  let g = new Three.Geometry()
+  g.merge(dodeca)
+  let s1 = square.clone().translate(0,dodecaApothem+0.5*unitSide,0)
+  g.merge(s1)
+  g.merge(s1.clone().rotateZ(60 * (Math.PI/180)))
+  g.merge(s1.clone().rotateZ(120 * (Math.PI/180)))
+  g.merge(s1.clone().rotateZ(180 * (Math.PI/180)))
+  g.merge(s1.clone().rotateZ(240 * (Math.PI/180)))
+  g.merge(s1.clone().rotateZ(300 * (Math.PI/180)))
+  let h1 = hex.clone().rotateZ(30 * (Math.PI/180)).translate(-1 * dodecaApothem - hexApothem,0,0)
+  g.merge(h1)
+  g.merge(h1.clone().rotateZ(60 * (Math.PI/180)))
+  g.merge(h1.clone().rotateZ(120 * (Math.PI/180)))
+  g.merge(h1.clone().rotateZ(180 * (Math.PI/180)))
+  g.merge(h1.clone().rotateZ(240 * (Math.PI/180)))
+  g.merge(h1.clone().rotateZ(300 * (Math.PI/180)))
+  let d1 = dodeca.clone().translate(0,-2*dodecaApothem-unitSide,0)
+  //g.merge(d1)
+  //g.merge(d1.clone().rotateZ(60 * (Math.PI/180)))
+  //g.merge(d1.clone().rotateZ(120 * (Math.PI/180)))
+  g.merge(d1.clone().rotateZ(180 * (Math.PI/180)))
+  g.merge(d1.clone().rotateZ(240 * (Math.PI/180)))
+  g.merge(d1.clone().rotateZ(300 * (Math.PI/180)))
+  let s2 = square.clone().translate(0.5*unitSide+dodecaApothem+2*hexApothem,0,0)
+  //g.merge(s2)
+  g.merge(s2.clone().rotateZ(60 * (Math.PI/180)))
+  g.merge(s2.clone().rotateZ(120 * (Math.PI/180)))
+  g.merge(s2.clone().rotateZ(180 * (Math.PI/180)))
+  g.merge(s2.clone().rotateZ(240 * (Math.PI/180)))
+  g.merge(s2.clone().rotateZ(300 * (Math.PI/180)))
+
+  g.merge(square.clone().translate(-2*hexApothem-dodecaApothem-0.5*unitSide,-2*dodecaApothem-unitSide))
+  g.merge(h1.clone().translate(-2*hexApothem-unitSide,0,0).rotateZ(60 * (Math.PI/180)))
+  g.merge(h1.clone().translate(-2*hexApothem-unitSide,0,0).rotateZ(120 * (Math.PI/180)))
+
+  let geometry = new Three.Geometry()
+  for(let x=0; x < repeatX; x++) {
+    for(let y=0; y < repeatY; y++) {
+      geometry.merge(g.clone().translate(x*(2*dodecaApothem+4*hexApothem+unitSide),y*(-4*dodecaApothem-2*unitSide),0))
+    }
+  }
+
+  geometry.computeBoundingBox()
+  geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
+  return new Three.BufferGeometry().fromGeometry(geometry)
 }
-const semiRegularDodecagonsTriangles = Vue.prototype.$geometry.semiRegularTilingGeometry.dodecagonsTriangles = (repeatX=1, repeatY=1) => {
 
+const semiRegularDodecagonsTriangles = Vue.prototype.$geometry.semiRegularTilingGeometry.dodecagonsTriangles = (repeatX=1, repeatY=1) => {
+  let red = new Three.Color("red")
+  let blue = new Three.Color("blue")
+  let yellow = new Three.Color("yellow")
+  let green = new Three.Color(0x00ff00)
+  let unitSide = 1
+
+  let dodecaRadius = unitSide / (2*Math.sin(180 * (Math.PI/180) / 12))
+  let dodecaApothem = dodecaRadius * Math.cos(180 * (Math.PI/180) / 12)
+  let redDodeca = new Three.CircleGeometry(dodecaRadius, 12)
+  redDodeca.rotateZ(15 * (Math.PI/180))
+  let blueDodeca = redDodeca.clone()
+  let yellowDodeca = redDodeca.clone()
+  let triRadius = unitSide / (2*Math.sin(180 * (Math.PI/180) / 3))
+  let triApothem = triRadius * Math.cos(180 * (Math.PI/180) / 3)
+  let tri = new Three.CircleGeometry(triRadius, 3)
+  tri.rotateZ(-30 * (Math.PI/180)).translate(0,triApothem,0)
+
+  for(let f=0; f < redDodeca.faces.length; f++) {
+    redDodeca.faces[f].color = red
+    blueDodeca.faces[f].color = blue
+    yellowDodeca.faces[f].color = yellow
+    redDodeca.faces[f].materialIndex = 0
+    blueDodeca.faces[f].materialIndex = 1
+    yellowDodeca.faces[f].materialIndex = 2
+  }
+  for(let f=0; f < tri.faces.length; f++) {
+    tri.faces[f].color = green
+    tri.faces[f].materialIndex = 3
+  }
+
+  let g = new Three.Geometry()
+  g.merge(redDodeca)
+  g.merge(yellowDodeca.clone().translate(2*dodecaApothem,0,0))
+  g.merge(blueDodeca.clone().translate(-2*dodecaApothem,0,0))
+  let t1 = tri.clone().translate(0,dodecaApothem)
+  g.merge(t1)
+  g.merge(t1.clone().rotateZ(60 * (Math.PI/180)))
+  g.merge(t1.clone().rotateZ(-60 * (Math.PI/180)))
+  g.merge(t1.clone().translate(2*dodecaApothem,0,0))
+  g.merge(t1.clone().translate(2*dodecaApothem,0,0))
+  g.merge(t1.clone().rotateZ(-60 * (Math.PI/180)).translate(2*dodecaApothem,0,0))
+  g.merge(t1.clone().translate(-2*dodecaApothem,0,0))
+
+  g.merge(g.clone().translate(-3*dodecaApothem,2*dodecaApothem-2*triApothem,0))
+
+
+  let geometry = new Three.Geometry()
+  for (let x=0; x < repeatX; x++) {
+    for (let y=0; y < repeatY; y++) {
+      geometry.merge(g.clone().translate(x*6*dodecaApothem,-1 * y*(4*dodecaApothem-4*triApothem),0))
+    }
+  }
+
+  geometry.computeBoundingBox()
+  geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
+  return new Three.BufferGeometry().fromGeometry(geometry)
 }
 

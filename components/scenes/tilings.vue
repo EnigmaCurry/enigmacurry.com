@@ -17,11 +17,11 @@ import {shuffle} from 'underscore'
 export default {
   props: {
     animated: {type: Boolean, default: false},
-    showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 20},
-    repeatX: {type: Number, default: 2},
-    repeatY: {type: Number, default: 2},
-    tileType: {type: String, default: 'hexagonsTriangles3'},
+    showGrid: {type: Boolean, default: true},
+    zoom: {type: Number, default: 50},
+    repeatX: {type: Number, default: 10},
+    repeatY: {type: Number, default: 10},
+    tileType: {type: String, default: 'triangles'},
     tileScale: {type: Number, default: 1}
   },
   data() {
@@ -53,6 +53,12 @@ export default {
         tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles2
       } else if (type === 'hexagonsTriangles3') {
         tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles3
+      } else if (type === 'hexagonsSquaresTriangles') {
+        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsSquaresTriangles
+      } else if (type === 'dodecagonsSquaresHexagons') {
+        tilingFunc = this.$geometry.semiRegularTilingGeometry.dodecagonsSquaresHexagons
+      } else if (type === 'dodecagonsTriangles') {
+        tilingFunc = this.$geometry.semiRegularTilingGeometry.dodecagonsTriangles
       }
 
       let tileGeometry = tilingFunc(repeatX, repeatY)
