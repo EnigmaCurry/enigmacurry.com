@@ -3,8 +3,8 @@
     <scene :obj="scene">
       <g-camera orthographic :zoomScale="zoom"/>
 
-      <g-grid :divisions="10" v-if="showGrid"/>
-
+      <g-grid :size="100" :divisions="100" v-if="showGrid"/>
+      <animation :fn="animate" :speed="0.01"/>
     </scene>
   </g-renderer>
 </template>
@@ -18,54 +18,44 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: true},
-    zoom: {type: Number, default: 50},
-    repeatX: {type: Number, default: 10},
-    repeatY: {type: Number, default: 10},
-    tileType: {type: String, default: 'triangles'},
-    tileScale: {type: Number, default: 1}
+    zoom: {type: Number, default: 20},
+    repeatX: {type: Number, default: 2},
+    repeatY: {type: Number, default: 2},
+    speedX: {type: Number, default: 1},
+    speedY: {type: Number, default: 0},
+    tileType: {type: String, default: 'snubSquare'},
+    tileScale: {type: Number, default: 0.5}
   },
   data() {
+    let mesh = this.tilingMesh(this.tileType, this.repeatX, this.repeatY, this.tileScale)
+    let startPos = mesh.position.clone()
     return {
-      scene: new Three.Scene()
+      scene: new Three.Scene(),
+      mesh,
+      startPos,
+      time: 0
     }
   },
   created() {
-    this.tiling(this.tileType, this.repeatX, this.repeatY, this.tileScale)
+    this.mesh.geometry.computeBoundingBox()
+    this.scene.add(this.mesh)
   },
   methods: {
-    tiling(type, repeatX, repeatY, scale=1) {
-      let tilingFunc
-      if (type === 'triangles') {
-        tilingFunc = this.$geometry.regularTilingGeometry.triangles
-      } else if (type === 'squares') {
-        tilingFunc = this.$geometry.regularTilingGeometry.squares
-      } else if (type === 'hexagons') {
-        tilingFunc = this.$geometry.regularTilingGeometry.hexagons
-      } else if (type === 'trianglesSquares1') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.trianglesSquares1
-      } else if (type === 'trianglesSquares2') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.trianglesSquares2
-      } else if (type === 'squaresOctagons') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.squaresOctagons
-      } else if (type === 'hexagonsTriangles1') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles1
-      } else if (type === 'hexagonsTriangles2') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles2
-      } else if (type === 'hexagonsTriangles3') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsTriangles3
-      } else if (type === 'hexagonsSquaresTriangles') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.hexagonsSquaresTriangles
-      } else if (type === 'dodecagonsSquaresHexagons') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.dodecagonsSquaresHexagons
-      } else if (type === 'dodecagonsTriangles') {
-        tilingFunc = this.$geometry.semiRegularTilingGeometry.dodecagonsTriangles
-      }
-
-      let tileGeometry = tilingFunc(repeatX, repeatY)
-      tileGeometry.scale(scale, scale, scale)
+    animate() {
+      //this.mesh.position.x = this.startPos.x - (this.time * this.speedX % this.tiling.period.x)
+      //this.mesh.position.y = this.startPos.y - (this.time * this.speedY % this.tiling.period.y)
+      this.time += 0.01
+    },
+    tilingMesh(type, repeatX, repeatY, scale=1) {
+      let tilingFunc = this.$geometry.tilingGeometry[this.tileType]
+      
+      this.tiling = tilingFunc(repeatX, repeatY)
+      this.tiling.geometry.scale(scale, scale, scale)
+      // this.tiling.period.x *= scale 
+      // this.tiling.period.y *= scale 
       let material = new Three.MeshBasicMaterial({ vertexColors: Three.FaceColors, wireframe: false })
-      let mesh = new Three.Mesh(tileGeometry, material)
-      this.scene.add(mesh)      
+      let mesh = new Three.Mesh(this.tiling.geometry, material)
+      return mesh
     }
   }
 }

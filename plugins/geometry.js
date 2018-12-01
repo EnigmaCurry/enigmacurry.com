@@ -323,125 +323,143 @@ const epicycle = Vue.prototype.$geometry.epicycle = (orbitRadius, orbitPeriod, c
 
 // Regular tiling polygons
 // https://morphingtiling.wordpress.com/2010/12/27/regular-and-semi-regular-tilings/
-const regularTilingGeometry = Vue.prototype.$geometry.regularTilingGeometry = {
-  triangles: (repeatX=1, repeatY=1) => {
-    let normal = new Three.Vector3(0, 0, 0)
-    let yellow = new Three.Color("yellow")
-    let blue = new Three.Color("blue")
-    let g = new Three.Geometry()
-    g.vertices[0] = new Three.Vector3(0, 0, 0)
-    g.vertices[1] = new Three.Vector3(Math.sqrt(3), -1, 0)
-    g.vertices[2] = new Three.Vector3(0, -2, 0)
-    g.faces[0] = new Three.Face3(2, 1, 0, normal, yellow, 0)
-    g.vertices[3] = new Three.Vector3(Math.sqrt(3), -3, 0)
-    g.faces[1] = new Three.Face3(2, 3, 1, normal, blue, 1)
-    g.vertices[4] = new Three.Vector3(2*Math.sqrt(3), -2, 0)
-    g.faces[2] = new Three.Face3(3, 4, 1, normal, yellow, 0)
-    g.vertices[5] = new Three.Vector3(2*Math.sqrt(3), 0, 0)
-    g.faces[3] = new Three.Face3(1, 4, 5, normal, blue, 1)
+const regularTilingGeometry = Vue.prototype.$geometry.tilingGeometry = { }
 
-    let xTranslate = 2 * Math.sqrt(3)
-    let yTranslate = -2
-    let geometry = new Three.Geometry()
-    for (let x=0; x < repeatX; x++) {
-      for (let y=0; y < repeatY; y++) {
-        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
-      }
+const triangularTiling = Vue.prototype.$geometry.tilingGeometry.triangular = (repeatX=1, repeatY=1) => {
+  let normal = new Three.Vector3(0, 0, 0)
+  let yellow = new Three.Color("yellow")
+  let blue = new Three.Color("blue")
+  let g = new Three.Geometry()
+  g.vertices[0] = new Three.Vector3(0, 0, 0)
+  g.vertices[1] = new Three.Vector3(Math.sqrt(3), -1, 0)
+  g.vertices[2] = new Three.Vector3(0, -2, 0)
+  g.faces[0] = new Three.Face3(2, 1, 0, normal, yellow, 0)
+  g.vertices[3] = new Three.Vector3(Math.sqrt(3), -3, 0)
+  g.faces[1] = new Three.Face3(2, 3, 1, normal, blue, 1)
+  g.vertices[4] = new Three.Vector3(2*Math.sqrt(3), -2, 0)
+  g.faces[2] = new Three.Face3(3, 4, 1, normal, yellow, 0)
+  g.vertices[5] = new Three.Vector3(2*Math.sqrt(3), 0, 0)
+  g.faces[3] = new Three.Face3(1, 4, 5, normal, blue, 1)
+
+  let xTranslate = 2 * Math.sqrt(3)
+  let yTranslate = -2
+  let geometry = new Three.Geometry()
+  for (let x=0; x < repeatX; x++) {
+    for (let y=0; y < repeatY; y++) {
+      geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
     }
-    geometry.computeBoundingBox()
-    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
-    return new Three.BufferGeometry().fromGeometry(geometry)
- },
-  squares: (repeatX=1, repeatY=1) => {
-    let normal = new Three.Vector3(0, 0, 0)
-    let yellow = new Three.Color("yellow")
-    let red = new Three.Color("red")
-
-    let square = (color, translateX=0, translateY=0) => {
-      let s = new Three.Geometry()
-      let materialIndex = color === red ? 1 : 0
-      s.vertices[0] = new Three.Vector3(0 + translateX, 0 + translateY, 0)
-      s.vertices[1] = new Three.Vector3(2 + translateX, 0 + translateY, 0)
-      s.vertices[2] = new Three.Vector3(2 + translateX, -2 + translateY, 0)
-      s.faces[0] = new Three.Face3(2, 1, 0, normal, color, materialIndex)
-      s.vertices[3] = new Three.Vector3(0 + translateX, -2 + translateY, 0)
-      s.faces[1] = new Three.Face3(3, 2, 0, normal, color, materialIndex)
-      return s
+  }
+  geometry.computeBoundingBox()
+  geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry),
+    period: {
+      x: xTranslate,
+      y: yTranslate
     }
+  }
+}
+const squareTiling = Vue.prototype.$geometry.tilingGeometry.square = (repeatX=1, repeatY=1) => {
+  let normal = new Three.Vector3(0, 0, 0)
+  let yellow = new Three.Color("yellow")
+  let red = new Three.Color("red")
 
-    let g = new Three.Geometry()
-    g.merge(square(yellow))
-    g.merge(square(red, 0, -2))
-    g.merge(square(yellow, 2, -2))
-    g.merge(square(red, 2, 0))
+  let square = (color, translateX=0, translateY=0) => {
+    let s = new Three.Geometry()
+    let materialIndex = color === red ? 1 : 0
+    s.vertices[0] = new Three.Vector3(0 + translateX, 0 + translateY, 0)
+    s.vertices[1] = new Three.Vector3(2 + translateX, 0 + translateY, 0)
+    s.vertices[2] = new Three.Vector3(2 + translateX, -2 + translateY, 0)
+    s.faces[0] = new Three.Face3(2, 1, 0, normal, color, materialIndex)
+    s.vertices[3] = new Three.Vector3(0 + translateX, -2 + translateY, 0)
+    s.faces[1] = new Three.Face3(3, 2, 0, normal, color, materialIndex)
+    return s
+  }
 
-    let xTranslate = 4
-    let yTranslate = -4
-    let geometry = new Three.Geometry()
-    for (let x=0; x < repeatX; x++) {
-      for (let y=0; y < repeatY; y++) {
-        geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
-      }
+  let g = new Three.Geometry()
+  g.merge(square(yellow))
+  g.merge(square(red, 0, -2))
+  g.merge(square(yellow, 2, -2))
+  g.merge(square(red, 2, 0))
+
+  let xTranslate = 4
+  let yTranslate = -4
+  let geometry = new Three.Geometry()
+  for (let x=0; x < repeatX; x++) {
+    for (let y=0; y < repeatY; y++) {
+      geometry.merge(g.clone().translate(x * xTranslate, y * yTranslate, 0))
     }
-    geometry.computeBoundingBox()
-    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
-    return new Three.BufferGeometry().fromGeometry(geometry)
-  },
-  hexagons: (repeatX, repeatY) => {
-    let normal = new Three.Vector3(0, 0, 0)
-    let red = new Three.Color("red")
-    let blue = new Three.Color("blue")
-    let yellow = new Three.Color("yellow")
-
-    let triangle = (color, translateX=0, translateY=0) => {
-      let t = new Three.Geometry()
-      let materialIndex
-      if (color === red) { materialIndex = 0 }
-      else if (color === blue) { materialIndex = 1 }
-      else if (color === yellow) { materialIndex = 2 }
-      t.vertices[0] = new Three.Vector3(0 + translateX, 0 + translateY, 0)
-      t.vertices[1] = new Three.Vector3(Math.sqrt(3) + translateX, 1 + translateY, 0)
-      t.vertices[2] = new Three.Vector3(Math.sqrt(3) + translateX, -1 + translateY, 0)
-      t.faces[0] = new Three.Face3(2, 1, 0, normal, color, materialIndex)
-      return t
+  }
+  geometry.computeBoundingBox()
+  geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry),
+    period: {
+      x: xTranslate,
+      y: yTranslate
     }
+  }
+}
 
-    let hexagon = (color, translateX=0, translateY=0) => {
-      let h = new Three.Geometry()
-      let angle = 0
-      for (let a=0; a < 6; a++) {
-        let t = triangle(color)
-        t.rotateZ(angle * (Math.PI/180))
-        h.merge(t)
-        angle += 60
-      }
-      return h
-    }
+const hexagonalTiling = Vue.prototype.$geometry.tilingGeometry.hexagonal = (repeatX, repeatY) => {
+  let normal = new Three.Vector3(0, 0, 0)
+  let red = new Three.Color("red")
+  let blue = new Three.Color("blue")
+  let yellow = new Three.Color("yellow")
 
-    let xTranslate = 6 * Math.sqrt(3)
-    let yTranslate = -6
-    let geometry = new Three.Geometry()
-    for (let x=0; x < repeatX; x++) {
-      for (let y=0; y < repeatY; y++) {
-        geometry.merge(hexagon(red).translate(x * xTranslate, y * yTranslate, 0))
-        geometry.merge(hexagon(blue).translate(x * xTranslate + 2*Math.sqrt(3), y * yTranslate, 0)) 
-        geometry.merge(hexagon(yellow).translate(x * xTranslate + 4*Math.sqrt(3), y * yTranslate, 0))
-        geometry.merge(hexagon(yellow).translate(x * xTranslate + Math.sqrt(3), y * yTranslate - 3, 0))
-        geometry.merge(hexagon(red).translate(x * xTranslate + 3*Math.sqrt(3), y * yTranslate - 3, 0))
-        geometry.merge(hexagon(blue).translate(x * xTranslate + 5*Math.sqrt(3), y * yTranslate - 3, 0))
-     }
+  let triangle = (color, translateX=0, translateY=0) => {
+    let t = new Three.Geometry()
+    let materialIndex
+    if (color === red) { materialIndex = 0 }
+    else if (color === blue) { materialIndex = 1 }
+    else if (color === yellow) { materialIndex = 2 }
+    t.vertices[0] = new Three.Vector3(0 + translateX, 0 + translateY, 0)
+    t.vertices[1] = new Three.Vector3(Math.sqrt(3) + translateX, 1 + translateY, 0)
+    t.vertices[2] = new Three.Vector3(Math.sqrt(3) + translateX, -1 + translateY, 0)
+    t.faces[0] = new Three.Face3(2, 1, 0, normal, color, materialIndex)
+    return t
+  }
+
+  let hexagon = (color, translateX=0, translateY=0) => {
+    let h = new Three.Geometry()
+    let angle = 0
+    for (let a=0; a < 6; a++) {
+      let t = triangle(color)
+      t.rotateZ(angle * (Math.PI/180))
+      h.merge(t)
+      angle += 60
     }
-    geometry.computeBoundingBox()
-    geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
-    return new Three.BufferGeometry().fromGeometry(geometry)
+    return h
+  }
+
+  let xTranslate = 6 * Math.sqrt(3)
+  let yTranslate = -6
+  let geometry = new Three.Geometry()
+  for (let x=0; x < repeatX; x++) {
+    for (let y=0; y < repeatY; y++) {
+      geometry.merge(hexagon(red).translate(x * xTranslate, y * yTranslate, 0))
+      geometry.merge(hexagon(blue).translate(x * xTranslate + 2*Math.sqrt(3), y * yTranslate, 0)) 
+      geometry.merge(hexagon(yellow).translate(x * xTranslate + 4*Math.sqrt(3), y * yTranslate, 0))
+      geometry.merge(hexagon(yellow).translate(x * xTranslate + Math.sqrt(3), y * yTranslate - 3, 0))
+      geometry.merge(hexagon(red).translate(x * xTranslate + 3*Math.sqrt(3), y * yTranslate - 3, 0))
+      geometry.merge(hexagon(blue).translate(x * xTranslate + 5*Math.sqrt(3), y * yTranslate - 3, 0))
+    }
+  }
+  geometry.computeBoundingBox()
+  geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry),
+    period: {
+      x: xTranslate,
+      y: yTranslate
+    }
   }
 }
 
 // Regular tiling polygons
 // https://morphingtiling.wordpress.com/2010/12/27/regular-and-semi-regular-tilings/
-const semiRegularTilingGeometry = Vue.prototype.$geometry.semiRegularTilingGeometry = { }
 
-const semiRegularTrianglesSquares1 = Vue.prototype.$geometry.semiRegularTilingGeometry.trianglesSquares1 = (repeatX=1, repeatY=1) => {
+const snubSquareTiling = Vue.prototype.$geometry.tilingGeometry.snubSquare = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let yellow = new Three.Color("yellow")
   let blue = new Three.Color("blue")
@@ -513,12 +531,20 @@ const semiRegularTrianglesSquares1 = Vue.prototype.$geometry.semiRegularTilingGe
     geometry.merge(xGeometry.clone().translate(y * translateDownLeft.x, y * translateDownLeft.y, 0))
   }
 
+  //geometry.rotateZ(42 * (Math.PI/180))
+
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry),
+    period: {
+      x: 1.5*unitSide + triApothem,
+      y: 1
+    }
+  }
 }
 
-const semiRegularTrianglesSquares2 = Vue.prototype.$geometry.semiRegularTilingGeometry.trianglesSquares2 = (repeatX=1, repeatY=1) => {
+const elongatedTriangularTiling = Vue.prototype.$geometry.tilingGeometry.elongatedTriangular = (repeatX=1, repeatY=1) => {
   let blue = new Three.Color("blue")
   let yellow = new Three.Color("yellow")
   let red = new Three.Color("red")
@@ -571,10 +597,12 @@ const semiRegularTrianglesSquares2 = Vue.prototype.$geometry.semiRegularTilingGe
   }
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
-const semiRegularSquaresOctagons = Vue.prototype.$geometry.semiRegularTilingGeometry.squaresOctagons = (repeatX=1, repeatY=1) => {
+const truncatedSquareTiling = Vue.prototype.$geometry.tilingGeometry.truncatedSquare = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let yellow = new Three.Color("yellow")
   let blue = new Three.Color("blue")
@@ -614,10 +642,12 @@ const semiRegularSquaresOctagons = Vue.prototype.$geometry.semiRegularTilingGeom
   }
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
-const semiRegularHexagonsTriangles1 = Vue.prototype.$geometry.semiRegularTilingGeometry.hexagonsTriangles1 = (repeatX=1, repeatY=1) => {
+const triHexagonalTiling = Vue.prototype.$geometry.tilingGeometry.triHexagonal = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let yellow = new Three.Color("yellow")
   let hexUnit = 1
@@ -656,10 +686,12 @@ const semiRegularHexagonsTriangles1 = Vue.prototype.$geometry.semiRegularTilingG
   }
   geometry.computeBoundingBox()
   geometry.translate(-1 * geometry.boundingBox.max.x / 2, -1 * geometry.boundingBox.min.y / 2, 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
-const semiRegularHexagonsTriangles2 = Vue.prototype.$geometry.semiRegularTilingGeometry.hexagonsTriangles2 = (repeatX=1, repeatY=1, flipNormals=false) => {
+const snubHexagonalTiling1 = Vue.prototype.$geometry.tilingGeometry.snubHexagonal1 = (repeatX=1, repeatY=1, flipNormals=false) => {
   let red = new Three.Color("red")
   let yellow = new Three.Color("yellow")
   let blue = new Three.Color("blue")
@@ -743,16 +775,18 @@ const semiRegularHexagonsTriangles2 = Vue.prototype.$geometry.semiRegularTilingG
       faceVertexUvs[i][2] = temp
     }
   }
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
-const semiRegularHexagonsTriangles3 = Vue.prototype.$geometry.semiRegularTilingGeometry.hexagonsTriangles3 = (repeatX=1, repeatY=1) => {
-  let geometry = semiRegularHexagonsTriangles2(repeatX, repeatY, true) //flips normals
-  geometry.rotateX(Math.PI)
-  return geometry
+const snubHexagonalTiling2 = Vue.prototype.$geometry.tilingGeometry.snubHexagonal2 = (repeatX=1, repeatY=1) => {
+  let tiling = snubHexagonalTiling1(repeatX, repeatY, true) //flips normals
+  tiling.geometry.rotateX(Math.PI)
+  return tiling
 }
 
-const semiRegularHexagonsSquaresTriangles = Vue.prototype.$geometry.semiRegularTilingGeometry.hexagonsSquaresTriangles = (repeatX=1, repeatY=1) => {
+const rhombiTriHexagonalTiling = Vue.prototype.$geometry.tilingGeometry.rhombiTriHexagonal = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let blue = new Three.Color("blue")
   let yellow = new Three.Color("yellow")
@@ -830,10 +864,12 @@ const semiRegularHexagonsSquaresTriangles = Vue.prototype.$geometry.semiRegularT
   }
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
-const semiRegularDodecagonsSquaresHexagons = Vue.prototype.$geometry.semiRegularTilingGeometry.dodecagonsSquaresHexagons = (repeatX=1, repeatY=1) => {
+const truncatedTriHexagonalTiling = Vue.prototype.$geometry.tilingGeometry.truncatedTriHexagonal = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let blue = new Three.Color("blue")
   let yellow = new Three.Color("yellow")
@@ -907,10 +943,12 @@ const semiRegularDodecagonsSquaresHexagons = Vue.prototype.$geometry.semiRegular
 
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
-const semiRegularDodecagonsTriangles = Vue.prototype.$geometry.semiRegularTilingGeometry.dodecagonsTriangles = (repeatX=1, repeatY=1) => {
+const truncatedHexagonalTiling = Vue.prototype.$geometry.tilingGeometry.truncatedHexagonal = (repeatX=1, repeatY=1) => {
   let red = new Three.Color("red")
   let blue = new Three.Color("blue")
   let yellow = new Three.Color("yellow")
@@ -966,6 +1004,8 @@ const semiRegularDodecagonsTriangles = Vue.prototype.$geometry.semiRegularTiling
 
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
-  return new Three.BufferGeometry().fromGeometry(geometry)
+  return {
+    geometry: new Three.BufferGeometry().fromGeometry(geometry)
+  }
 }
 
