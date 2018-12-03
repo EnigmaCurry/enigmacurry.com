@@ -517,12 +517,14 @@ const snubSquareTiling = Vue.prototype.$geometry.tilingGeometry.snubSquare = (re
   let translateDownLeft = (new Three.Vector2(p8.x, p8.y)).sub(new Three.Vector2(p9.x, p9.y))
 
   let geometry = new Three.Geometry()
+
   let xPos = new Three.Vector2()
   for(let x=0; x < repeatX; x++) {
-    if (x % 2 === 0) {
-      xPos.add(translateUpRight)
-    } else {
+    //mod4 makes the top edge a little straighter..
+    if (x % 4 === 0) {
       xPos.add(translateDownRight)
+    } else {
+      xPos.add(translateUpRight)
     }
     geometry.merge(g.clone().translate(xPos.x, xPos.y, 0))
   }
@@ -530,8 +532,6 @@ const snubSquareTiling = Vue.prototype.$geometry.tilingGeometry.snubSquare = (re
   for(let y=1; y < repeatY; y++) {
     geometry.merge(xGeometry.clone().translate(y * translateDownLeft.x, y * translateDownLeft.y, 0))
   }
-
-  //geometry.rotateZ(42 * (Math.PI/180))
 
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
@@ -587,12 +587,13 @@ const elongatedTriangularTiling = Vue.prototype.$geometry.tilingGeometry.elongat
   g.merge(redTri.clone().rotateZ(-150 * (Math.PI/180)).translate(2*unitSide, 0, 0))
   g.merge(yellowTri.clone().rotateZ(-90 * (Math.PI/180)).translate(2*unitSide, 0, 0))
   g.merge(blueTri.clone().rotateZ(-150 * (Math.PI/180)).translate(3*unitSide, 0, 0))
-  g.merge(g.clone().translate(0.5 * unitSide, (-1 * unitSide) - (unitSide * (Math.sqrt(3)/2)), 0))
 
   let geometry = new Three.Geometry()
   for(let x=0; x < repeatX; x++) {
     for(let y=0; y < repeatY; y++) {
-      geometry.merge(g.clone().translate(x*3*unitSide + y*unitSide, y*(-2*unitSide - 2*unitSide*(Math.sqrt(3)/2)), 0))
+      let xTrans = x*3*unitSide + (y%6)*0.5*unitSide
+      let yTrans = y * (-1*unitSide - 1*unitSide*(Math.sqrt(3)/2))
+      geometry.merge(g.clone().translate(xTrans, yTrans, 0))
     }
   }
   geometry.computeBoundingBox()
@@ -860,8 +861,9 @@ const rhombiTriHexagonalTiling = Vue.prototype.$geometry.tilingGeometry.rhombiTr
   }
   let geometryY = geometry.clone()
   for(let x=1; x < repeatX; x++) {
-    geometry.merge(geometryY.clone().translate(x * (4.5*unitSide+3*hexApothem),x * (-0.5 * unitSide - hexApothem),0))
+    geometry.merge(geometryY.clone().translate(x * (4.5*unitSide+3*hexApothem), (x%2) * (-0.5 * unitSide - hexApothem),0))
   }
+
   geometry.computeBoundingBox()
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
   return {
