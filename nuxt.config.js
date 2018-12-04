@@ -48,6 +48,7 @@ module.exports = {
     '@/plugins/penroseTextures',
     '@/plugins/penroseV1',
     '@/plugins/penroseV1Textures',
+    '@/plugins/tilings',
   ],
 
   /*

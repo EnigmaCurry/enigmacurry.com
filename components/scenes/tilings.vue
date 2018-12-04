@@ -16,46 +16,44 @@ import {shuffle} from 'underscore'
 
 export default {
   props: {
-    animated: {type: Boolean, default: false},
-    showGrid: {type: Boolean, default: true},
-    zoom: {type: Number, default: 20},
-    repeatX: {type: Number, default: 2},
-    repeatY: {type: Number, default: 2},
-    speedX: {type: Number, default: 1},
-    speedY: {type: Number, default: 0},
-    tileType: {type: String, default: 'snubSquare'},
+    animated: {type: Boolean, default: true},
+    showGrid: {type: Boolean, default: false},
+    zoom: {type: Number, default: 30},
+    tileFrustrumSize: {type: Number, default: 10},
+    speedX: {type: Number, default: 0.07},
+    speedY: {type: Number, default: 0.03},
+    speedRotation: {type: Number, default: 0.002},
+    tileType: {type: String, default: null},
     tileScale: {type: Number, default: 0.5}
   },
   data() {
-    let mesh = this.tilingMesh(this.tileType, this.repeatX, this.repeatY, this.tileScale)
-    let startPos = mesh.position.clone()
+    let tileType = this.tileType
+    if(tileType === null) {
+      tileType = shuffle(Object.keys(this.$tilings.tilingGeometry))[0]
+    }
+    let tilingGroup = this.newTilingGroup(tileType, this.tileFrustrumSize)
+    let startPos = tilingGroup.group.position.clone()
     return {
       scene: new Three.Scene(),
-      mesh,
+      tilingGroup,
       startPos,
       time: 0
     }
   },
   created() {
-    this.mesh.geometry.computeBoundingBox()
-    this.scene.add(this.mesh)
+    this.containerGroup = new Three.Group()
+    this.containerGroup.add(this.tilingGroup.group)
+    this.scene.add(this.containerGroup)
   },
   methods: {
     animate() {
-      //this.mesh.position.x = this.startPos.x - (this.time * this.speedX % this.tiling.period.x)
-      //this.mesh.position.y = this.startPos.y - (this.time * this.speedY % this.tiling.period.y)
+      this.tilingGroup.pan(this.speedX, this.speedY)
+      this.containerGroup.rotation.z += this.speedRotation
       this.time += 0.01
     },
-    tilingMesh(type, repeatX, repeatY, scale=1) {
-      let tilingFunc = this.$geometry.tilingGeometry[this.tileType]
-      
-      this.tiling = tilingFunc(repeatX, repeatY)
-      this.tiling.geometry.scale(scale, scale, scale)
-      // this.tiling.period.x *= scale 
-      // this.tiling.period.y *= scale 
-      let material = new Three.MeshBasicMaterial({ vertexColors: Three.FaceColors, wireframe: false })
-      let mesh = new Three.Mesh(this.tiling.geometry, material)
-      return mesh
+    newTilingGroup(tileType, frustrumSize) {
+      let tilingGroup = new this.$tilings.TilingGroup({tileType, frustrum:{left: -frustrumSize, right: frustrumSize, top:frustrumSize, bottom:-frustrumSize}})
+      return tilingGroup
     }
   }
 }
