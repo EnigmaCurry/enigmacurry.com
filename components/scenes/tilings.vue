@@ -29,9 +29,9 @@ export default {
       scene: new Three.Scene(),
       time: 0,
       tweenGroup: new TWEEN.Group(),
-      tileTypes: ["triangular", "square", "hexagonal", "snubSquare", "elongatedTriangular",
+      tileTypes: ["truncatedTriHexagonal", "triangular", "square", "hexagonal", "snubSquare", "elongatedTriangular",
                   "truncatedSquare", "triHexagonal", "snubHexagonal1", "rhombiTriHexagonal",
-                  "truncatedTriHexagonal", "truncatedHexagonal"],
+                  "truncatedHexagonal"],
     }
   },
   created() {    

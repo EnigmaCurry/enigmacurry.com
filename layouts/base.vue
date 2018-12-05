@@ -162,6 +162,7 @@ export default {
         { img: require('~/assets/img/icons/pentagon.png'), title: 'Penrose', to: '/geometry/penrose' },
         //{ img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' },
         { img: require('~/assets/img/icons/epicycle.png'), title: 'Epicycles', to: '/geometry/epicycles' },
+        { img: require('~/assets/img/icons/tilings.png'), title: 'Tilings', to: '/geometry/tilings' },
      ],
     }
   },
