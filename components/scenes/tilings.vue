@@ -12,6 +12,7 @@
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle, reject} from 'underscore'
+import Visibility from 'visibilityjs'
 
 export default {
   props: {
@@ -54,10 +55,10 @@ export default {
     
     this.newBackgroundTilingGroup()
     this.newForegroundTilingGroup()
-    setInterval(() => {
+    Visibility.every(20000, () => {
       this.newForegroundTilingGroup()
       this.newBackgroundTilingGroup()
-    }, 20000)
+    })
     
     let light = new Three.PointLight(0xffffff, 4, 8)
     light.position.z = 5

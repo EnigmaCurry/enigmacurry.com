@@ -14,6 +14,7 @@
 <script>
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
+import Visibility from 'visibilityjs'
 
 export default {
   props: {
@@ -53,9 +54,9 @@ export default {
   mounted() {
     if (this.animated) {
       this.newScaleInterval()
-      setInterval(() => {
+      Visibility.every(this.newMeshInterval * 1000, () => {
         this.newPenroseMeshInterval()
-      }, this.newMeshInterval * 1000)
+      })
     }
   },
   beforeDestroy() {

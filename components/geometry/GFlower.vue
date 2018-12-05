@@ -6,6 +6,7 @@
 import * as Three from 'three'
 import {Object3D} from 'vue-threejs'
 import * as TWEEN from '@tweenjs/tween.js'
+import Visibility from 'visibilityjs'
 
 export default {
   name: "g-flower",
@@ -53,7 +54,7 @@ export default {
   created() {
     this.tweenGroup = new TWEEN.Group()
     this.newFlowerInterval({initial: true})
-    setInterval(this.newFlowerInterval, this.flowerInterval * 1000)
+    Visibility.every(this.flowerInterval * 1000, this.newFlowerInterval)
     this.newMaterialTweenInterval()
     this.newMeshScaleTweenInterval()
   },

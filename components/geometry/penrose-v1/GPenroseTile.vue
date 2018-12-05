@@ -33,7 +33,6 @@ export default {
 
     //Animate world rotation
     let worldOrigin = new Three.Vector3(this.worldOrigin.x, this.worldOrigin.y, this.worldOrigin.z)
-    //setInterval(() => {this.rotateWorld(worldOrigin, 0.11 * (Math.PI/180))}, 5)
   },
   methods: {
     drawEdges() {
