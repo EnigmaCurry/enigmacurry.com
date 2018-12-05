@@ -59,7 +59,7 @@ export default {
       this.newBackgroundTilingGroup()
     }, 20000)
     
-    let light = new Three.PointLight(0xffffff, 2, 8)
+    let light = new Three.PointLight(0xffffff, 4, 8)
     light.position.z = 5
     light.position.y = 0
     this.scene.add(light)
