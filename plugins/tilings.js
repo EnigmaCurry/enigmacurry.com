@@ -13,7 +13,7 @@ export {
 class TilingGroup {
   //Maintain a group of tiling meshes
   //Add new meshes to fill the frustrum plane, remove meshes that are outside these dimensions
-  constructor({tileType, frustrum={left:-10, right: 10, top: 10, bottom: -10}, showFrustrum = true }) {
+  constructor({tileType, frustrum={left:-10, right: 10, top: 10, bottom: -10}, showFrustrum=true, materials=null}) {
     this.group = new Three.Group()
     this.tiles = []
     this.frustrum = frustrum
@@ -22,8 +22,10 @@ class TilingGroup {
     this.tiling.geometry.computeBoundingBox()
 
     //Place initial tile:
-    let material = new Three.MeshBasicMaterial({ vertexColors: Three.FaceColors, wireframe: false })
-    this.tileMesh = new Three.Mesh(this.tiling.geometry, material)
+    if (materials === null) {
+      materials = new Three.MeshBasicMaterial({ vertexColors: Three.FaceColors, wireframe: false })
+    }
+    this.tileMesh = new Three.Mesh(this.tiling.geometry, materials)
     this.group.add(this.tileMesh)
     this.tiles.push(this.tileMesh)
 
@@ -114,7 +116,7 @@ $tilings.TilingGroup = TilingGroup
 $tilings.tilingGeometry = { }
 
 $tilings.tilingGeometry.triangular = (repeatX=1, repeatY=1) => {
-  let normal = new Three.Vector3(0, 0, 0)
+  let normal = new Three.Vector3(0, 0, 1)
   let yellow = new Three.Color("yellow")
   let blue = new Three.Color("blue")
   let g = new Three.Geometry()
@@ -148,7 +150,7 @@ $tilings.tilingGeometry.triangular = (repeatX=1, repeatY=1) => {
 }
 
 $tilings.tilingGeometry.square = (repeatX=1, repeatY=1) => {
-  let normal = new Three.Vector3(0, 0, 0)
+  let normal = new Three.Vector3(0, 0, 1)
   let yellow = new Three.Color("yellow")
   let red = new Three.Color("red")
 
@@ -188,7 +190,7 @@ $tilings.tilingGeometry.square = (repeatX=1, repeatY=1) => {
 }
 
 $tilings.tilingGeometry.hexagonal = (repeatX, repeatY) => {
-  let normal = new Three.Vector3(0, 0, 0)
+  let normal = new Three.Vector3(0, 0, 1)
   let red = new Three.Color("red")
   let blue = new Three.Color("blue")
   let yellow = new Three.Color("yellow")
