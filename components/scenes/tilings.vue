@@ -28,12 +28,12 @@ export default {
       scene: new Three.Scene(),
       time: 0,
       tweenGroup: new TWEEN.Group(),
-      backgroundTileTypes: ["truncatedTriHexagonal", "triangular", "square", "hexagonal", "snubSquare", "elongatedTriangular",
-                            "truncatedSquare", "triHexagonal", "snubHexagonal1", "rhombiTriHexagonal",
-                            "truncatedHexagonal"],
+      backgroundTileTypes: ["truncatedTriHexagonal", "triangular", "square", "hexagonal", "snubSquare",
+                            "elongatedTriangular", "truncatedSquare", "triHexagonal", "snubHexagonal1",
+                            "rhombiTriHexagonal"],
       foregroundTileTypes: ["triangular", "square", "hexagonal", "snubSquare", "elongatedTriangular",
                             "truncatedSquare", "triHexagonal", "snubHexagonal1", "rhombiTriHexagonal",
-                            "truncatedHexagonal", "truncatedTriHexagonal"],
+                            "truncatedTriHexagonal"],
     }
   },
   created() {    

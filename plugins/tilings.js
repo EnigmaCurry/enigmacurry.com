@@ -796,11 +796,12 @@ $tilings.tilingGeometry.truncatedHexagonal = (repeatX=1, repeatY=1) => {
 
   g.merge(g.clone().translate(-3*dodecaApothem,2*dodecaApothem-2*triApothem,0))
 
-
+  let xTrans = 6 * dodecaApothem
+  let yTrans = -1 * (4*dodecaApothem - 4*triApothem)
   let geometry = new Three.Geometry()
   for (let x=0; x < repeatX; x++) {
     for (let y=0; y < repeatY; y++) {
-      geometry.merge(g.clone().translate(x*6*dodecaApothem,-1 * y*(4*dodecaApothem-4*triApothem),0))
+      geometry.merge(g.clone().translate(x*xTrans,y*yTrans,0))
     }
   }
 
@@ -808,8 +809,9 @@ $tilings.tilingGeometry.truncatedHexagonal = (repeatX=1, repeatY=1) => {
   geometry.translate(-1 * ((geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2), -1 * ((geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2), 0)
   return {
     geometry: new Three.BufferGeometry().fromGeometry(geometry),
-    translationX: new Three.Vector3(6*dodecaApothem,0,0),
-    translationY: new Three.Vector3(0,-1 * (4*dodecaApothem-4*triApothem),0),
+    //TODO: Fix this translation:
+    translationX: new Three.Vector3(xTrans, 0, 0),
+    translationY: new Three.Vector3(0, yTrans, 0),
   }
 }
 
