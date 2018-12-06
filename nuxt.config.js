@@ -45,6 +45,7 @@ module.exports = {
     '@/plugins/vuetify',
     '@/plugins/vue-threejs',
     '@/plugins/geometry',
+    '@/plugins/textures',
     '@/plugins/penroseTextures',
     '@/plugins/penroseV1',
     '@/plugins/penroseV1Textures',

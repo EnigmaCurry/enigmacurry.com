@@ -25,10 +25,8 @@ export default {
       let opts = { ...this.options }
       if (this.color) opts.color = this.color
       material = new THREE[mod](opts)
-    } else {
-      console.log("Using existing material obj")
     }
-
+    
     return { material }
   },
   provide () {
