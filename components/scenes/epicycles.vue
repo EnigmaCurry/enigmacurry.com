@@ -8,14 +8,14 @@
      <g-group name="earth" :position="earthPosition">
         <g-mesh>
           <g-geometry type="Circle" :args="[earthRadius, 64]" />
-          <material type="MeshBasic" :options="{map: earthTexture }" />
+          <material type="MeshBasic" :options="{color: 'blue'}" />
         </g-mesh>
       </g-group>
 
       <g-group name="sun" :position="sunPosition">
         <g-mesh>
           <g-geometry type="Circle" :args="[sunRadius, 64]" />
-          <material type="MeshBasic" :options="{map: sunTexture}" />
+          <material type="MeshBasic" :options="{color: 'yellow'}" />
         </g-mesh>
       </g-group>
 
@@ -34,12 +34,6 @@
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
-import earthIcon from '!raw-loader!~/assets/img/alchemical/earth.svg'
-import sunIcon from '!raw-loader!~/assets/img/alchemical/sun.svg'
-import mercuryIcon from '!raw-loader!~/assets/img/alchemical/mercury.svg'
-import venusIcon from '!raw-loader!~/assets/img/alchemical/venus.svg'
-import marsIcon from '!raw-loader!~/assets/img/alchemical/mars.svg'
-import jupiterIcon from '!raw-loader!~/assets/img/alchemical/jupiter.svg'
 
 export default {
   props: {
@@ -54,59 +48,57 @@ export default {
     let planets = {
       mercury: {
         name: "mercury",
+        color: 'grey',
         orbit: 0.387098 * AU,
         orbitRatio: (87.969 / year),
         solarYearsToDraw: 32,
         zoom: 2,
-        rate: 1,
-        texture: this.$textures.svg2texture({svg: mercuryIcon, fillColor: '#cfbf9d'}),
+        rate: 1
       },
       venus: {
         name: "venus",
+        color: 'green',
         orbit: 0.7233 * AU,
         orbitRatio: (224.701 / year),
         solarYearsToDraw: 32,
         zoom: 2,
-        rate: 1,
-        texture: this.$textures.svg2texture({svg: venusIcon, fillColor: '#e4a72c'}),
+        rate: 1
       },
       mars: {
         name: "mars",
+        color: 'red',
         orbit: 1.524 * AU,
         orbitRatio: (686.971 / year),
         solarYearsToDraw: 32,
         zoom: 3,
-        rate: 1,
-        texture: this.$textures.svg2texture({svg: marsIcon, fillColor: '#f4815a'}),
+        rate: 1
       },
       jupiter: {
         name: "jupiter",
+        color: "orange",
         orbit: 5.20445 * AU,
         orbitRatio: (4332.59 / year),
         solarYearsToDraw: 83,
         zoom: 10,
-        rate: 5,
-        texture: this.$textures.svg2texture({svg: jupiterIcon, fillColor: '#96816b'}),
+        rate: 5
       }
     }
     
     return {
       scene: new Three.Scene(),
       system: new Three.Group(),
-      planetMaterial: new Three.MeshBasicMaterial(),
-      earth, earthRadius: 0.08, earthPosition: new Three.Vector3(),
-      sun, sunRadius: 0.1, sunPosition: new Three.Vector3(),
+      planetMaterial: new Three.MeshBasicMaterial({ color: 'orange' }),
+      earth, earthRadius: 0.05, earthPosition: new Three.Vector3(),
+      sun, sunRadius: 0.05, sunPosition: new Three.Vector3(),
       planets,
       planetPlaylist: ['venus', 'mercury', 'mars', 'jupiter'],
       playlistIndex: -1,
-      planetRadius: 0.08, planetPosition: new Three.Vector3(),
+      planetRadius: 0.05, planetPosition: new Three.Vector3(),
       currentTime: 0,
       rateMultiplier: 0.005,
       orbitMeshes: [],
       systemFinished: false,
       zoom: 1,
-      earthTexture: this.$textures.svg2texture({svg: earthIcon, fillColor: '#0077ff'}),
-      sunTexture: this.$textures.svg2texture({svg: sunIcon, fillColor: 'yellow'}),
     }
   },
   created() {
@@ -136,7 +128,8 @@ export default {
       this.planetRevolutions = 0
       this.systemFinished = false
       this.zoom = this.planet.zoom
-      this.planetMaterial.map = this.planet.texture
+      let planetColor = new Three.Color(this.planet.color)
+      this.planetMaterial.color.setRGB(planetColor.r, planetColor.g, planetColor.b)
     },
     newOrbitMesh() {
       if (typeof(this.orbitPoints) != "undefined") {
@@ -150,7 +143,6 @@ export default {
       this.orbitGeometry.setDrawRange(0, 0)
       this.orbitMesh = new Three.Line(this.orbitGeometry, this.orbitMaterial)
       this.orbitMeshes.push(this.orbitMesh)
-      this.orbitMesh.renderOrder = -1
       this.scene.add(this.orbitMesh)
     },
     animate() {
