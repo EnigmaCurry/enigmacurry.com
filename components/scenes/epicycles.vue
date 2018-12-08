@@ -104,7 +104,6 @@ export default {
   created() {
     this.orbitMaterial = new Three.LineBasicMaterial({color: 'white'})
     this.newSystem()
-    this.newOrbitMesh()
   },
   mounted() {
     document.getElementById('bg').classList.add(this.backgroundClass)
