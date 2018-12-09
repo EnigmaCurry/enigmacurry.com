@@ -1,5 +1,5 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :clearAlpha="0.95" :antialias="true">
+  <g-renderer :animated="animated" class="renderer" ref="renderer" :clearAlpha="0.8" :antialias="true">
     <scene :obj="scene">
       <g-camera orthographic :zoomScale="zoom"/>
 
