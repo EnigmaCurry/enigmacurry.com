@@ -138,7 +138,7 @@ export default {
         return shuffle(choices)[0]
       }
 
-      let ratios = [[1,2,1], [3,2,6], [5,7,6], [8,9,1], [3,6,9]]
+      let ratios = [[1.01,2,1], [3,2.01,6], [5.01,7,6], [8,8.98,1], [3.01,6,9]]
       let ratio = choice(ratios)
 
       return [
