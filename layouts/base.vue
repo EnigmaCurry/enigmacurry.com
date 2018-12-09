@@ -93,6 +93,10 @@
   background-image: url(~assets/img/fractal/deepfield-halfoct-ngon4.gimp.jpg);
 }
 
+#bg.pare4Dolia-8 {
+  background-image: url(~assets/img/fractal/pare4Dolia.8.1024.jpg);
+}
+
 div#app {
   background: transparent;
 }
@@ -163,6 +167,7 @@ export default {
         //{ img: require('~/assets/img/icons/subdivision.png'), title: 'Penrose Rays', to: '/geometry/penrose-rays' },
         { img: require('~/assets/img/icons/epicycle.png'), title: 'Epicycles', to: '/geometry/epicycles' },
         { img: require('~/assets/img/icons/tilings.png'), title: 'Tilings', to: '/geometry/tilings' },
+        { img: require('~/assets/img/icons/harmonograph.png'), title: 'Harmonograph', to: '/geometry/harmonograph' },
      ],
     }
   },

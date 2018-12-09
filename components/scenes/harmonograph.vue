@@ -1,5 +1,5 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :antialias="true">
+  <g-renderer :animated="animated" class="renderer" ref="renderer" :clearAlpha="0.95" :antialias="true">
     <scene :obj="scene">
       <g-camera orthographic :zoomScale="zoom"/>
 
@@ -19,6 +19,7 @@ import ColorScheme from 'color-scheme'
 
 export default {
   props: {
+    backgroundClass: {type: String, default: "pare4Dolia-8"},    
     animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
@@ -41,6 +42,12 @@ export default {
   created() {
     this.newGraph()
     Visibility.every(this.graphInterval * 1000, this.newGraph)
+  },
+  mounted() {
+    document.getElementById('bg').classList.add(this.backgroundClass)
+  },
+  beforeDestroy() {
+    document.getElementById('bg').classList.remove(this.backgroundClass)
   },
   methods: {
     animate() {
