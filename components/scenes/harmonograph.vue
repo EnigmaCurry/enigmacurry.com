@@ -23,7 +23,7 @@ export default {
     animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
-    graphInterval: {type: Number, default: 15},
+    graphInterval: {type: Number, default: 25},
   },
   data() {
     return {
