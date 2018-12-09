@@ -137,10 +137,16 @@ export default {
       const choice = (choices) => {
         return shuffle(choices)[0]
       }
-
-      let ratios = [[1.01,2,1], [3,2.01,6], [5.01,7,6], [8,8.98,1], [3.01,6,9]]
+      
+      let ratios = [
+        [3* 1.000001, 6 * 1.0001, 12 * 0.9998],
+        [5, 10, 20.01],
+        [7 * 1.00001, 28 * 0.999998, 7],
+        [4.0001, 8.009, 2/1024],
+        [32805 * 1.00000001, 32805, 32805 * 1.000001],
+      ]
       let ratio = choice(ratios)
-
+      
       return [
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
