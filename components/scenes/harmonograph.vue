@@ -56,7 +56,7 @@ export default {
     newGraph() {
       let colorScheme = new ColorScheme()
           .from_hue( Math.random() * 256 )
-          .scheme('mono')
+          .scheme(shuffle(['contrast','tetrade','triade'][0]))
           .variation('default')
           .colors()
       let colors = []
