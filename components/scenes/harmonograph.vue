@@ -23,12 +23,13 @@ export default {
     animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
-    graphInterval: {type: Number, default: 25},
+    graphInterval: {type: Number, default: 60},
+    lineOpacity: {type: Number, default: 0.33},
   },
   data() {
     return {
       scene: new Three.Scene(),
-      speed: 50,
+      speed: 25,
       time: 0,
       interval: 0.005,
       radius: 18,
@@ -65,7 +66,7 @@ export default {
       }
       this.materials = []
       for (let c=0; c < colors.length; c++) {
-        this.materials.push(new Three.LineBasicMaterial({color: colors[c], transparent: true, opacity: 0.25}))
+        this.materials.push(new Three.LineBasicMaterial({color: colors[c], transparent: true, opacity: this.lineOpacity}))
       }
       this.time = 0
       this.pendulums = this.randomPendulums()
@@ -140,25 +141,26 @@ export default {
       
       let ratios = [
         [3* 1.000001, 6 * 1.0001, 12 * 0.9998],
-        [5, 10, 20.01],
+        [81,80,80.5],
         [7 * 1.00001, 28 * 0.999998, 7],
         [4.0001, 8.009, 2/1024],
-        [32805 * 1.00000001, 32805, 32805 * 1.000001],
+        [32805, 32805.002, 32805.01],
+        [3.3, 6.6, 9.9]
       ]
       let ratio = choice(ratios)
       
       return [
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
-         damping: randomInt(60, 180),
+         damping: randomInt(216, 488),
          frequency: ratio[0]},
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
-         damping: randomInt(60, 180),
+         damping: randomInt(216, 488),
          frequency: ratio[1]},
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
-         damping: randomInt(60, 180),
+         damping: randomInt(216, 488),
          frequency: ratio[2]},
       ]      
     }
