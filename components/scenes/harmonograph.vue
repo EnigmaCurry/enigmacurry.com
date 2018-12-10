@@ -77,18 +77,19 @@ export default {
         this.scene.remove(mesh)
       }
       this.graphMeshes = []
+      this.graphPoints = null
       this.newGraphMesh()
     },
     newGraphMesh() {      
-      if (typeof(this.graphPoints) === "undefined") {
+      if (this.graphPoints === null) {
         this.graphPoints = new Float32Array( this.graphPointsPerMesh )        
         this.currentGraphMeshPoint = 0
       } else {
-        this.previousGraphPoints = this.graphPoints
+        let previousGraphPoints = this.graphPoints
         this.graphPoints = new Float32Array( this.graphPointsPerMesh )
-        this.graphPoints[0] = this.previousGraphPoints[this.previousGraphPoints.length-3]
-        this.graphPoints[1] = this.previousGraphPoints[this.previousGraphPoints.length-2]
-        this.graphPoints[2] = this.previousGraphPoints[this.previousGraphPoints.length-1]
+        this.graphPoints[0] = previousGraphPoints[previousGraphPoints.length-3]
+        this.graphPoints[1] = previousGraphPoints[previousGraphPoints.length-2]
+        this.graphPoints[2] = previousGraphPoints[previousGraphPoints.length-1]
         this.currentGraphMeshPoint = 3
       }
       this.graphGeometry = new Three.BufferGeometry()
