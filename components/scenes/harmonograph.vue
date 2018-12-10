@@ -23,13 +23,13 @@ export default {
     animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
-    graphInterval: {type: Number, default: 60},
+    graphInterval: {type: Number, default: 45},
     lineOpacity: {type: Number, default: 0.33},
   },
   data() {
     return {
       scene: new Three.Scene(),
-      speed: 25,
+      speed: 75,
       time: 0,
       interval: 0.005,
       radius: 18,
@@ -142,26 +142,26 @@ export default {
       
       let ratios = [
         [3* 1.000001, 6 * 1.0001, 12 * 0.9998],
-        [81,80,80.5],
+        [1, 1, 3.002],
         [7 * 1.00001, 28 * 0.999998, 7],
-        [4.0001, 8.009, 2/1024],
-        [32805, 32805.002, 32805.01],
-        [3.3, 6.6, 9.9]
+        [4.002, 8, 2],
+        [32805, 31805.002, 32805.01],
+        [3.301, 6.6, 9.9]
       ]
       let ratio = choice(ratios)
       
       return [
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
-         damping: randomInt(216, 488),
+         damping: randomInt(100, 488),
          frequency: ratio[0]},
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
-         damping: randomInt(216, 488),
+         damping: randomInt(100, 488),
          frequency: ratio[1]},
         {amplitude: {x: randomInt(1,2), y: randomInt(1,2)},
          phase: {x: randomInt(0, 360) * (Math.PI/180), y: randomInt(0, 360) * (Math.PI/180)},
-         damping: randomInt(216, 488),
+         damping: randomInt(100, 488),
          frequency: ratio[2]},
       ]      
     }
