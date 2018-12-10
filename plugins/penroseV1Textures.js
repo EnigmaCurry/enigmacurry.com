@@ -69,7 +69,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
     let schemes = ['contrast', 'mono', 'triade', 'tetrade', 'analogic']
     let variations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale']
     let scheme = new ColorScheme()
-        .from_hue( Math.random() * 256 )
+        .from_hue( Math.random() * 360 )
         .scheme(schemes[Math.floor(Math.random() * schemes.length)])
         .variation(variations[Math.floor(Math.random() * variations.length)])
     let colors = shuffle(scheme.colors())

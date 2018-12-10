@@ -119,7 +119,7 @@ class PenroseTextureRenderer extends CanvasRenderer {
 
   newColorInterval(initialInterval) {
     let scheme = new ColorScheme()
-      .from_hue( Math.random() * 256 )
+      .from_hue( Math.random() * 360 )
       .scheme(this.colorSchemes[Math.floor(Math.random() * this.colorSchemes.length)])
       .variation(this.colorVariations[Math.floor(Math.random() * this.colorVariations.length)])
     let colors = shuffle(scheme.colors())
