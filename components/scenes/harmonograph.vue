@@ -17,6 +17,16 @@ import Visibility from 'visibilityjs'
 import {shuffle} from 'underscore'
 import ColorScheme from 'color-scheme'
 
+const randomInt = (min, max) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+const choice = (choices) => {
+  return shuffle(choices)[0]
+}
+
+
 export default {
   props: {
     backgroundClass: {type: String, default: "pare4Dolia-8"},    
@@ -56,9 +66,9 @@ export default {
     },
     newGraph() {
       let colorScheme = new ColorScheme()
-          .from_hue( Math.random() * 256 )
-          .scheme(shuffle(['contrast','tetrade','triade'][0]))
-          .variation('default')
+          .from_hue( randomInt(0,359) )
+          .scheme(choice(['contrast','tetrade','triade','analogic','mono']))
+          .variation(choice(['default','pale','hard','light']))
           .colors()
       let colors = []
       for (let c=0; c < colorScheme.length; c++) {
@@ -131,15 +141,6 @@ export default {
       this.y = py - p2.y
     },
     randomPendulums() {
-      const randomInt = (min, max) => {
-        min = Math.ceil(min)
-        max = Math.floor(max)
-        return Math.floor(Math.random() * (max - min + 1)) + min
-      }
-      const choice = (choices) => {
-        return shuffle(choices)[0]
-      }
-      
       let ratios = [
         [3* 1.000001, 6 * 1.0001, 12 * 0.9998],
         [1, 1, 3.002],
