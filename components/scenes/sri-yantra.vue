@@ -25,19 +25,31 @@ export default {
     return {
       scene: new Three.Scene(),
       wireGeometry: new Three.Geometry(),
+      innerGeometry: new Three.Geometry(),
       wireMaterial: new Three.LineBasicMaterial({color: 'white'}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
+      innerMaterials: [
+        new Three.MeshBasicMaterial({color: "#ffffff"}), //0 - bindu
+        new Three.MeshBasicMaterial({color: "#fb0203"}), //1 - innermost triangle
+        new Three.MeshBasicMaterial({color: "#fff000"}), //2 - surrounding quadralaterals
+        new Three.MeshBasicMaterial({color: "#f84302"}), //3 - triangles
+        new Three.MeshBasicMaterial({color: "#00fff1"}), //4 
+        new Three.MeshBasicMaterial({color: "#fa0378"}), //5 - triangles
+        new Three.MeshBasicMaterial({color: "#01f37a"}), //6
+        new Three.MeshBasicMaterial({color: "#fe0000"}), //7 - triangles
+        new Three.MeshBasicMaterial({color: "#ba05d0"}), //8
+        new Three.MeshBasicMaterial({color: "#246d01"}), //9 - triangles        
+      ],
       center: new Three.Vector3()
     }
   },
-  created() {    
+  created() {
     /// Create wire mesh from triangles:
-    this.createWireGeometry()
+    this.createInnerGeometry()
     let wires = new Three.LineSegments(new Three.EdgesGeometry(this.wireGeometry), this.wireMaterial)
+    let mesh = new Three.Mesh(this.innerGeometry, this.innerMaterials)
+    this.scene.add(mesh)
     this.scene.add(wires)
-    
-    /// Add the bindu
-    this.marker(this.center, 0.01, this.wireMaterial)
   },
   methods: {
     marker(vectors, radius=0.01, material=this.testMaterial) {
@@ -50,19 +62,29 @@ export default {
                       )
       }
     },
-    addTriangle(p1, p2, p3) {
-      let index = this.wireGeometry.vertices.length
-      this.wireGeometry.vertices.push(p1, p2, p3)
-      this.wireGeometry.faces.push(new Three.Face3(index, index+1, index+2))
-    },
-    createWireGeometry() {
+    createInnerGeometry() {
+      const addWireTriangle = (p1, p2, p3) => {
+        let index = this.wireGeometry.vertices.length
+        this.wireGeometry.vertices.push(p1, p2, p3)
+        this.wireGeometry.faces.push(new Three.Face3(index, index+1, index+2))
+      }
+      const addMeshTriangle = (p1, p2, p3, level) => {
+        let normal = new Three.Vector3(0, 0, -1)
+        let index = this.innerGeometry.vertices.length
+        this.innerGeometry.vertices.push(p1, p2, p3)
+        this.innerGeometry.faces.push(new Three.Face3(
+          index, index+1, index+2, normal, this.innerMaterials[level].color, level))
+        //TODO: might not need uv map?
+        //this.innerGeometry.faceVertexUvs[0].push([new Three.Vector2(),new Three.Vector2(),new Three.Vector2()])
+      }
+      
       let dodecagon = new Three.CircleGeometry(this.innerRadius, 12).translate(this.center.x, this.center.y, 0)
       
       /// First big triangle pointing up
       let t1Point = this.$geometry.lineIntersection(dodecagon.vertices[7], dodecagon.vertices[12],
                                                     dodecagon.vertices[8], dodecagon.vertices[1])
       let t1Base = this.$geometry.lineCircleIntersection(t1Point, t1Point.clone().setX(t1Point.x+1), this.innerRadius, this.center)
-      this.addTriangle(t1Base[0], t1Base[1], dodecagon.vertices[4])
+      addWireTriangle(t1Base[0], t1Base[1], dodecagon.vertices[4])
       
       /// Second big triangle pointing down
       let t2Temp1 = this.$geometry.lineIntersection(dodecagon.vertices[7], dodecagon.vertices[1],
@@ -71,7 +93,7 @@ export default {
                                                     dodecagon.vertices[12], dodecagon.vertices[3])
       let t2Side1 = this.$geometry.lineCircleIntersection(t2Temp1, dodecagon.vertices[10], this.innerRadius, this.center)
       let t2Side2 = this.$geometry.lineCircleIntersection(t2Temp2, dodecagon.vertices[10], this.innerRadius, this.center)
-      this.addTriangle(t2Side1[1], t2Side2[1], dodecagon.vertices[10] )
+      addWireTriangle(t2Side1[1], t2Side2[1], dodecagon.vertices[10] )
       
       //Find all intersections between first and second triangles
       let t1t2Intersect = [
@@ -115,7 +137,7 @@ export default {
       let t5Point1 = new Three.Vector3(0, t1t2Intersect[1].y, 0)
       let t5Point2 = this.$geometry.lineIntersection(t4Temp1, t4Temp2, t5Point1, t4t1Intersect[0])
       let t5Point3 = this.$geometry.lineIntersection(t4Temp1, t4Temp2, t5Point1, t4t1Intersect[1])
-      this.addTriangle(t5Point1, t5Point2, t5Point3)
+      addWireTriangle(t5Point1, t5Point2, t5Point3)
       
       let t5t2Intersect = [
         this.$geometry.lineIntersection(t5Point1, t4t1Intersect[0], t2Side1[0], t2Side1[1]),
@@ -127,7 +149,7 @@ export default {
       /// Now complete triangle 3:
       let t3Point2 = this.$geometry.lineIntersection(t3Point1, t3Temp3, t5t2Intersect[0], t5t2Intersect[1])
       let t3Point3 = this.$geometry.lineIntersection(t3Point1, t3Temp4, t5t2Intersect[0], t5t2Intersect[1])
-      this.addTriangle(t3Point1, t3Point2, t3Point3)
+      addWireTriangle(t3Point1, t3Point2, t3Point3)
       
       let t3t2Intersect = [
         this.$geometry.lineIntersection(t3Point2, t3Point1, t2Side1[1], t2Side2[1]),
@@ -139,7 +161,7 @@ export default {
       let t6Point1 = new Three.Vector3(0, t6Temp1.y, 0)
       let t6Point2 = this.$geometry.lineIntersection(t3Temp1, t3Temp2, t6Point1, t3t2Intersect[0])
       let t6Point3 = this.$geometry.lineIntersection(t3Temp1, t3Temp2, t6Point1, t3t2Intersect[1])
-      this.addTriangle(t6Point1, t6Point2, t6Point3)
+      addWireTriangle(t6Point1, t6Point2, t6Point3)
       
       let t6t1Intersect = [
         this.$geometry.lineIntersection(t6Point1, t6Point2, t1Base[0], dodecagon.vertices[4]),
@@ -149,13 +171,13 @@ export default {
       /// Now complete triangle 4:
       let t4Point2 = this.$geometry.lineIntersection(t6t1Intersect[0], t6t1Intersect[1], t4Point1, t4Temp3)
       let t4Point3 = this.$geometry.lineIntersection(t6t1Intersect[0], t6t1Intersect[1], t4Point1, t4Temp4)
-      this.addTriangle(t4Point1, t4Point2, t4Point3)
+      addWireTriangle(t4Point1, t4Point2, t4Point3)
       
       /// Seventh triangle pointing up
       let t7Point1 = new Three.Vector3(0, t4Point2.y, 0)
       let t7Point2 = this.$geometry.midpoint(t3t4Intersect[0], t4t1Intersect[0])
       let t7Point3 = this.$geometry.midpoint(t3t4Intersect[1], t4t1Intersect[1])
-      this.addTriangle(t7Point1, t7Point2, t7Point3)
+      addWireTriangle(t7Point1, t7Point2, t7Point3)
       
       /// Eighth triangle pointing down
       let t8Temp1 = this.$geometry.lineIntersection(t6Point1, t6Point2, t7Point1, t7Point2)
@@ -163,7 +185,7 @@ export default {
       let t8Point1 = new Three.Vector3(0, t3Point2.y, 0)
       let t8Point2 = this.$geometry.lineIntersection(t8Temp1, t8Temp2, t3Point1, t3Point2)
       let t8Point3 = this.$geometry.lineIntersection(t8Temp1, t8Temp2, t3Point1, t3Point3)
-      this.addTriangle(t8Point1, t8Point2, t8Point3)
+      addWireTriangle(t8Point1, t8Point2, t8Point3)
       
       /// Ninth triangle pointing down
       let t9Temp1 = this.$geometry.lineIntersection(t6Point1, t6Point2, t5Point1, t5Point2)
@@ -171,11 +193,33 @@ export default {
       let t9Point1 = new Three.Vector3(0, t1Base[0].y, 0)
       let t9Point2 = this.$geometry.lineIntersection(t7Point1, t7Point2, t9Temp1, t9Temp2)
       let t9Point3 = this.$geometry.lineIntersection(t7Point1, t7Point3, t9Temp1, t9Temp2)
-      this.addTriangle(t9Point1, t9Point2, t9Point3)
+      addWireTriangle(t9Point1, t9Point2, t9Point3)
       
       /// Add bounding circle
       let circle = new Three.CircleGeometry(this.innerRadius, 128).translate(this.center.x, this.center.y, 0)
       this.wireGeometry.merge(circle)
+      
+      ///// Done with wire mesh
+      ///// Start making full mesh
+      let allpoints = [t1Point, t2Side1[0], t2Side1[1], t2Side2[1],
+                       t1t2Intersect[0],t1t2Intersect[1],t1t2Intersect[2],t1t2Intersect[3],t1t2Intersect[4], t1t2Intersect[5],
+                       t3Point1, t3Point2, t3Point3, t3Temp3, t3Temp4, t4Point1, t4Temp3, t4Temp4, t4t1Intersect[0], t4t1Intersect[1],
+                       t3t4Intersect[0], t3t4Intersect[1],
+                       t5Point1, t5Point2, t5Point3, t5t2Intersect[0], t5t2Intersect[1], t5t2Intersect[2], t5t2Intersect[3],
+                       t3t2Intersect[0], t3t2Intersect[1],
+                       t6Point1, t6Point2, t6Point3, t6t1Intersect[0], t6t1Intersect[1],
+                       t4Point2, t4Point3,
+                       t7Point1, t7Point2, t7Point3,
+                       t8Point1, t8Point2, t8Point3,
+                       t9Point1, t9Point2, t9Point3
+                      ]
+      this.marker(allpoints)
+
+      /// Add innermost triangle (material index 1)
+      addMeshTriangle(t6Point1,t9Temp2,t9Temp1, 1)
+
+      /// Add second layer of 9 triangles (material index 3)
+      //this.marker([t5Point1, t8Temp1])
     }
   }
 }
