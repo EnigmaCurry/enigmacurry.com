@@ -8,6 +8,62 @@ export {
   $geometry
 }
 
+$geometry.lineIntersection = (line1a, line1b, line2a, line2b) => {
+  return new Three.Vector3(
+    ((line1a.x*line1b.y - line1a.y*line1b.x) * (line2a.x - line2b.x) -
+     (line1a.x - line1b.x) * (line2a.x*line2b.y - line2a.y*line2b.x)) /
+      ((line1a.x -line1b.x) * (line2a.y - line2b.y) -
+       (line1a.y - line1b.y) * (line2a.x - line2b.x)),
+    ((line1a.x*line1b.y - line1a.y*line1b.x) * (line2a.y - line2b.y) -
+     (line1a.y - line1b.y) * (line2a.x*line2b.y - line2a.y*line2b.x)) /
+      ((line1a.x - line1b.x) * (line2a.y - line2b.y) -
+       (line1a.y - line1b.y) * (line2a.x - line2b.x))
+    , 0)
+}
+
+$geometry.lineCircleIntersection = (p1, p2, radius, center={x:0, y:0}) => {
+  // http://mathworld.wolfram.com/Circle-LineIntersection.html
+  // p1 and p2 are points on an infinite line
+  // radius and center describe the size and position of a circle
+  p1 = p1.clone().sub(center)
+  p2 = p2.clone().sub(center)
+  const dx = p2.x - p1.x
+  const dy = p2.y - p1.y
+  const dr = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
+  const D = p1.x*p2.y - p2.x*p1.y
+  const sgn = (x) => {return x < 0 ? -1 : 1}
+  const discriminant = Math.pow(radius, 2) * Math.pow(dr, 2) - Math.pow(D, 2)
+  let intersections
+  if (discriminant === 0) {
+    // Line is tangent at one point
+    intersections = [
+      new Three.Vector3(D * dy / Math.pow(dr, 2),
+                        -D * dx / Math.pow(dr, 2),
+                        0).add(center) ]
+  } else if (discriminant > 0) {
+    // Line intersects at two points
+    intersections = [
+      new Three.Vector3(
+        (D * dy - sgn(dy) * dx * Math.sqrt(discriminant)) / Math.pow(dr, 2),
+        (-D * dx - Math.abs(dy) * Math.sqrt(discriminant)) / Math.pow(dr, 2),
+        0).add(center),
+      new Three.Vector3(
+        (D * dy + sgn(dy) * dx * Math.sqrt(discriminant)) / Math.pow(dr, 2),
+        (-D * dx + Math.abs(dy) * Math.sqrt(discriminant)) / Math.pow(dr, 2),
+        0).add(center)
+    ]
+  } else {
+    // Line does not intersect
+    intersections = []
+  }
+  return intersections
+}
+
+$geometry.midpoint = (p1, p2) => {
+  return new Three.Vector3((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
+}
+
+
 //------------ flowerPattern --------------------------------------
 // Construct the flower of life pattern as an array of Vector3(x,y,z=0)
 // specifying the center of each circle.
