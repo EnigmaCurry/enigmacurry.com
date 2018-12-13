@@ -130,7 +130,7 @@ export default {
       let t3t4 = [
         this.$geometry.lineIntersection(t3Point1, t3Temp3, t4Point1, t4Temp3),
         this.$geometry.lineIntersection(t3Point1, t3Temp4, t4Point1, t4Temp4),
-        //There's four more that we don't need..
+        //Four more to be added below...
       ]
       
       /// Fifth triangle pointing up
@@ -171,7 +171,14 @@ export default {
       
       let t6t1 = [
         this.$geometry.lineIntersection(t6[0], t6[1], t1[0], t1[2]),
-        this.$geometry.lineIntersection(t6[0], t6[2], t1[1], t1[2])
+        this.$geometry.lineIntersection(t6[0], t6[2], t1[1], t1[2]),
+        this.$geometry.lineIntersection(t6[1], t6[2], t1[0], t1[2]),
+        this.$geometry.lineIntersection(t6[1], t6[2], t1[1], t1[2]) 
+      ]
+      
+      let t5t6 = [
+        this.$geometry.lineIntersection(t5[0], t5[1], t6[0], t6[1]),
+        this.$geometry.lineIntersection(t5[0], t5[2], t6[0], t6[2])
       ]
       
       /// Now complete triangle 4:
@@ -181,11 +188,26 @@ export default {
         this.$geometry.lineIntersection(t6t1[0], t6t1[1], t4Point1, t4Temp4)
       ]
       
+      t3t4[2] = this.$geometry.lineIntersection(t3[0], t3[1], t4[1], t4[2])
+      t3t4[3] = this.$geometry.lineIntersection(t3[0], t3[2], t4[1], t4[2])
+      t3t4[4] = this.$geometry.lineIntersection(t4[0], t4[1], t3[1], t3[2])
+      t3t4[5] = this.$geometry.lineIntersection(t4[0], t4[2], t3[1], t3[2])
+      
       /// Seventh triangle pointing up
       let t7 = [
         new Three.Vector3(0, t4[1].y, 0),
         this.$geometry.midpoint(t3t4[0], t4t1[0]),
         this.$geometry.midpoint(t3t4[1], t4t1[1])
+      ]
+      
+      let t2t7 = [
+        this.$geometry.lineIntersection(t2[1], t2[0], t7[0], t7[1]),
+        this.$geometry.lineIntersection(t2[1], t2[0], t7[0], t7[2]),
+      ]
+      
+      let t6t7 = [
+        this.$geometry.lineIntersection(t6[0], t6[1], t7[0], t7[1]),
+        this.$geometry.lineIntersection(t6[0], t6[2], t7[0], t7[2])
       ]
       
       /// Eighth triangle pointing down
@@ -197,6 +219,23 @@ export default {
         this.$geometry.lineIntersection(t8Temp1, t8Temp2, t3[0], t3[2])
       ]
       
+      let t1t8 = [
+        this.$geometry.lineIntersection(t1[0], t1[1], t8[0], t8[1]),
+        this.$geometry.lineIntersection(t1[0], t1[1], t8[0], t8[2]),
+      ]
+      
+      let t7t8 = [
+        this.$geometry.lineIntersection(t8[0], t8[1], t7[0], t7[1]),
+        this.$geometry.lineIntersection(t8[0], t8[2], t7[0], t7[2])
+      ]
+      
+      let t5t8 = [
+        this.$geometry.lineIntersection(t5[0], t5[1], t8[1], t8[2]),
+        this.$geometry.lineIntersection(t5[0], t5[2], t8[1], t8[2]),
+        this.$geometry.lineIntersection(t5[0], t5[1], t8[0], t8[1]),
+        this.$geometry.lineIntersection(t5[0], t5[2], t8[0], t8[2]),
+      ]
+      
       /// Ninth triangle pointing down
       let t9Temp1 = this.$geometry.lineIntersection(t6[0], t6[1], t5[0], t5[1])
       let t9Temp2 = this.$geometry.lineIntersection(t6[0], t6[2], t5[0], t5[2])
@@ -205,29 +244,50 @@ export default {
         this.$geometry.lineIntersection(t7[0], t7[1], t9Temp1, t9Temp2),
         this.$geometry.lineIntersection(t7[0], t7[2], t9Temp1, t9Temp2)
       ]
+      
+      let t5t9 = [
+        this.$geometry.lineIntersection(t5[0], t5[1], t9[0], t9[1]),
+        this.$geometry.lineIntersection(t5[0], t5[2], t9[0], t9[2])
+      ]
+      
+      let t7t9 = [
+        this.$geometry.lineIntersection(t7[1], t7[2], t9[0], t9[1]),
+        this.$geometry.lineIntersection(t7[1], t7[2], t9[0], t9[2])
+      ]
 
-      let triangles = [t1, t2, t3, t4, t5, t6, t7, t8, t9]
+      let triangles = [
+        t1,
+        t2,
+        t3,
+        t4,
+        t5,
+        t6,
+        t7,
+        t8,
+        t9
+      ]
+      
       for(let t=0; t < triangles.length; t++) {
         addWireTriangle(...triangles[t])
       }
-
+      
       /// Add bounding circle
       let circle = new Three.CircleGeometry(this.innerRadius, 128).translate(this.center.x, this.center.y, 0)
       this.wireGeometry.merge(circle)
       
       ///// Done with wire mesh
       ///// Start making full mesh
-      let allpoints = [t1Point, t1[0], t1[1], t1[2], t2Side1[0], t2[0], t2[1],
+      let allpoints = [t1[0], t1[1], t1[2], t2Side1[0], t2[0], t2[1],
                        t1t2[0],t1t2[1],t1t2[2],t1t2[3],t1t2[4], t1t2[5],
-                       t3[0], t3[1], t3[2], t3Temp3, t3Temp4, t4[0], t4Temp3, t4Temp4, t4t1[0], t4t1[1],
-                       t3t4[0], t3t4[1],
+                       t3[0], t3[1], t3[2], t4[0], t4t1[0], t4t1[1],
+                       t3t4[0], t3t4[1], t3t4[2], t3t4[3],t3t4[4], t3t4[5],
                        t5[0], t5[1], t5[2], t5t2[0], t5t2[1], t5t2[2], t5t2[3],
                        t3t2[0], t3t2[1],
-                       t6[0], t6[1], t6[2], t6t1[0], t6t1[1],
+                       t6[0], t6[1], t6[2], t6t1[0], t6t1[1], t6t1[2], t6t1[3], t5t6[0], t5t6[1],
                        t4[1], t4[2],
-                       t7[0], t7[1], t7[2],
-                       t8[0], t8[1], t8[2],
-                       t9[0], t9[1], t9[2],
+                       t7[0], t7[1], t7[2], t2t7[0], t2t7[1], t6t7[0], t6t7[1],
+                       t8[0], t8[1], t8[2], t1t8[0], t1t8[1], t7t8[0], t7t8[1], t5t8[0],t5t8[1],t5t8[2],t5t8[3],
+                       t9[0], t9[1], t9[2], t5t9[0], t5t9[1], t7t9[0], t7t9[1],
                       ]
       this.marker(allpoints)
 
