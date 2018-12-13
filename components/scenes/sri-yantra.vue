@@ -18,6 +18,7 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
+    showWires: {type: Boolean, default: false},
     zoom: {type: Number, default: 1.2},
     innerRadius: {type: Number, default: 1}
   },
@@ -52,14 +53,15 @@ export default {
     this.scene.add(wires)
   },
   methods: {
-    marker(vectors, radius=0.01, material=this.testMaterial) {
+    marker(vectors, color="red", radius=0.01) {
+      let mat = new Three.MeshBasicMaterial({color})
       if(vectors.isVector2 || vectors.isVector3) {
         vectors = [ vectors ]
       }
       for(let v=0; v < vectors.length; v++) {
-        this.scene.add(new Three.Mesh(
-          new Three.CircleGeometry(radius, 32).translate(vectors[v].x, vectors[v].y, 0), material)
-                      )
+        this.scene.add(
+          new Three.Mesh(new Three.CircleGeometry(radius, 32).translate(vectors[v].x, vectors[v].y, 0), mat)
+        )
       }
     },
     createInnerGeometry() {
@@ -67,15 +69,6 @@ export default {
         let index = this.wireGeometry.vertices.length
         this.wireGeometry.vertices.push(p1, p2, p3)
         this.wireGeometry.faces.push(new Three.Face3(index, index+1, index+2))
-      }
-      const addMeshTriangle = (p1, p2, p3, level) => {
-        let normal = new Three.Vector3(0, 0, -1)
-        let index = this.innerGeometry.vertices.length
-        this.innerGeometry.vertices.push(p1, p2, p3)
-        this.innerGeometry.faces.push(new Three.Face3(
-          index, index+1, index+2, normal, this.innerMaterials[level].color, level))
-        //TODO: might not need uv map?
-        //this.innerGeometry.faceVertexUvs[0].push([new Three.Vector2(),new Three.Vector2(),new Three.Vector2()])
       }
       
       let dodecagon = new Three.CircleGeometry(this.innerRadius, 12).translate(this.center.x, this.center.y, 0)
@@ -155,7 +148,7 @@ export default {
         this.$geometry.lineIntersection(t3Point1, t3Temp4, t5t2[0], t5t2[1])
       ]
       
-      let t3t2 = [
+      let t2t3 = [
         this.$geometry.lineIntersection(t3[1], t3[0], t2[0], t2[1]),
         this.$geometry.lineIntersection(t3[2], t3[0], t2[0], t2[1])
       ]
@@ -165,8 +158,8 @@ export default {
       let t6Point1 = new Three.Vector3(0, t6Temp1.y, 0)
       let t6 = [
         t6Point1,
-        this.$geometry.lineIntersection(t3Temp1, t3Temp2, t6Point1, t3t2[0]),
-        this.$geometry.lineIntersection(t3Temp1, t3Temp2, t6Point1, t3t2[1])
+        this.$geometry.lineIntersection(t3Temp1, t3Temp2, t6Point1, t2t3[0]),
+        this.$geometry.lineIntersection(t3Temp1, t3Temp2, t6Point1, t2t3[1])
       ]
       
       let t6t1 = [
@@ -254,21 +247,12 @@ export default {
         this.$geometry.lineIntersection(t7[1], t7[2], t9[0], t9[1]),
         this.$geometry.lineIntersection(t7[1], t7[2], t9[0], t9[2])
       ]
-
-      let triangles = [
-        t1,
-        t2,
-        t3,
-        t4,
-        t5,
-        t6,
-        t7,
-        t8,
-        t9
-      ]
       
-      for(let t=0; t < triangles.length; t++) {
-        addWireTriangle(...triangles[t])
+      let triangles = [t1, t2, t3, t4, t5, t6, t7, t8, t9]
+      if (this.showWires) {
+        for(let t=0; t < triangles.length; t++) {
+          addWireTriangle(...triangles[t])
+        }
       }
       
       /// Add bounding circle
@@ -277,25 +261,69 @@ export default {
       
       ///// Done with wire mesh
       ///// Start making full mesh
-      let allpoints = [t1[0], t1[1], t1[2], t2Side1[0], t2[0], t2[1],
-                       t1t2[0],t1t2[1],t1t2[2],t1t2[3],t1t2[4], t1t2[5],
-                       t3[0], t3[1], t3[2], t4[0], t4t1[0], t4t1[1],
-                       t3t4[0], t3t4[1], t3t4[2], t3t4[3],t3t4[4], t3t4[5],
-                       t5[0], t5[1], t5[2], t5t2[0], t5t2[1], t5t2[2], t5t2[3],
-                       t3t2[0], t3t2[1],
-                       t6[0], t6[1], t6[2], t6t1[0], t6t1[1], t6t1[2], t6t1[3], t5t6[0], t5t6[1],
-                       t4[1], t4[2],
-                       t7[0], t7[1], t7[2], t2t7[0], t2t7[1], t6t7[0], t6t7[1],
-                       t8[0], t8[1], t8[2], t1t8[0], t1t8[1], t7t8[0], t7t8[1], t5t8[0],t5t8[1],t5t8[2],t5t8[3],
-                       t9[0], t9[1], t9[2], t5t9[0], t5t9[1], t7t9[0], t7t9[1],
-                      ]
-      this.marker(allpoints)
 
+      const addMeshTriangle = (triTuple, level) => {
+        let normal = new Three.Vector3(0, 0, -1)
+        let index = this.innerGeometry.vertices.length
+        this.innerGeometry.vertices.push(triTuple[0], triTuple[1], triTuple[2])
+        this.innerGeometry.faces.push(new Three.Face3(
+          index+2, index+1, index, normal, this.innerMaterials[level].color, level))
+        //TODO: might not need uv map?
+        //this.innerGeometry.faceVertexUvs[0].push([new Three.Vector2(),new Three.Vector2(),new Three.Vector2()])
+      }
+      
       /// Add innermost triangle (material index 1)
-      addMeshTriangle(t6[0],t9Temp2,t9Temp1, 1)
-
+      addMeshTriangle([t6[0],t5t6[0],t5t6[1]], 1)
+      
       /// Add second layer of 9 triangles (material index 3)
-      //this.marker([t5[0], t8Temp1])
+      addMeshTriangle([t5[0], t5t8[1], t5t8[0]], 3)
+      addMeshTriangle([t5t8[1], t6t7[1], t5t6[1]], 3)
+      addMeshTriangle([t5t6[1], t9[2], t5t9[1]], 3)
+      addMeshTriangle([t5t9[1], t5t8[3], t7t9[1]], 3)
+      addMeshTriangle([t7t9[0], t7t9[1], t9[0]], 3)
+      addMeshTriangle([t5t9[0], t7t9[0], t5t8[2]], 3)
+      addMeshTriangle([t5t6[0], t5t9[0], t9[1]], 3)
+      addMeshTriangle([t5t8[0], t5t6[0], t6t7[0]], 3)
+      
+      /// Add third layer of 10 triangles (material index 5)
+      addMeshTriangle([t2t7[1], t2t7[0], t7[0]], 5)
+      addMeshTriangle([t2t7[1], t2t3[1], t6t7[1]], 5)
+      addMeshTriangle([t6t7[1], t8[2], t7t8[1]], 5)
+      addMeshTriangle([t7t8[1], t7[2], t5t8[3]], 5)
+      addMeshTriangle([t5t8[3], t4t1[1], t1t8[1]], 5)
+      addMeshTriangle([t1t8[1], t8[0], t1t8[0]], 5)
+      addMeshTriangle([t5t8[2], t1t8[0], t4t1[0]], 5)
+      addMeshTriangle([t7t8[0], t5t8[2], t7[1]], 5)
+      addMeshTriangle([t6t7[0], t7t8[0], t8[1]], 5)
+      addMeshTriangle([t2t7[0], t6t7[0], t2t3[0]], 5)
+      
+      /// Add fourth layer of 10 triangles (material index 7)
+      addMeshTriangle([t3[0], t3t4[3], t3t4[2]], 7)
+      addMeshTriangle([t3t4[3], t6t1[1], t2t3[1]], 7)
+      addMeshTriangle([t2t3[1], t1t2[4], t3t4[1]], 7)
+      addMeshTriangle([t3t4[1], t1t2[5], t4t1[1]], 7)
+      addMeshTriangle([t4t1[1], t5t2[1], t3t4[5]], 7)
+      addMeshTriangle([t3t4[5], t4[0], t3t4[4]], 7)
+      addMeshTriangle([t4t1[0], t3t4[4], t5t2[0]], 7)
+      addMeshTriangle([t3t4[0], t4t1[0], t1t2[2]], 7)
+      addMeshTriangle([t2t3[0], t3t4[0], t1t2[1]], 7)
+      addMeshTriangle([t6t1[0], t3t4[2], t2t3[0]], 7)
+      
+      /// Add fifth layer of 14 triangles (material index 9)
+      addMeshTriangle([t1[2], t6t1[3], t6t1[2]], 9)
+      addMeshTriangle([t6t1[3], t6[2], t6t1[1]], 9)
+      addMeshTriangle([t6t1[1], t4[2], t1t2[4]], 9)
+      addMeshTriangle([t1t2[4], t2[1], t1t2[3]], 9)
+      addMeshTriangle([t1t2[3], t1[1], t1t2[5]], 9)
+      addMeshTriangle([t1t2[5], t3[2], t5t2[1]], 9)
+      addMeshTriangle([t5t2[1], t5[2], t5t2[3]], 9)
+      addMeshTriangle([t5t2[3], t2[2], t5t2[2]], 9)
+      addMeshTriangle([t5t2[0], t5t2[2], t5[1]], 9)
+      addMeshTriangle([t1t2[2], t5t2[0], t3[1]], 9)
+      addMeshTriangle([t1t2[2], t1[0], t1t2[0]], 9)
+      addMeshTriangle([t1t2[1], t1t2[0], t2[0]], 9)
+      addMeshTriangle([t6t1[0], t1t2[1], t4[1]], 9)
+      addMeshTriangle([t6t1[2], t6t1[0], t6[1]], 9)
     }
   }
 }
