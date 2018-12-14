@@ -19,7 +19,7 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     showWires: {type: Boolean, default: false},
-    zoom: {type: Number, default: 1.2},
+    zoom: {type: Number, default: 1.5},
     innerRadius: {type: Number, default: 1}
   },
   data() {
@@ -46,7 +46,7 @@ export default {
   },
   created() {
     /// Create wire mesh from triangles:
-    this.createInnerGeometry()
+    this.createGeometry()
     let wires = new Three.LineSegments(new Three.EdgesGeometry(this.wireGeometry), this.wireMaterial)
     let mesh = new Three.Mesh(this.innerGeometry, this.innerMaterials)
     this.scene.add(mesh)
@@ -64,7 +64,7 @@ export default {
         )
       }
     },
-    createInnerGeometry() {
+    createGeometry() {
       const addWireTriangle = (p1, p2, p3) => {
         let index = this.wireGeometry.vertices.length
         this.wireGeometry.vertices.push(p1, p2, p3)
@@ -255,13 +255,9 @@ export default {
         }
       }
       
-      /// Add bounding circle
-      let circle = new Three.CircleGeometry(this.innerRadius, 128).translate(this.center.x, this.center.y, 0)
-      this.wireGeometry.merge(circle)
-      
       ///// Done with wire mesh
       ///// Start making full mesh
-
+      
       const addMeshTriangle = (triTuple, level) => {
         let normal = new Three.Vector3(0, 0, -1)
         let index = this.innerGeometry.vertices.length
@@ -324,6 +320,42 @@ export default {
       addMeshTriangle([t1t2[1], t1t2[0], t2[0]], 9)
       addMeshTriangle([t6t1[0], t1t2[1], t4[1]], 9)
       addMeshTriangle([t6t1[2], t6t1[0], t6[1]], 9)
+      
+      /// Add Bindu
+      this.marker(this.center, 'white', 0.01)
+      
+      /// Add Bhupura
+      const circle1 = new Three.CircleGeometry(
+        this.innerRadius, 128).translate(this.center.x, this.center.y, 0)
+      const circle2Radius = this.$geometry.distance(t6[0], dodecagon.vertices[4])
+      const circle2 = new Three.CircleGeometry(
+        circle2Radius, 128).translate(this.center.x, this.center.y, 0)
+      const circle3Radius = this.$geometry.distance(t5[0], dodecagon.vertices[10])
+      const circle3 = new Three.CircleGeometry(
+        circle3Radius, 128).translate(this.center.x, this.center.y, 0)
+      //this.wireGeometry.merge(circle1)
+      this.wireGeometry.merge(circle2)
+      this.wireGeometry.merge(circle3)
+      
+      const petalP1 = this.$geometry.pointOnCircle(this.center, circle2Radius,  90)
+      const petalP2 = this.$geometry.pointOnCircle(this.center, this.innerRadius, 90 + (360 / 16))
+      const petalShape = new Three.Shape()
+      petalShape.moveTo(petalP1.x, petalP1.y)
+      petalShape.lineTo(petalP2.x, petalP2.y)
+      let angle = 90 + (360 / 16)
+      const segments = 16
+      for (let i=0; i < segments; i++) {
+        angle = angle - (1/segments) * (360/8)
+        let p = this.$geometry.pointOnCircle(this.center, this.innerRadius, angle)
+        petalShape.lineTo(p.x, p.y)
+      }
+      
+      const petal = new Three.Mesh(new Three.ShapeGeometry(petalShape), this.testMaterial)
+      for (let i=0; i < 8; i++) {
+        let p = petal.clone()
+        p.rotation.z = i * (360/8) * (Math.PI/180)
+        this.scene.add(p)
+      }
     }
   }
 }

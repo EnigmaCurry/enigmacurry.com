@@ -63,6 +63,9 @@ $geometry.midpoint = (p1, p2) => {
   return new Three.Vector3((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
 }
 
+$geometry.distance = (p1, p2) => {
+  return math.distance([p1.x, p1.y], [p2.x, p2.y])
+}
 
 //------------ flowerPattern --------------------------------------
 // Construct the flower of life pattern as an array of Vector3(x,y,z=0)
@@ -133,10 +136,10 @@ let areaOfTriangleBySides = $geometry.areaOfTriangleBySides = (sideA, sideB, sid
 }
 
 let pointOnCircle = $geometry.pointOnCircle = ({x, y}, radius, degrees) => {
-  return {
-    x: x + radius * Math.cos(degrees * (Math.PI/180)),
-    y: y + radius * Math.sin(degrees * (Math.PI/180))
-  }
+  return new Three.Vector3(
+    x + radius * Math.cos(degrees * (Math.PI/180)),
+    y + radius * Math.sin(degrees * (Math.PI/180))
+  )
 }
 
 // Penrose P2 tiling - Subdivide list of golden triangles and gnomon coordinates
