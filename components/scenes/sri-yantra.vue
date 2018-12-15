@@ -337,11 +337,18 @@ export default {
       this.wireGeometry.merge(circle2)
       this.wireGeometry.merge(circle3)
       
-      const petalP1 = this.$geometry.pointOnCircle(this.center, circle2Radius,  90)
-      const petalP2 = this.$geometry.pointOnCircle(this.center, this.innerRadius, 90 + (360 / 16))
+      const petalTop = this.$geometry.pointOnCircle(this.center, circle2Radius,  90)
+      const petalBottomLeft = this.$geometry.pointOnCircle(this.center, this.innerRadius, 90 + (360 / 16))
+      const petalBottomRight = this.$geometry.pointOnCircle(this.center, this.innerRadius, 90 - (360 / 16))
+      const petalMidLeft = this.$geometry.midpoint(petalTop, petalBottomLeft)
+      const petalMidRight = this.$geometry.midpoint(petalTop, petalBottomRight)
+      const petalCP1 = new Three.Vector3(petalTop.x, petalTop.y - 0.08 * this.innerRadius, 0)
+      const petalCP2 = new Three.Vector3(petalMidLeft.x - 0.20 * this.innerRadius, petalMidLeft.y + 0.03 * this.innerRadius)
+      const petalCP3 = new Three.Vector3(-1 * petalCP2.x, petalCP2.y)
       const petalShape = new Three.Shape()
-      petalShape.moveTo(petalP1.x, petalP1.y)
-      petalShape.lineTo(petalP2.x, petalP2.y)
+      petalShape.moveTo(petalTop.x, petalTop.y)
+      petalShape.bezierCurveTo(petalCP1.x, petalCP1.y, petalCP2.x, petalCP2.y, petalBottomLeft.x, petalBottomLeft.y)
+      //petalShape.lineTo(petalBottomLeft.x, petalBottomLeft.y)
       let angle = 90 + (360 / 16)
       const segments = 16
       for (let i=0; i < segments; i++) {
@@ -349,7 +356,7 @@ export default {
         let p = this.$geometry.pointOnCircle(this.center, this.innerRadius, angle)
         petalShape.lineTo(p.x, p.y)
       }
-      
+      petalShape.bezierCurveTo(petalCP3.x, petalCP3.y, petalCP1.x, petalCP1.y, petalTop.x, petalTop.y)
       const petal = new Three.Mesh(new Three.ShapeGeometry(petalShape), this.testMaterial)
       for (let i=0; i < 8; i++) {
         let p = petal.clone()
