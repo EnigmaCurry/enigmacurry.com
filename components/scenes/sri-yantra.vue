@@ -18,7 +18,7 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    showWires: {type: Boolean, default: false},
+    showWires: {type: Boolean, default: true},
     zoom: {type: Number, default: 2},
     innerRadius: {type: Number, default: 1}
   },
@@ -28,7 +28,7 @@ export default {
       wireGeometry: new Three.Geometry(),
       foregroundMeshes: [],
       backgroundMeshes: [],
-      wireMaterial: new Three.LineBasicMaterial({color: 'white'}),
+      wireMaterial: new Three.LineBasicMaterial({color: 'white', linewidth: 5}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
       foregroundMaterials: [
         new Three.MeshBasicMaterial({color: "#fb0203"}), //0 - innermost triangle
@@ -46,13 +46,13 @@ export default {
         new Three.MeshBasicMaterial({color: "#ba05d0"}), //3 - outside triangles
         new Three.MeshBasicMaterial({color: "#f1d006"}), //4 - inside circle
         new Three.MeshBasicMaterial({color: "#f6f49d"}), //5 - inside petals
-        new Three.MeshBasicMaterial({color: "#fc17cb"}), //6 - inside gateway
+        new Three.MeshBasicMaterial({color: "#ababab"}), //6 - inside gateway
         new Three.MeshBasicMaterial({color: "#fefdfd"}), //7 - gateway threshold
         new Three.MeshBasicMaterial({color: "#37f0f8"}), //7 - innermost gateway
         new Three.MeshBasicMaterial({color: "#fefdfd"}), //8 - intergateway
         new Three.MeshBasicMaterial({color: "#46f87e"}), //9 - second gateway
         new Three.MeshBasicMaterial({color: "#fefdfd"}), //10 - intergateway
-        new Three.MeshBasicMaterial({color: "#dd00fe"}), //11 - third gateway
+        new Three.MeshBasicMaterial({color: "#ababab"}), //11 - third gateway
       ],
       center: new Three.Vector3()
     }
@@ -78,9 +78,9 @@ export default {
         vectors = [ vectors ]
       }
       for(let v=0; v < vectors.length; v++) {
-        this.scene.add(
-          new Three.Mesh(new Three.CircleGeometry(radius, 32).translate(vectors[v].x, vectors[v].y, 0), mat)
-        )
+        let m = new Three.Mesh(new Three.CircleGeometry(radius, 32).translate(vectors[v].x, vectors[v].y, 0), mat)
+        m.renderOrder = 5000
+        this.scene.add(m)
       }
     },
     createGeometry() {
@@ -355,9 +355,9 @@ export default {
       const circle3Radius = this.$geometry.distance(t5[0], dodecagon.vertices[10])
       const circle3 = new Three.CircleGeometry(
         circle3Radius, 128).translate(this.center.x, this.center.y, 0)
-      //this.wireGeometry.merge(circle1)
-      //this.wireGeometry.merge(circle2)
-      //this.wireGeometry.merge(circle3)
+      this.wireGeometry.merge(circle1)
+      this.wireGeometry.merge(circle2)
+      this.wireGeometry.merge(circle3)
       
       /// Add Petals level 1
       const petal1Top = this.$geometry.pointOnCircle(this.center, circle2Radius,  90)
@@ -414,10 +414,27 @@ export default {
         p.rotation.z = i * (360/16) * (Math.PI/180)
         this.foregroundMeshes.push(p)
       }
-
-      /// Add background layers
-      this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(circle3Radius, 64), this.backgroundMaterials[5]))
       
+      /// Add background layers
+      const triangleBG4 = new Three.Geometry()
+      triangleBG4.vertices.push(t5t8[2], t5t8[3], t5[0])
+      triangleBG4.faces.push(new Three.Face3(0, 1, 2))
+      this.backgroundMeshes.push(new Three.Mesh(triangleBG4, this.backgroundMaterials[0]))
+      const triangleBG3 = new Three.Geometry()
+      triangleBG3.vertices.push(t7t8[0], t7t8[1], t7[0], t8[0])
+      triangleBG3.faces.push(new Three.Face3(0, 1, 2), new Three.Face3(0, 3, 1))
+      this.backgroundMeshes.push(new Three.Mesh(triangleBG3, this.backgroundMaterials[1]))
+      const triangleBG2 = new Three.Geometry()
+      triangleBG2.vertices.push(t3t4[0], t3t4[1], t3[0], t4[0])
+      triangleBG2.faces.push(new Three.Face3(0, 1, 2), new Three.Face3(0, 3, 1))
+      this.backgroundMeshes.push(new Three.Mesh(triangleBG2, this.backgroundMaterials[2]))
+      const triangleBG1 = new Three.Geometry()
+      triangleBG1.vertices.push(t1t2[0], t1t2[3], t1[2], t2[2])
+      triangleBG1.faces.push(new Three.Face3(0, 1, 2), new Three.Face3(0, 3, 1))
+      this.backgroundMeshes.push(new Three.Mesh(triangleBG1, this.backgroundMaterials[3]))
+      this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(this.innerRadius, 64), this.backgroundMaterials[4]))
+      this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(circle3Radius, 64), this.backgroundMaterials[5]))
+
       /// Add gateway
       const squareGuide1 = new Three.PlaneGeometry(circle3Radius * 2, circle3Radius * 2)
       const gwLevel = (level) => {
