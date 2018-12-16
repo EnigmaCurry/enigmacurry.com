@@ -348,16 +348,28 @@ export default {
       
       /// Add Bhupura
       const circle1 = new Three.CircleGeometry(
-        this.innerRadius, 128).translate(this.center.x, this.center.y, 0)
+        this.innerRadius, 256).translate(this.center.x, this.center.y, 0)
       const circle2Radius = this.$geometry.distance(t6[0], dodecagon.vertices[4])
       const circle2 = new Three.CircleGeometry(
-        circle2Radius, 128).translate(this.center.x, this.center.y, 0)
+        circle2Radius, 256).translate(this.center.x, this.center.y, 0)
       const circle3Radius = this.$geometry.distance(t5[0], dodecagon.vertices[10])
       const circle3 = new Three.CircleGeometry(
-        circle3Radius, 128).translate(this.center.x, this.center.y, 0)
+        circle3Radius, 256).translate(this.center.x, this.center.y, 0)
+      const circle4Radius = circle3Radius + 0.03 * this.innerRadius
+      const circle4 = new Three.CircleGeometry(
+        circle4Radius, 256).translate(this.center.x, this.center.y, 0)
+      const circle5Radius = circle3Radius + 0.06 * this.innerRadius
+      const circle5 = new Three.CircleGeometry(
+        circle5Radius, 256).translate(this.center.x, this.center.y, 0)
+      const circle6Radius = circle3Radius + 0.09 * this.innerRadius
+      const circle6 = new Three.CircleGeometry(
+        circle6Radius, 256).translate(this.center.x, this.center.y, 0)
       this.wireGeometry.merge(circle1)
       this.wireGeometry.merge(circle2)
       this.wireGeometry.merge(circle3)
+      this.wireGeometry.merge(circle4)
+      this.wireGeometry.merge(circle5)
+      this.wireGeometry.merge(circle6)
       
       /// Add Petals level 1
       const petal1Top = this.$geometry.pointOnCircle(this.center, circle2Radius,  90)
@@ -436,13 +448,13 @@ export default {
       this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(circle3Radius, 64), this.backgroundMaterials[5]))
 
       /// Add gateway
-      const squareGuide1 = new Three.PlaneGeometry(circle3Radius * 2, circle3Radius * 2)
+      const squareGuide1 = new Three.PlaneGeometry(circle6Radius * 2, circle6Radius * 2)
       const gwLevel = (level) => {
         const levelIncrease = level * 0.02 * this.innerRadius
         let array = []
         array[0] = new Three.Vector3(squareGuide1.vertices[0].x - levelIncrease, squareGuide1.vertices[0].y + levelIncrease)
-        array[1] = new Three.Vector3(((circle3Radius * 2) / 3) - circle3Radius - levelIncrease, squareGuide1.vertices[0].y + levelIncrease)
-        array[2] = new Three.Vector3(array[1].x, t7[0].y - t2[2].y - levelIncrease)
+        array[1] = new Three.Vector3(((circle6Radius * 2) / 3) - circle6Radius - levelIncrease, squareGuide1.vertices[0].y + levelIncrease)
+        array[2] = new Three.Vector3(array[1].x, 0.05 * this.innerRadius + t7[0].y - t2[2].y - levelIncrease)
         array[3] = new Three.Vector3(array[1].x - 0.1 * this.innerRadius, array[2].y)
         array[4] = new Three.Vector3(array[3].x, array[3].y + 0.1 * this.innerRadius + 2*levelIncrease)
         array[5] = new Three.Vector3(-1 * array[4].x, array[4].y)
@@ -450,7 +462,7 @@ export default {
         array[7] = new Three.Vector3(-1 * array[2].x, array[2].y)
         array[8] = new Three.Vector3(-1 * array[1].x, array[1].y)
         array[9] = new Three.Vector3(squareGuide1.vertices[1].x + levelIncrease, squareGuide1.vertices[1].y + levelIncrease)
-        array[10] = new Three.Vector3(array[9].x, 0.5 * ((circle3Radius * 2) / 3) + levelIncrease)
+        array[10] = new Three.Vector3(array[9].x, 0.5 * ((circle6Radius * 2) / 3) + levelIncrease)
         array[11] = new Three.Vector3(array[2].y, array[10].y)
         array[12] = new Three.Vector3(array[11].x, array[11].y + 0.1 * this.innerRadius)
         array[13] = new Three.Vector3(array[11].x + 0.1 * this.innerRadius + 2*levelIncrease, array[12].y)
