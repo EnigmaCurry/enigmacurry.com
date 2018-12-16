@@ -54,11 +54,12 @@ export default {
   created() {
     this.tweenGroup = new TWEEN.Group()
     this.newFlowerInterval({initial: true})
-    Visibility.every(this.flowerInterval * 1000, this.newFlowerInterval)
+    this.visibilityInterval = Visibility.every(this.flowerInterval * 1000, this.newFlowerInterval)
     this.newMaterialTweenInterval()
     this.newMeshScaleTweenInterval()
   },
   beforeDestroy() {
+    Visibility.stop(this.visibilityInterval)
     this.tweenGroup.removeAll()
   },
   methods: {

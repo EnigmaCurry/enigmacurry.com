@@ -55,7 +55,7 @@ export default {
     
     this.newBackgroundTilingGroup()
     this.newForegroundTilingGroup()
-    Visibility.every(20000, () => {
+    this.visibilityInterval = Visibility.every(20000, () => {
       this.newForegroundTilingGroup()
       this.newBackgroundTilingGroup()
     })
@@ -68,6 +68,7 @@ export default {
     
   },
   beforeDestroy() {
+    Visibility.stop(this.visibilityInterval)
     this.tweenGroup.removeAll()
   },
   methods: {

@@ -54,12 +54,13 @@ export default {
   mounted() {
     if (this.animated) {
       this.newScaleInterval()
-      Visibility.every(this.newMeshInterval * 1000, () => {
+      this.visibilityInterval = Visibility.every(this.newMeshInterval * 1000, () => {
         this.newPenroseMeshInterval()
       })
     }
   },
   beforeDestroy() {
+    Visibility.stop(this.visibilityInterval)
     this.tweenGroup.removeAll()
     this.$penroseTextures.cancelPenroseTweens()
   },  

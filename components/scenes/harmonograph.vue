@@ -52,12 +52,13 @@ export default {
   },
   created() {
     this.newGraph()
-    Visibility.every(this.graphInterval * 1000, this.newGraph)
+    this.visibilityInterval = Visibility.every(this.graphInterval * 1000, this.newGraph)
   },
   mounted() {
     document.getElementById('bg').classList.add(this.backgroundClass)
   },
   beforeDestroy() {
+    Visibility.stop(this.visibilityInterval)
     document.getElementById('bg').classList.remove(this.backgroundClass)
   },
   methods: {
