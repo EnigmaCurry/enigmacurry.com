@@ -147,7 +147,7 @@ export default {
       
     },
     marker(vectors, color="red", radius=0.01) {
-      let mat = new Three.MeshBasicMaterial({color})
+      let mat = new Three.MeshBasicMaterial({color, transparent: true})
       if(vectors.isVector2 || vectors.isVector3) {
         vectors = [ vectors ]
       }
