@@ -172,6 +172,7 @@ export default {
         { img: require('~/assets/img/icons/epicycle.png'), title: 'Epicycles', to: '/geometry/epicycles' },
         { img: require('~/assets/img/icons/tilings.png'), title: 'Tilings', to: '/geometry/tilings' },
         { img: require('~/assets/img/icons/harmonograph.png'), title: 'Harmonograph', to: '/geometry/harmonograph' },
+        { img: require('~/assets/img/icons/sri-yantra.png'), title: 'Sri Yantra', to: '/geometry/sri-yantra' },
      ],
     }
   },
