@@ -31,9 +31,11 @@ export default {
     return {
       scene: new Three.Scene(),
       wireGeometry: new Three.Geometry(),
+      wireGeometry2: new Three.Geometry(),
       foregroundMeshes: [],
       backgroundMeshes: [],
       wireMaterial: new Three.LineBasicMaterial({color: 'white', linewidth: 5}),
+      wireMaterial2: new Three.LineBasicMaterial({color: 'white', linewidth: 2}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
       foregroundMaterials: [
         new Three.MeshPhysicalMaterial({color: "#fb0203"}), //0 - innermost triangle
@@ -68,6 +70,9 @@ export default {
     /// Create wire mesh from triangles:
     this.createGeometry()
     let wires = new Three.LineSegments(new Three.EdgesGeometry(this.wireGeometry), this.wireMaterial)
+    this.scene.add(wires)
+    let wires2 = new Three.LineSegments(new Three.EdgesGeometry(this.wireGeometry2), this.wireMaterial2)
+    this.scene.add(wires2)
     for(let fg=0; fg < this.foregroundMeshes.length; fg++) {
       this.foregroundMeshes[fg].renderOrder = 2
       this.scene.add(this.foregroundMeshes[fg])
@@ -76,7 +81,6 @@ export default {
       this.backgroundMeshes[bg].renderOrder = -1 * bg
       this.scene.add(this.backgroundMeshes[bg])
     }
-    this.scene.add(wires)
     this.newColorInterval()
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
     
@@ -428,12 +432,12 @@ export default {
       const circle6Radius = circle3Radius + 0.09 * this.innerRadius
       const circle6 = new Three.CircleGeometry(
         circle6Radius, 256).translate(this.center.x, this.center.y, 0)
-      this.wireGeometry.merge(circle1)
-      this.wireGeometry.merge(circle2)
-      this.wireGeometry.merge(circle3)
-      this.wireGeometry.merge(circle4)
-      this.wireGeometry.merge(circle5)
-      this.wireGeometry.merge(circle6)
+      this.wireGeometry2.merge(circle1)
+      this.wireGeometry2.merge(circle2)
+      this.wireGeometry2.merge(circle3)
+      this.wireGeometry2.merge(circle4)
+      this.wireGeometry2.merge(circle5)
+      this.wireGeometry2.merge(circle6)
       
       /// Add Petals level 1
       const petal1Top = this.$geometry.pointOnCircle(this.center, circle2Radius,  90)
