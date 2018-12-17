@@ -38,28 +38,28 @@ export default {
       wireMaterial2: new Three.LineBasicMaterial({color: 'white', linewidth: 2}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
       foregroundMaterials: [
-        new Three.MeshPhysicalMaterial({color: "#fb0203"}), //0 - innermost triangle
-        new Three.MeshPhysicalMaterial({color: "#f84302"}), //1 - triangles
-        new Three.MeshPhysicalMaterial({color: "#fa0378"}), //2 - triangles
-        new Three.MeshPhysicalMaterial({color: "#fe0000"}), //3 - triangles
-        new Three.MeshPhysicalMaterial({color: "#246d01"}), //4 - triangles
-        new Three.MeshPhysicalMaterial({color: "#f91c53"}), //5 - petals 1
-        new Three.MeshPhysicalMaterial({color: "#fd615c"}), //6 - petals 2
+        new Three.MeshPhongMaterial({color: "#fb0203"}), //0 - innermost triangle
+        new Three.MeshPhongMaterial({color: "#f84302"}), //1 - triangles
+        new Three.MeshPhongMaterial({color: "#fa0378"}), //2 - triangles
+        new Three.MeshPhongMaterial({color: "#fe0000"}), //3 - triangles
+        new Three.MeshPhongMaterial({color: "#246d01"}), //4 - triangles
+        new Three.MeshPhongMaterial({color: "#f91c53"}), //5 - petals 1
+        new Three.MeshPhongMaterial({color: "#fd615c"}), //6 - petals 2
       ],
       backgroundMaterials: [
-        new Three.MeshPhysicalMaterial({color: "#fff000"}), //0 - outside innermost triangle
-        new Three.MeshPhysicalMaterial({color: "#00feef"}), //1 - outside triangles
-        new Three.MeshPhysicalMaterial({color: "#01f37a"}), //2 - outside triangles
-        new Three.MeshPhysicalMaterial({color: "#ba05d0"}), //3 - outside triangles
-        new Three.MeshPhysicalMaterial({color: "#f1d006"}), //4 - inside circle
-        new Three.MeshPhysicalMaterial({color: "#f6f49d"}), //5 - inside petals
-        new Three.MeshPhysicalMaterial({color: "#ababab"}), //6 - inside gateway
-        new Three.MeshPhysicalMaterial({color: "#fefdfd"}), //7 - gateway threshold
-        new Three.MeshPhysicalMaterial({color: "#37f0f8"}), //7 - innermost gateway
-        new Three.MeshPhysicalMaterial({color: "#fefdfd"}), //8 - intergateway
-        new Three.MeshPhysicalMaterial({color: "#46f87e"}), //9 - second gateway
-        new Three.MeshPhysicalMaterial({color: "#fefdfd"}), //10 - intergateway
-        new Three.MeshPhysicalMaterial({color: "#ababab"}), //11 - third gateway
+        new Three.MeshPhongMaterial({color: "#fff000"}), //0 - outside innermost triangle
+        new Three.MeshPhongMaterial({color: "#00feef"}), //1 - outside triangles
+        new Three.MeshPhongMaterial({color: "#01f37a"}), //2 - outside triangles
+        new Three.MeshPhongMaterial({color: "#ba05d0"}), //3 - outside triangles
+        new Three.MeshPhongMaterial({color: "#f1d006"}), //4 - inside circle
+        new Three.MeshPhongMaterial({color: "#f6f49d"}), //5 - inside petals
+        new Three.MeshPhongMaterial({color: "#ababab"}), //6 - inside gateway
+        new Three.MeshPhongMaterial({color: "#fefdfd"}), //7 - gateway threshold
+        new Three.MeshPhongMaterial({color: "#37f0f8"}), //7 - innermost gateway
+        new Three.MeshPhongMaterial({color: "#fefdfd"}), //8 - intergateway
+        new Three.MeshPhongMaterial({color: "#46f87e"}), //9 - second gateway
+        new Three.MeshPhongMaterial({color: "#fefdfd"}), //10 - intergateway
+        new Three.MeshPhongMaterial({color: "#ababab"}), //11 - third gateway
       ],
       center: new Three.Vector3(),
       tweenGroup: new TWEEN.Group(),
