@@ -22,7 +22,7 @@ export default {
     animated: {type: Boolean, default: true},
     backgroundClass: {type: String, default: "pare4Dolia-pair-of-four-dull-olyas"},
     showGrid: {type: Boolean, default: false},
-    showWires: {type: Boolean, default: true},
+    showWires: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
     innerRadius: {type: Number, default: 1},
     colorInterval: {type: Number, default: 15},
@@ -34,8 +34,8 @@ export default {
       wireGeometry2: new Three.Geometry(),
       foregroundMeshes: [],
       backgroundMeshes: [],
-      wireMaterial: new Three.LineBasicMaterial({color: 'white', linewidth: 5}),
-      wireMaterial2: new Three.LineBasicMaterial({color: 'white', linewidth: 2}),
+      wireMaterial: new Three.LineBasicMaterial({color: 'white', linewidth: 1}),
+      wireMaterial2: new Three.LineBasicMaterial({color: 'white', linewidth: 2, transparent: true, opacity: 0.3}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
       foregroundMaterials: [
         new Three.MeshPhongMaterial({color: "#fb0203"}), //0 - innermost triangle
@@ -138,6 +138,7 @@ export default {
         }
         this.tweenMaterialColor(this.backgroundMaterials[m], color, this.colorInterval)
       }
+      this.tweenMaterialColor(this.wireMaterial, bgColors[0], this.colorInterval)
       
     },
     marker(vectors, color="red", radius=0.01) {
@@ -432,9 +433,9 @@ export default {
       const circle6Radius = circle3Radius + 0.09 * this.innerRadius
       const circle6 = new Three.CircleGeometry(
         circle6Radius, 256).translate(this.center.x, this.center.y, 0)
-      this.wireGeometry2.merge(circle1)
-      this.wireGeometry2.merge(circle2)
-      this.wireGeometry2.merge(circle3)
+      // this.wireGeometry2.merge(circle1)
+      // this.wireGeometry2.merge(circle2)
+      // this.wireGeometry2.merge(circle3)
       this.wireGeometry2.merge(circle4)
       this.wireGeometry2.merge(circle5)
       this.wireGeometry2.merge(circle6)
