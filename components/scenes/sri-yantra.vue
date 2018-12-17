@@ -28,6 +28,8 @@ export default {
     colorInterval: {type: Number, default: 15},
   },
   data() {
+    let cloudsTexture = new Three.TextureLoader().load(require("~/assets/img/texture/clouds.png"))
+    let uvsTexture = new Three.TextureLoader().load(require("~/assets/img/texture/uv-test.jpg"))
     return {
       scene: new Three.Scene(),
       wireGeometry: new Three.Geometry(),
@@ -43,15 +45,15 @@ export default {
         new Three.MeshPhongMaterial({color: "#fa0378"}), //2 - triangles
         new Three.MeshPhongMaterial({color: "#fe0000"}), //3 - triangles
         new Three.MeshPhongMaterial({color: "#246d01"}), //4 - triangles
-        new Three.MeshPhongMaterial({color: "#f91c53"}), //5 - petals 1
-        new Three.MeshPhongMaterial({color: "#fd615c"}), //6 - petals 2
+        new Three.MeshPhongMaterial({color: "#f91c53", map: cloudsTexture}), //5 - petals 1
+        new Three.MeshPhongMaterial({color: "#fd615c", map: uvsTexture, bumpMap: cloudsTexture}), //6 - petals 2
       ],
       backgroundMaterials: [
         new Three.MeshPhongMaterial({color: "#fff000"}), //0 - outside innermost triangle
         new Three.MeshPhongMaterial({color: "#00feef"}), //1 - outside triangles
         new Three.MeshPhongMaterial({color: "#01f37a"}), //2 - outside triangles
         new Three.MeshPhongMaterial({color: "#ba05d0"}), //3 - outside triangles
-        new Three.MeshPhongMaterial({color: "#f1d006"}), //4 - inside circle
+        new Three.MeshPhongMaterial({color: "#f1d006", bumpMap: cloudsTexture}), //4 - inside circle
         new Three.MeshPhongMaterial({color: "#f6f49d"}), //5 - inside petals
         new Three.MeshPhongMaterial({color: "#ababab"}), //6 - inside gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //7 - gateway threshold
@@ -84,12 +86,15 @@ export default {
     this.newColorInterval()
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
     
-    this.light = new Three.SpotLight(0xffaaaa, 3.2)
+    this.light = new Three.SpotLight(0xffaaaa, 2.2)
     this.light.position.set(0,2,0.25)
     this.scene.add(this.light)
-    this.light2 = new Three.SpotLight(0xaaaaff, 3.2)
+    this.light2 = new Three.SpotLight(0xaaaaff, 2.2)
     this.light2.position.set(0,-2,0.25)
     this.scene.add(this.light2)
+    this.light3 = new Three.PointLight(0xababab, 0.5)
+    this.light3.position.set(0,0,1)
+    this.scene.add(this.light3)
   },
   mounted() {
     document.getElementById('bg').classList.add(this.backgroundClass)
