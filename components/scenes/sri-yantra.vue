@@ -36,31 +36,32 @@ export default {
       wireMaterial: new Three.LineBasicMaterial({color: 'white', linewidth: 5}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
       foregroundMaterials: [
-        new Three.MeshBasicMaterial({color: "#fb0203"}), //0 - innermost triangle
-        new Three.MeshBasicMaterial({color: "#f84302"}), //1 - triangles
-        new Three.MeshBasicMaterial({color: "#fa0378"}), //2 - triangles
-        new Three.MeshBasicMaterial({color: "#fe0000"}), //3 - triangles
-        new Three.MeshBasicMaterial({color: "#246d01"}), //4 - triangles
-        new Three.MeshBasicMaterial({color: "#f91c53"}), //5 - petals 1
-        new Three.MeshBasicMaterial({color: "#fd615c"}), //6 - petals 2
+        new Three.MeshPhysicalMaterial({color: "#fb0203"}), //0 - innermost triangle
+        new Three.MeshPhysicalMaterial({color: "#f84302"}), //1 - triangles
+        new Three.MeshPhysicalMaterial({color: "#fa0378"}), //2 - triangles
+        new Three.MeshPhysicalMaterial({color: "#fe0000"}), //3 - triangles
+        new Three.MeshPhysicalMaterial({color: "#246d01"}), //4 - triangles
+        new Three.MeshPhysicalMaterial({color: "#f91c53"}), //5 - petals 1
+        new Three.MeshPhysicalMaterial({color: "#fd615c"}), //6 - petals 2
       ],
       backgroundMaterials: [
-        new Three.MeshBasicMaterial({color: "#fff000"}), //0 - outside innermost triangle
-        new Three.MeshBasicMaterial({color: "#00feef"}), //1 - outside triangles
-        new Three.MeshBasicMaterial({color: "#01f37a"}), //2 - outside triangles
-        new Three.MeshBasicMaterial({color: "#ba05d0"}), //3 - outside triangles
-        new Three.MeshBasicMaterial({color: "#f1d006"}), //4 - inside circle
-        new Three.MeshBasicMaterial({color: "#f6f49d"}), //5 - inside petals
-        new Three.MeshBasicMaterial({color: "#ababab"}), //6 - inside gateway
-        new Three.MeshBasicMaterial({color: "#fefdfd"}), //7 - gateway threshold
-        new Three.MeshBasicMaterial({color: "#37f0f8"}), //7 - innermost gateway
-        new Three.MeshBasicMaterial({color: "#fefdfd"}), //8 - intergateway
-        new Three.MeshBasicMaterial({color: "#46f87e"}), //9 - second gateway
-        new Three.MeshBasicMaterial({color: "#fefdfd"}), //10 - intergateway
-        new Three.MeshBasicMaterial({color: "#ababab"}), //11 - third gateway
+        new Three.MeshPhysicalMaterial({color: "#fff000"}), //0 - outside innermost triangle
+        new Three.MeshPhysicalMaterial({color: "#00feef"}), //1 - outside triangles
+        new Three.MeshPhysicalMaterial({color: "#01f37a"}), //2 - outside triangles
+        new Three.MeshPhysicalMaterial({color: "#ba05d0"}), //3 - outside triangles
+        new Three.MeshPhysicalMaterial({color: "#f1d006"}), //4 - inside circle
+        new Three.MeshPhysicalMaterial({color: "#f6f49d"}), //5 - inside petals
+        new Three.MeshPhysicalMaterial({color: "#ababab"}), //6 - inside gateway
+        new Three.MeshPhysicalMaterial({color: "#fefdfd"}), //7 - gateway threshold
+        new Three.MeshPhysicalMaterial({color: "#37f0f8"}), //7 - innermost gateway
+        new Three.MeshPhysicalMaterial({color: "#fefdfd"}), //8 - intergateway
+        new Three.MeshPhysicalMaterial({color: "#46f87e"}), //9 - second gateway
+        new Three.MeshPhysicalMaterial({color: "#fefdfd"}), //10 - intergateway
+        new Three.MeshPhysicalMaterial({color: "#ababab"}), //11 - third gateway
       ],
       center: new Three.Vector3(),
-      tweenGroup: new TWEEN.Group()
+      tweenGroup: new TWEEN.Group(),
+      lightAngle: 0,
     }
   },
   created() {
@@ -78,6 +79,13 @@ export default {
     this.scene.add(wires)
     this.newColorInterval()
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
+    
+    this.light = new Three.SpotLight(0xffffff, 0.9)
+    this.light.position.set(0,2,1)
+    this.scene.add(this.light)
+    this.light2 = new Three.SpotLight(0xffffff, 0.9)
+    this.light2.position.set(0,-2,1)
+    this.scene.add(this.light2)
   },
   mounted() {
     document.getElementById('bg').classList.add(this.backgroundClass)
@@ -90,6 +98,13 @@ export default {
   methods: {
     animate() {
       this.tweenGroup.update()
+      //Move light
+      this.lightAngle = (this.lightAngle + 0.2) % 360
+      let pos = this.$geometry.pointOnCircle(this.center, this.innerRadius * 2.5, this.lightAngle)
+      this.light.position.x = pos.x
+      this.light.position.y = pos.y
+      this.light2.position.x = -1 * pos.x
+      this.light2.position.y = -1 * pos.y
     },
     tweenMaterialColor(material, toColor, interval) {
       let color = {r: material.color.r, g: material.color.g, b: material.color.b}
@@ -119,7 +134,7 @@ export default {
         }
         this.tweenMaterialColor(this.backgroundMaterials[m], color, this.colorInterval)
       }
-
+      
     },
     marker(vectors, color="red", radius=0.01) {
       let mat = new Three.MeshBasicMaterial({color})
@@ -136,7 +151,7 @@ export default {
       const addWireTriangle = (p1, p2, p3) => {
         let index = this.wireGeometry.vertices.length
         this.wireGeometry.vertices.push(p1, p2, p3)
-        this.wireGeometry.faces.push(new Three.Face3(index, index+1, index+2))
+        this.wireGeometry.faces.push(new Three.Face3(index, index+1, index+2, new Three.Vector3(0,0,1)))
       }
       
       let dodecagon = new Three.CircleGeometry(this.innerRadius, 12).translate(this.center.x, this.center.y, 0)
@@ -328,7 +343,7 @@ export default {
       const trianglesGeometry = new Three.Geometry()
       
       const addMeshTriangle = (triTuple, level) => {
-        let normal = new Three.Vector3(0, 0, -1)
+        let normal = new Three.Vector3(0, 0, 1)
         let index = trianglesGeometry.vertices.length
         trianglesGeometry.vertices.push(triTuple[0], triTuple[1], triTuple[2])
         trianglesGeometry.faces.push(new Three.Face3(
@@ -479,19 +494,19 @@ export default {
       /// Add background layers
       const triangleBG4 = new Three.Geometry()
       triangleBG4.vertices.push(t5t8[2], t5t8[3], t5[0])
-      triangleBG4.faces.push(new Three.Face3(0, 1, 2))
+      triangleBG4.faces.push(new Three.Face3(0, 1, 2, new Three.Vector3(0,0,1)))
       this.backgroundMeshes.push(new Three.Mesh(triangleBG4, this.backgroundMaterials[0]))
       const triangleBG3 = new Three.Geometry()
       triangleBG3.vertices.push(t7t8[0], t7t8[1], t7[0], t8[0])
-      triangleBG3.faces.push(new Three.Face3(0, 1, 2), new Three.Face3(0, 3, 1))
+      triangleBG3.faces.push(new Three.Face3(0, 1, 2, new Three.Vector3(0,0,1)), new Three.Face3(0, 3, 1, new Three.Vector3(0,0,1)))
       this.backgroundMeshes.push(new Three.Mesh(triangleBG3, this.backgroundMaterials[1]))
       const triangleBG2 = new Three.Geometry()
       triangleBG2.vertices.push(t3t4[0], t3t4[1], t3[0], t4[0])
-      triangleBG2.faces.push(new Three.Face3(0, 1, 2), new Three.Face3(0, 3, 1))
+      triangleBG2.faces.push(new Three.Face3(0, 1, 2, new Three.Vector3(0,0,1)), new Three.Face3(0, 3, 1, new Three.Vector3(0,0,1)))
       this.backgroundMeshes.push(new Three.Mesh(triangleBG2, this.backgroundMaterials[2]))
       const triangleBG1 = new Three.Geometry()
       triangleBG1.vertices.push(t1t2[0], t1t2[3], t1[2], t2[2])
-      triangleBG1.faces.push(new Three.Face3(0, 1, 2), new Three.Face3(0, 3, 1))
+      triangleBG1.faces.push(new Three.Face3(0, 1, 2, new Three.Vector3(0,0,1)), new Three.Face3(0, 3, 1, new Three.Vector3(0,0,1)))
       this.backgroundMeshes.push(new Three.Mesh(triangleBG1, this.backgroundMaterials[3]))
       this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(this.innerRadius, 64), this.backgroundMaterials[4]))
       this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(circle3Radius, 64), this.backgroundMaterials[5]))
