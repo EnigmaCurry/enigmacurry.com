@@ -4,7 +4,7 @@
       <g-camera orthographic :zoomScale="zoom"/>
 
       <g-grid :divisions="10" v-if="showGrid"/>
-
+      <animation :fn="animate" />
     </scene>
   </g-renderer>
 </template>
@@ -12,15 +12,18 @@
 <script>
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
+import ColorScheme from 'color-scheme'
 import {shuffle} from 'underscore'
+import Visibility from 'visibilityjs'
 
 export default {
   props: {
-    animated: {type: Boolean, default: false},
+    animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: false},
     showWires: {type: Boolean, default: true},
     zoom: {type: Number, default: 2},
-    innerRadius: {type: Number, default: 1}
+    innerRadius: {type: Number, default: 1},
+    colorInterval: {type: Number, default: 15},
   },
   data() {
     return {
@@ -54,7 +57,8 @@ export default {
         new Three.MeshBasicMaterial({color: "#fefdfd"}), //10 - intergateway
         new Three.MeshBasicMaterial({color: "#ababab"}), //11 - third gateway
       ],
-      center: new Three.Vector3()
+      center: new Three.Vector3(),
+      tweenGroup: new TWEEN.Group()
     }
   },
   created() {
@@ -70,8 +74,43 @@ export default {
       this.scene.add(this.backgroundMeshes[bg])
     }
     this.scene.add(wires)
+    this.newColorInterval()
+    this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
+  },
+  beforeDestroy() {
+    this.tweenGroup.removeAll()
+    Visibility.stop(this.visibilityInterval)
   },
   methods: {
+    animate() {
+      this.tweenGroup.update()
+    },
+    tweenMaterialColor(material, toColor, interval) {
+      let color = {r: material.color.r, g: material.color.g, b: material.color.b}
+      toColor = {r: toColor.r, g: toColor.g, b: toColor.b}
+      return new TWEEN.Tween(color, this.tweenGroup)
+        .to(toColor, interval * 1000)
+        .easing(TWEEN.Easing.Linear.None)
+        .onUpdate(() => {
+          material.color.setRGB(color.r, color.g, color.b)
+        })
+        .start()      
+    },
+    newColorInterval() {
+      let scheme = new ColorScheme()
+          .from_hue( Math.random() * 360 )
+          .scheme(shuffle(['triade','tetrade','analogic', 'contrast'])[0])
+          .variation('default')
+      let fgColors = scheme.colors()
+      let bgColors = shuffle(scheme.colors())
+      for (let m=0; m < this.foregroundMaterials.length; m++) {
+        this.tweenMaterialColor(this.foregroundMaterials[m], new Three.Color('#' + fgColors[m % fgColors.length]), this.colorInterval)
+      }
+      for (let m=0; m < this.backgroundMaterials.length; m++) {
+        this.tweenMaterialColor(this.backgroundMaterials[m], new Three.Color('#' + bgColors[m % bgColors.length]), this.colorInterval)
+      }
+
+    },
     marker(vectors, color="red", radius=0.01) {
       let mat = new Three.MeshBasicMaterial({color})
       if(vectors.isVector2 || vectors.isVector3) {
@@ -392,7 +431,7 @@ export default {
         petal1Shape.lineTo(p.x, p.y)
       }
       petal1Shape.bezierCurveTo(petal1CP3.x, petal1CP3.y, petal1CP1.x, petal1CP1.y, petal1Top.x, petal1Top.y)
-      const petal1 = new Three.Mesh(new Three.ShapeGeometry(petal1Shape), this.testMaterial)
+      const petal1 = new Three.Mesh(new Three.ShapeGeometry(petal1Shape), this.foregroundMaterials[5])
       for (let i=0; i < 8; i++) {
         let p = petal1.clone()
         p.rotation.z = i * (360/8) * (Math.PI/180)
@@ -420,7 +459,7 @@ export default {
         petal2Shape.lineTo(p.x, p.y)
       }
       petal2Shape.bezierCurveTo(petal2CP3.x, petal2CP3.y, petal2CP1.x, petal2CP1.y, petal2Top.x, petal2Top.y)
-      const petal2 = new Three.Mesh(new Three.ShapeGeometry(petal2Shape), this.testMaterial)
+      const petal2 = new Three.Mesh(new Three.ShapeGeometry(petal2Shape), this.foregroundMaterials[6])
       for (let i=0; i < 16; i++) {
         let p = petal2.clone()
         p.rotation.z = i * (360/16) * (Math.PI/180)
