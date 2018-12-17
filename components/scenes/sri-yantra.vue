@@ -28,8 +28,7 @@ export default {
     colorInterval: {type: Number, default: 15},
   },
   data() {
-    let cloudsTexture = new Three.TextureLoader().load(require("~/assets/img/texture/clouds.png"))
-    let uvsTexture = new Three.TextureLoader().load(require("~/assets/img/texture/uv-test.jpg"))
+    let bricksTexture = new Three.TextureLoader().load(require("~/assets/img/texture/bricks.png"))
     return {
       scene: new Three.Scene(),
       wireGeometry: new Three.Geometry(),
@@ -40,22 +39,23 @@ export default {
       wireMaterial2: new Three.LineBasicMaterial({color: 'white', linewidth: 2, transparent: true, opacity: 0.3}),
       testMaterial: new Three.MeshBasicMaterial({color: "red"}),
       foregroundMaterials: [
-        new Three.MeshPhongMaterial({color: "#fb0203"}), //0 - innermost triangle
-        new Three.MeshPhongMaterial({color: "#f84302"}), //1 - triangles
-        new Three.MeshPhongMaterial({color: "#fa0378"}), //2 - triangles
-        new Three.MeshPhongMaterial({color: "#fe0000"}), //3 - triangles
-        new Three.MeshPhongMaterial({color: "#246d01"}), //4 - triangles
-        new Three.MeshPhongMaterial({color: "#f91c53", map: cloudsTexture}), //5 - petals 1
-        new Three.MeshPhongMaterial({color: "#fd615c", map: uvsTexture, bumpMap: cloudsTexture}), //6 - petals 2
+        new Three.MeshPhongMaterial({color: "#fb0203", transparent: true, opacity: 1, emissive: new Three.Color('#333')}), //0 - innermost triangle
+        new Three.MeshPhongMaterial({color: "#f84302", transparent: true, opacity: 1}), //1 - triangles
+        new Three.MeshPhongMaterial({color: "#fa0378", transparent: true, opacity: 1}), //2 - triangles
+        new Three.MeshPhongMaterial({color: "#fe0000", transparent: true, opacity: 1}), //3 - triangles
+        new Three.MeshPhongMaterial({color: "#246d01", transparent: true, opacity: 1}), //4 - triangles
+        new Three.MeshPhongMaterial({color: "#f91c53", transparent: true, opacity: 1}), //5 - petals 1
+        new Three.MeshPhongMaterial({color: "#fd615c", transparent: true, opacity: 1}), //6 - petals 2
       ],
       backgroundMaterials: [
-        new Three.MeshPhongMaterial({color: "#fff000"}), //0 - outside innermost triangle
-        new Three.MeshPhongMaterial({color: "#00feef"}), //1 - outside triangles
-        new Three.MeshPhongMaterial({color: "#01f37a"}), //2 - outside triangles
-        new Three.MeshPhongMaterial({color: "#ba05d0"}), //3 - outside triangles
-        new Three.MeshPhongMaterial({color: "#f1d006", bumpMap: cloudsTexture}), //4 - inside circle
-        new Three.MeshPhongMaterial({color: "#f6f49d"}), //5 - inside petals
-        new Three.MeshPhongMaterial({color: "#ababab"}), //6 - inside gateway
+        new Three.MeshPhongMaterial({color: "#fff000", transparent: true, opacity: 0.75}), //0 - outside innermost triangle
+        new Three.MeshPhongMaterial({color: "#00feef", transparent: true, opacity: 0.75}), //1 - outside triangles
+        new Three.MeshPhongMaterial({color: "#01f37a", transparent: true, opacity: 0.75}), //2 - outside triangles
+        new Three.MeshPhongMaterial({color: "#ba05d0", transparent: true, opacity: 0.75}), //3 - outside triangles
+        new Three.MeshPhongMaterial({
+          color: "#f1d006", normalMap: bricksTexture, normalScale: new Three.Vector2(2,2), transparent: true, opacity: 0.75}), //4 - inside circle
+        new Three.MeshPhongMaterial({color: "#f6f49d", transparent: true, opacity: 0.85}), //5 - inside petals
+        new Three.MeshPhongMaterial({color: "#ababab", normalMap: bricksTexture, normalMapType: Three.ObjectSpaceNormalMap}), //6 - inside gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //7 - gateway threshold
         new Three.MeshPhongMaterial({color: "#37f0f8"}), //7 - innermost gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //8 - intergateway
@@ -130,7 +130,7 @@ export default {
       let scheme = new ColorScheme()
           .from_hue( Math.random() * 360 )
           .scheme(shuffle(['tetrade','analogic'])[0])
-          .variation(shuffle(['pastel','hard'][0]))
+          .variation('hard')
       let fgColors = scheme.colors()
       let bgColors = shuffle(scheme.colors())
       for (let m=0; m < this.foregroundMaterials.length; m++) {
@@ -358,8 +358,7 @@ export default {
         trianglesGeometry.vertices.push(triTuple[0], triTuple[1], triTuple[2])
         trianglesGeometry.faces.push(new Three.Face3(
           index+2, index+1, index, normal, this.foregroundMaterials[level].color, level))
-        //TODO: might not need uv map?
-        //this.foregroundGeometry.faceVertexUvs[0].push([new Three.Vector2(),new Three.Vector2(),new Three.Vector2()])
+        trianglesGeometry.faceVertexUvs[0].push([new Three.Vector2(),new Three.Vector2(),new Three.Vector2()])
       }
       
       /// Add innermost triangle (material index 0)
