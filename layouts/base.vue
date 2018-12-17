@@ -97,6 +97,10 @@
   background-image: url(~assets/img/fractal/pare4Dolia.8.1024.jpg);
 }
 
+#bg.pare4Dolia-pair-of-four-dull-olyas {
+  background-image: url(~assets/img/fractal/pare4Dolia.pair-of-four-dull-olyas.2.1024.jpg);
+}
+
 div#app {
   background: transparent;
 }

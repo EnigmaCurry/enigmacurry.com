@@ -19,6 +19,7 @@ import Visibility from 'visibilityjs'
 export default {
   props: {
     animated: {type: Boolean, default: true},
+    backgroundClass: {type: String, default: "pare4Dolia-pair-of-four-dull-olyas"},
     showGrid: {type: Boolean, default: false},
     showWires: {type: Boolean, default: true},
     zoom: {type: Number, default: 2},
@@ -77,9 +78,13 @@ export default {
     this.newColorInterval()
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
   },
+  mounted() {
+    document.getElementById('bg').classList.add(this.backgroundClass)
+  },
   beforeDestroy() {
     this.tweenGroup.removeAll()
     Visibility.stop(this.visibilityInterval)
+    document.getElementById('bg').classList.remove(this.backgroundClass)    
   },
   methods: {
     animate() {
@@ -94,7 +99,7 @@ export default {
         .onUpdate(() => {
           material.color.setRGB(color.r, color.g, color.b)
         })
-        .start()      
+        .start()
     },
     newColorInterval() {
       let scheme = new ColorScheme()
