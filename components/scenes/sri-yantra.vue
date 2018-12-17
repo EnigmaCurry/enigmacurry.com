@@ -84,10 +84,10 @@ export default {
     this.newColorInterval()
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
     
-    this.light = new Three.SpotLight(0xffffff, 2.2)
+    this.light = new Three.SpotLight(0xffaaaa, 3.2)
     this.light.position.set(0,2,0.25)
     this.scene.add(this.light)
-    this.light2 = new Three.SpotLight(0xffffff, 2.2)
+    this.light2 = new Three.SpotLight(0xaaaaff, 3.2)
     this.light2.position.set(0,-2,0.25)
     this.scene.add(this.light2)
   },
@@ -124,8 +124,8 @@ export default {
     newColorInterval() {
       let scheme = new ColorScheme()
           .from_hue( Math.random() * 360 )
-          .scheme(shuffle(['triade','tetrade','analogic', 'contrast'])[0])
-          .variation('default')
+          .scheme(shuffle(['tetrade','analogic'])[0])
+          .variation(shuffle(['pastel','hard'][0]))
       let fgColors = scheme.colors()
       let bgColors = shuffle(scheme.colors())
       for (let m=0; m < this.foregroundMaterials.length; m++) {
