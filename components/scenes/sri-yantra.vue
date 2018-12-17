@@ -28,7 +28,8 @@ export default {
     colorInterval: {type: Number, default: 15},
   },
   data() {
-    let bricksTexture = new Three.TextureLoader().load(require("~/assets/img/texture/bricks.png"))
+    let mazeTexture = new Three.TextureLoader().load(require("~/assets/img/texture/maze.png"))
+    let diffractionTexture = new Three.TextureLoader().load(require("~/assets/img/texture/diffraction3.png"))
     return {
       scene: new Three.Scene(),
       wireGeometry: new Three.Geometry(),
@@ -53,9 +54,9 @@ export default {
         new Three.MeshPhongMaterial({color: "#01f37a", transparent: true, opacity: 0.75}), //2 - outside triangles
         new Three.MeshPhongMaterial({color: "#ba05d0", transparent: true, opacity: 0.75}), //3 - outside triangles
         new Three.MeshPhongMaterial({
-          color: "#f1d006", normalMap: bricksTexture, normalScale: new Three.Vector2(2,2), transparent: true, opacity: 0.75}), //4 - inside circle
+          color: "#f1d006", normalMap: mazeTexture, normalScale: new Three.Vector2(1,1), transparent: true}), //4 - inside circle
         new Three.MeshPhongMaterial({color: "#f6f49d", transparent: true, opacity: 0.85}), //5 - inside petals
-        new Three.MeshPhongMaterial({color: "#ababab", normalMap: bricksTexture, normalMapType: Three.ObjectSpaceNormalMap}), //6 - inside gateway
+        new Three.MeshPhongMaterial({color: "#ababab", normalMap: diffractionTexture, normalScale: new Three.Vector2(0.6,0.6)}), //6 - inside gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //7 - gateway threshold
         new Three.MeshPhongMaterial({color: "#37f0f8"}), //7 - innermost gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //8 - intergateway
@@ -519,7 +520,7 @@ export default {
       this.backgroundMeshes.push(new Three.Mesh(triangleBG1, this.backgroundMaterials[3]))
       this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(this.innerRadius, 64), this.backgroundMaterials[4]))
       this.backgroundMeshes.push(new Three.Mesh(new Three.CircleGeometry(circle3Radius, 64), this.backgroundMaterials[5]))
-
+      
       /// Add gateway
       const squareGuide1 = new Three.PlaneGeometry(circle6Radius * 2, circle6Radius * 2)
       const gwLevel = (level) => {
@@ -572,6 +573,13 @@ export default {
           gateShape.lineTo(points[i].x, points[i].y)
         }
         const gateGeometry = new Three.ShapeGeometry(gateShape)
+        for(let f=0; f < gateGeometry.faceVertexUvs[0].length; f++) {
+          let uvs = gateGeometry.faceVertexUvs[0][f]
+          for (let uv=0; uv < uvs.length; uv++) {
+            uvs[uv].x = (0.25 * uvs[uv].x) + 0.5
+            uvs[uv].y = (0.25 * uvs[uv].y) + 0.5
+          }
+        }
         this.backgroundMeshes.push(new Three.Mesh(gateGeometry, material))
       }
       for (let level=-2; level < 5; level++) {
