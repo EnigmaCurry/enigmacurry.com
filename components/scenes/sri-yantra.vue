@@ -84,11 +84,11 @@ export default {
     this.newColorInterval()
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
     
-    this.light = new Three.SpotLight(0xffffff, 0.9)
-    this.light.position.set(0,2,1)
+    this.light = new Three.SpotLight(0xffffff, 2.2)
+    this.light.position.set(0,2,0.25)
     this.scene.add(this.light)
-    this.light2 = new Three.SpotLight(0xffffff, 0.9)
-    this.light2.position.set(0,-2,1)
+    this.light2 = new Three.SpotLight(0xffffff, 2.2)
+    this.light2.position.set(0,-2,0.25)
     this.scene.add(this.light2)
   },
   mounted() {
