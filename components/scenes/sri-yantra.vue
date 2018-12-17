@@ -15,6 +15,7 @@ import * as TWEEN from '@tweenjs/tween.js'
 import ColorScheme from 'color-scheme'
 import {shuffle} from 'underscore'
 import Visibility from 'visibilityjs'
+import chroma from 'chroma-js'
 
 export default {
   props: {
@@ -112,7 +113,11 @@ export default {
         this.tweenMaterialColor(this.foregroundMaterials[m], new Three.Color('#' + fgColors[m % fgColors.length]), this.colorInterval)
       }
       for (let m=0; m < this.backgroundMaterials.length; m++) {
-        this.tweenMaterialColor(this.backgroundMaterials[m], new Three.Color('#' + bgColors[m % bgColors.length]), this.colorInterval)
+        let color = new Three.Color('#' + bgColors[m % bgColors.length])
+        if( m === 6 ) {
+          color = new Three.Color(chroma("#" + color.getHexString()).darken(1.5).hex())
+        }
+        this.tweenMaterialColor(this.backgroundMaterials[m], color, this.colorInterval)
       }
 
     },
