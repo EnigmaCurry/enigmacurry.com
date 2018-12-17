@@ -66,7 +66,8 @@ export default {
       ],
       center: new Three.Vector3(),
       tweenGroup: new TWEEN.Group(),
-      lightAngle: 0,
+      lightAngle1: 0,
+      lightAngle2: 180,
     }
   },
   created() {
@@ -88,11 +89,15 @@ export default {
     this.visibilityInterval = Visibility.every(this.colorInterval * 1000, this.newColorInterval)
     
     this.light = new Three.SpotLight(0xffaaaa, 2.2)
-    this.light.position.set(0,2,0.25)
+    this.light.position.set(0,2,0.0125)
     this.scene.add(this.light)
+    this.lightHelper = new Three.SpotLightHelper(this.light)
+    //this.scene.add(this.lightHelper)
     this.light2 = new Three.SpotLight(0xaaaaff, 2.2)
-    this.light2.position.set(0,-2,0.25)
+    this.light2.position.set(0,-2,0.0125)
     this.scene.add(this.light2)
+    this.lightHelper2 = new Three.SpotLightHelper(this.light2)
+    //this.scene.add(this.lightHelper2)
     this.light3 = new Three.PointLight(0xababab, 0.5)
     this.light3.position.set(0,0,1)
     this.scene.add(this.light3)
@@ -109,12 +114,14 @@ export default {
     animate() {
       this.tweenGroup.update()
       //Move light
-      this.lightAngle = (this.lightAngle + 0.2) % 360
-      let pos = this.$geometry.pointOnCircle(this.center, this.innerRadius * 2.5, this.lightAngle)
-      this.light.position.x = pos.x
-      this.light.position.y = pos.y
-      this.light2.position.x = -1 * pos.x
-      this.light2.position.y = -1 * pos.y
+      this.lightAngle1 = (this.lightAngle1 + 0.2) % 360
+      this.lightAngle2 = (this.lightAngle2 + 0.2) % 360
+      let pos1 = this.$geometry.pointOnCircle(this.center, this.innerRadius * 2.5, this.lightAngle1)
+      let pos2 = this.$geometry.pointOnCircle(this.center, this.innerRadius * 2.5, this.lightAngle2)
+      this.light.position.x = pos1.x
+      this.light.position.y = pos1.y
+      this.light2.position.x = pos2.x
+      this.light2.position.y = pos2.y
     },
     tweenMaterialColor(material, toColor, interval) {
       let color = {r: material.color.r, g: material.color.g, b: material.color.b}
