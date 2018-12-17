@@ -29,7 +29,8 @@ export default {
   },
   data() {
     let mazeTexture = new Three.TextureLoader().load(require("~/assets/img/texture/maze.png"))
-    let diffractionTexture = new Three.TextureLoader().load(require("~/assets/img/texture/diffraction3.png"))
+    let diffractionTexture = new Three.TextureLoader().load(require("~/assets/img/texture/diffraction3.jpg"))
+    let lavaTexture = new Three.TextureLoader().load(require("~/assets/img/texture/lava.jpg"))
     return {
       scene: new Three.Scene(),
       wireGeometry: new Three.Geometry(),
@@ -55,7 +56,7 @@ export default {
         new Three.MeshPhongMaterial({color: "#ba05d0", transparent: true, opacity: 0.75}), //3 - outside triangles
         new Three.MeshPhongMaterial({
           color: "#f1d006", normalMap: mazeTexture, normalScale: new Three.Vector2(1,1), transparent: true}), //4 - inside circle
-        new Three.MeshPhongMaterial({color: "#f6f49d", transparent: true, opacity: 0.85}), //5 - inside petals
+        new Three.MeshPhongMaterial({color: "#f6f49d", transparent: true, opacity: 0.5, normalMap: lavaTexture, normalScale: new Three.Vector2(1,1)}), //5 - inside petals
         new Three.MeshPhongMaterial({color: "#ababab", normalMap: diffractionTexture, normalScale: new Three.Vector2(0.6,0.6)}), //6 - inside gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //7 - gateway threshold
         new Three.MeshPhongMaterial({color: "#37f0f8"}), //7 - innermost gateway
