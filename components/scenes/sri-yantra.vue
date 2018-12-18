@@ -1,5 +1,5 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :antialias="true">
+  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :clearAlpha="0" :antialias="true">
     <scene :obj="scene">
       <g-camera orthographic :zoomScale="zoom"/>
 
@@ -20,7 +20,7 @@ import chroma from 'chroma-js'
 export default {
   props: {
     animated: {type: Boolean, default: true},
-    backgroundClass: {type: String, default: "pare4Dolia-pair-of-four-dull-olyas"},
+    backgroundClass: {type: String, default: "mitosis"},
     showGrid: {type: Boolean, default: false},
     showWires: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},

@@ -101,6 +101,14 @@
   background-image: url(~assets/img/fractal/pare4Dolia.pair-of-four-dull-olyas.2.1024.jpg);
 }
 
+#bg.green-ball {
+  background-image: url(~assets/img/fractal/green-ball.5.1024.jpg);
+}
+
+#bg.mitosis {
+  background-image: url(~assets/img/fractal/Mitosis.1024.jpg);
+}
+
 div#app {
   background: transparent;
 }
