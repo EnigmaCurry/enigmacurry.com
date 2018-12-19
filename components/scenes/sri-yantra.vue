@@ -59,11 +59,11 @@ export default {
         new Three.MeshPhongMaterial({color: "#f6f49d", transparent: true, opacity: 0.5, normalMap: lavaTexture, normalScale: new Three.Vector2(1,1)}), //5 - inside petals
         new Three.MeshPhongMaterial({color: "#ababab", normalMap: diffractionTexture, normalScale: new Three.Vector2(0.6,0.6)}), //6 - inside gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //7 - gateway threshold
-        new Three.MeshPhongMaterial({color: "#37f0f8"}), //7 - innermost gateway
+        new Three.MeshBasicMaterial({color: "#37f0f8"}), //7 - innermost gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //8 - intergateway
-        new Three.MeshPhongMaterial({color: "#46f87e"}), //9 - second gateway
+        new Three.MeshBasicMaterial({color: "#46f87e"}), //9 - second gateway
         new Three.MeshPhongMaterial({color: "#fefdfd"}), //10 - intergateway
-        new Three.MeshPhongMaterial({color: "#ababab"}), //11 - third gateway
+        new Three.MeshBasicMaterial({color: "#ababab"}), //11 - third gateway
       ],
       center: new Three.Vector3(),
       tweenGroup: new TWEEN.Group(),
