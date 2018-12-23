@@ -1,10 +1,10 @@
 <template>
   <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :antialias="true">
     <scene :obj="scene">
-      <g-camera orthographic :zoomScale="zoom"/>
+      <g-camera orthographic :zoomScale="zoom" />
 
       <g-grid :divisions="10" v-if="showGrid"/>
-
+      <animation :fn="animate" />
     </scene>
   </g-renderer>
 </template>
@@ -13,22 +13,25 @@
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
+import testSVG from '~/assets/img/svg/tiger.svg'
 
 export default {
   props: {
-    animated: {type: Boolean, default: false},
+    animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: true},
     zoom: {type: Number, default: 0.75}
   },
   data() {
     return {
-      scene: new Three.Scene()
+      scene: new Three.Scene(),
     }
   },
   created() {
     this.createScene()
   },
   methods: {
+    animate() {
+    },
     createScene() {
       const blanket = new Three.Group()
       const [width, height] = [1, 1.32]
@@ -107,6 +110,14 @@ export default {
       heart4.position.y = yellowSquare4.position.y
       blanket.add(heart4)
 
+      this.$graphics.svg({
+        url: testSVG,
+        scale: 0.01,
+        center: new Three.Vector2(50, 50),
+        callback: (group) => {
+          this.scene.add(group)
+        }
+      })
 
       this.scene.add(blanket)
     }

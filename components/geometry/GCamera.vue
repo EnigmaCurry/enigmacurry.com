@@ -16,6 +16,7 @@ export default {
     orthographic: {type: Boolean, default: false},
     orthoStatic: {type: Boolean, default: false},
     position: {type: Object, default: () => {return {x: 0, y:0, z: -5}}},
+    lookAt: {type: Object, default: () => {return {x: 0, y:0, z: 0}}},
     frustrum: {type: Object, default: () => {return {left:1, right:-1, top:1, bottom:-1}}},
     zoom: {type: Number, default: 1},
     zoomScale: {type: Number, default: null},
@@ -49,8 +50,8 @@ export default {
     this._camera.position.x = this.position.x
     this._camera.position.y = this.position.y
     this._camera.position.z = this.position.z
-    this._camera.lookAt(new Three.Vector3(0,0,0))
-    
+    this._camera.lookAt(new Three.Vector3(this.lookAt.x, this.lookAt.y, this.lookAt.z))
+
     if(this.isGlobal) {
       this.global.camera = this._camera
       this.global.camera.onContainerResize = this.onContainerResize

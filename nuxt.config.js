@@ -66,6 +66,7 @@ module.exports = {
     '@/plugins/penroseV1',
     '@/plugins/penroseV1Textures',
     '@/plugins/tilings',
+    '@/plugins/graphics',
   ],
 
   /*
