@@ -13,7 +13,7 @@
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
-import testSVG from '~/assets/img/svg/tiger.svg'
+import testSVG from '~/assets/img/svg/horsey.svg'
 
 export default {
   props: {
@@ -113,7 +113,7 @@ export default {
       this.$graphics.svg({
         url: testSVG,
         scale: 0.01,
-        center: new Three.Vector2(50, 50),
+        center: new Three.Vector2(100,145),
         callback: (group) => {
           this.scene.add(group)
         }
