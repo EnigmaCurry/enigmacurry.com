@@ -32,13 +32,17 @@ class TilingGroup {
     this.frustrumUpdate(frustrum)
   }
 
+  scale(scale) {
+    this.group.scale.copy(new Three.Vector3(0,0,0))
+  }
+
   pan(x, y) {
     this.frustrum.left += x
     this.frustrum.right += x
     this.frustrum.top += y
     this.frustrum.bottom += y
-    this.group.position.x -= x
-    this.group.position.y -= y
+    this.group.position.x -= x * this.group.scale.x
+    this.group.position.y -= y * this.group.scale.y
     this.frustrumUpdate(this.frustrum)
   }
 

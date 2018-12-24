@@ -1,8 +1,31 @@
 import * as Three from 'three'
+import * as TWEEN from '@tweenjs/tween.js'
 import Vue from 'vue'
 import canvg from 'canvg'
-
+import {$tilings} from '~/plugins/tilings.js'
 const $textures = Vue.prototype.$textures = {}
+
+class CanvasRenderer {
+  constructor ({size, cameraX=0, cameraY=0}) {
+    this.canvas = document.createElement('canvas')
+    this.renderer = new Three.WebGLRenderer({canvas: this.canvas, antialias: true})
+    this.tweenGroup = new TWEEN.Group()
+    this.renderer.setSize(size, size)
+    this.scene = new Three.Scene()
+    this.camera = new Three.OrthographicCamera(size / -2, size / 2, size / 2, size / -2, 1, 1000)
+    this.camera.position.z = 1
+    this.camera.position.x = cameraX
+    this.camera.position.y = cameraY
+    this.camera.lookAt(new Three.Vector3(cameraX,cameraY,0))
+
+    this.texture = new Three.CanvasTexture(this.canvas)
+  }
+
+  render() {
+    this.texture.needsUpdate = true
+    this.renderer.render(this.scene, this.camera)
+  }
+}
 
 $textures.svg2texture = ({svg, width=256, height=256, fillColor=null}) => {
   let canvas = document.createElement('canvas')
@@ -24,4 +47,15 @@ $textures.svg2texture = ({svg, width=256, height=256, fillColor=null}) => {
   }
 
   return new Three.CanvasTexture(canvas)
+}
+
+$textures.tilingTexture = ({tileType, materials, size=256, scale=1, tileFrustrumSize=10 }) => {
+  const renderer = new CanvasRenderer({size})
+  let frustrum = {left: -tileFrustrumSize, right: tileFrustrumSize, top:tileFrustrumSize, bottom:-tileFrustrumSize}
+  const tilingGroup = new $tilings.TilingGroup({tileType, materials, frustrum, showFrustrum: false})
+  tilingGroup.group.scale.multiplyScalar(scale)
+  renderer.scene.add(tilingGroup.group)
+  renderer.render()
+
+  return {tilingGroup, renderer}
 }

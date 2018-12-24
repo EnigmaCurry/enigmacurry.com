@@ -18,8 +18,8 @@ import testSVG from '~/assets/img/svg/horsey.svg'
 export default {
   props: {
     animated: {type: Boolean, default: true},
-    showGrid: {type: Boolean, default: true},
-    zoom: {type: Number, default: 0.75}
+    showGrid: {type: Boolean, default: false},
+    zoom: {type: Number, default: 0.8}
   },
   data() {
     return {
@@ -31,6 +31,8 @@ export default {
   },
   methods: {
     animate() {
+      this.tilingTexture.tilingGroup.pan(0.01,0.001)
+      this.tilingTexture.renderer.render()
     },
     createScene() {
       const blanket = new Three.Group()
@@ -46,8 +48,23 @@ export default {
       const redChecker = new Three.Mesh(new Three.PlaneGeometry(width - borderWidth, height - borderWidth), redCheckerMaterial)
       blanket.add(redChecker)
       
-      const blueCheckerMaterial = new Three.MeshBasicMaterial({color: "#aaaaff"})
+      const tileMaterials = [
+        new Three.MeshBasicMaterial({color: 0x1212cc}),
+        new Three.MeshBasicMaterial({color: 'white'}), 
+        new Three.MeshBasicMaterial({color: 'black'}),
+        new Three.MeshBasicMaterial({color: 'white'}),
+      ]
+      const tilingTexture = this.tilingTexture = this.$textures.tilingTexture({
+        tileType: 'rhombiTriHexagonal', materials: tileMaterials, size: 512, scale: 16, tileFrustrumSize: 20})
+      const blueCheckerMaterial = new Three.MeshBasicMaterial({map: tilingTexture.renderer.texture})
       const blueChecker = new Three.Mesh(new Three.PlaneGeometry(width - borderWidth - redCheckerWidth, height - borderWidth - redCheckerWidth), blueCheckerMaterial)
+      for (let f=0; f < blueChecker.geometry.faces.length; f++) {
+        const uvs = blueChecker.geometry.faceVertexUvs[0][f]
+        for (let u=0; u < uvs.length; u++){
+          uvs[u].x = uvs[u].x * (1/height)
+          console.log(uvs[u])
+        }
+      }
       blanket.add(blueChecker)
       
       const yellowSquareWidth = redCheckerWidth / 2
@@ -109,7 +126,7 @@ export default {
       heart4.position.x = yellowSquare4.position.x
       heart4.position.y = yellowSquare4.position.y
       blanket.add(heart4)
-
+      
       this.$graphics.svg({
         url: testSVG,
         scale: 0.01,
