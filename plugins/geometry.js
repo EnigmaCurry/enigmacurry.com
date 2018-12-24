@@ -383,3 +383,47 @@ $geometry.epicycle = (orbitRadius, orbitPeriod, centerFunc, offset=-17) => {
   }
 }
 
+// Find a circle given three points on its circumference
+// http://web.archive.org/web/20161011113446/http://www.abecedarical.com/zenosamples/zs_circle3pts.html
+$geometry.circleFromThreePoints = (p1, p2, p3) => {
+  let p = [p1, p2, p3]
+
+  // Minor 11
+  let a = []
+  for (let i=0; i<3; i++){
+    a.push([p[i].x, p[i].y, 1])
+  }
+  const m11 = math.det(a)
+
+  // Minor 12
+  a = []
+  for (let i=0; i<3; i++){
+    a.push([Math.pow(p[i].x, 2) + Math.pow(p[i].y, 2), p[i].y, 1])
+  }
+  const m12 = math.det(a)
+
+  // Minor 13
+  a = []
+  for (let i=0; i<3; i++) {
+    a.push([Math.pow(p[i].x, 2) + Math.pow(p[i].y, 2), p[i].x, 1])
+  }
+  const m13 = math.det(a)
+
+  // Minor 14
+  a = []
+  for (let i=0; i<3; i++) {
+    a.push([Math.pow(p[i].x, 2) + Math.pow(p[i].y, 2), p[i].x, p[i].y])
+  }
+  const m14 = math.det(a)
+
+  let center = new Three.Vector2(0, 0)
+  let radius = 0
+  let isCircle = false
+  if (m11 != 0) {
+    isCircle = true
+    center.x = 0.5 * m12 / m11
+    center.y = -0.5 * m13 / m11
+    radius = Math.sqrt(Math.pow(center.x, 2) + Math.pow(center.y, 2) + m14/m11)
+  }
+  return {center, radius, isCircle}
+}
