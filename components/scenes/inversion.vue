@@ -19,7 +19,7 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 450}
+    zoom: {type: Number, default: 90}
   },
   data() {
     return {
@@ -31,9 +31,11 @@ export default {
     }
   },
   created() {
-    let p = [new Three.Vector3(-12,1,0),
-             new Three.Vector3(12,1,0),
-             new Three.Vector3(0,-2,0)]
+    let p = [
+      new Three.Vector3(0,   15, 0),
+      new Three.Vector3(0,  -15, 0),
+      new Three.Vector3(-2,  0, 0),
+    ]
     for(let i=0; i < 500; i++) {
       let circle = this.circumference(p)
       p[2] = circle.center.multiplyScalar(-2.031)
