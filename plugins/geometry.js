@@ -67,6 +67,84 @@ $geometry.distance = (p1, p2) => {
   return math.distance([p1.x, p1.y], [p2.x, p2.y])
 }
 
+// Circle-Circle intersection
+// MIT Licenced from: 
+// https://github.com/williamfiset/Algorithms/blob/master/com/williamfiset/algorithms/geometry/CircleCircleIntersectionPoints.js
+$geometry.circleCircleIntersection = (center1, radius1, center2, radius2) => {
+  // Let EPS (epsilon) be a small value
+  const EPS = 0.0000001
+  // Let a point be a pair: (x, y)
+  const Point = function(x, y) {
+    this.x = x
+    this.y = y
+  }
+  // Define a circle centered at (x,y) with radius r
+  const Circle = function(x,y,r) {
+    this.x = x
+    this.y = y
+    this.r = r
+  }
+  // Due to double rounding precision the value passed into the Math.acos
+  // function may be outside its domain of [-1, +1] which would return
+  // the value NaN which we do not want.
+  const acossafe = function(x) {
+    if (x >= +1.0) return 0
+    if (x <= -1.0) return Math.PI
+    return Math.acos(x)
+  }
+  // Rotates a point about a fixed point at some angle 'a'
+  const rotatePoint = function(fp, pt, a) {
+    let x = pt.x - fp.x;
+    let y = pt.y - fp.y;
+    let xRot = x * Math.cos(a) + y * Math.sin(a);
+    let yRot = y * Math.cos(a) - x * Math.sin(a);
+    return new Point(fp.x+xRot,fp.y+yRot);
+  }
+  let r, R, d, dx, dy, cx, cy, Cx, Cy;
+
+  if (radius1 < radius2) {
+    r  = radius1;  R = radius2;
+    cx = center1.x; cy = center1.y;
+    Cx = center2.x; Cy = center2.y;
+  } else {
+    r  = radius2; R  = radius1;
+    Cx = center1.x; Cy = center1.y;
+    cx = center2.x; cy = center2.y;
+  }
+
+  // Compute the vector <dx, dy>
+  dx = cx - Cx;
+  dy = cy - Cy;
+
+  // Find the distance between two points.
+  d = Math.sqrt( dx*dx + dy*dy );
+
+  // There are an infinite number of solutions
+  // Seems appropriate to also return null
+  if (d < EPS && Math.abs(R-r) < EPS) return [];
+
+  // No intersection (circles centered at the 
+  // same place with different size)
+  else if (d < EPS) return [];
+
+  let x = (dx / d) * R + Cx;
+  let y = (dy / d) * R + Cy;
+  let P = new Point(x, y);
+
+  // Single intersection (kissing circles)
+  if (Math.abs((R+r)-d) < EPS || Math.abs(R-(r+d)) < EPS) return [P];
+
+  // No intersection. Either the small circle contained within 
+  // big circle or circles are simply disjoint.
+  if ( (d+r) < R || (R+r < d) ) return [];
+
+  let C = new Point(Cx, Cy);
+  let angle = acossafe((r*r-d*d-R*R)/(-2.0*d*R));
+  let pt1 = rotatePoint(C, P, +angle);
+  let pt2 = rotatePoint(C, P, -angle);
+  return [pt1, pt2];
+}
+
 //------------ flowerPattern --------------------------------------
 // Construct the flower of life pattern as an array of Vector3(x,y,z=0)
 // specifying the center of each circle.
