@@ -9,6 +9,7 @@ import GMaterial from '~/components/geometry/GMaterial.vue'
 import GGeometry from '~/components/geometry/GGeometry.vue'
 import GGrid from '~/components/geometry/GGrid.vue'
 import GGroup from '~/components/geometry/GGroup.vue'
+import GScene from '~/components/geometry/GScene.vue'
 Vue.component('g-renderer', GRenderer)
 Vue.component('g-object-3D', GObject3D)
 Vue.component('g-camera', GCamera)
@@ -18,6 +19,7 @@ Vue.component('g-material', GMaterial)
 Vue.component('g-geometry', GGeometry)
 Vue.component('g-grid', GGrid)
 Vue.component('g-group', GGroup)
+Vue.component('g-scene', GScene)
 
 import GTetrahedron from '~/components/geometry/GTetrahedron.vue'
 import GCube from '~/components/geometry/GCube.vue'

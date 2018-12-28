@@ -182,6 +182,8 @@ export default {
         { img: require('~/assets/img/icons/harmonograph.png'), title: 'Harmonograph', to: '/geometry/harmonograph' },
         { img: require('~/assets/img/icons/sri-yantra.png'), title: 'Sri Yantra', to: '/geometry/sri-yantra' },
         { img: require('~/assets/img/icons/circumferencia.png'), title: 'Circumferencia', to: '/geometry/circumferencia' },
+        { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/scene-test-1' },
+        { img: require('~/assets/img/icons/seed-of-life.png'), title: 'Flower of Life', to: '/geometry/scene-test-2' },
      ],
     }
   },

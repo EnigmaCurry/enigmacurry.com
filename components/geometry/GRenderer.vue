@@ -39,6 +39,7 @@ export default {
   },
   props: {
     obj: { type: Object },
+    global: {type: Object, default: () => {return {}}},
     animated: { type: Boolean, default: false },
     clearColor: { type: String, default: "#000000" },
     clearAlpha: { type: Number, default: 0.65 },
@@ -66,7 +67,7 @@ export default {
       }
     }
     curObj.name = curObj.name || curObj.type
-    return { curObj, global: {}, isGlobal, texture }
+    return { curObj, isGlobal, texture }
   },
   methods: {
     onResize: function(e, toSize) {
@@ -94,6 +95,7 @@ export default {
     }
   },
   created() {
+    console.log("uh")
     // An initial size has to be set, this is immediately resized again in mount()
     this.size = {width: 0, height: 0}
     this.curObj.setSize(this.size.width, this.size.height)

@@ -9,10 +9,10 @@ import GObject3D from '~/components/geometry/GObject3D.vue'
 
 export default {
   name: 'GCamera',
-  inject: ['global'],
+  inject: ['renderer', 'scene'],
   mixins: [GObject3D],
   props: {
-    isGlobal: {type: Boolean, default: true},
+    name: {type: String, required: true},
     orthographic: {type: Boolean, default: false},
     orthoStatic: {type: Boolean, default: false},
     position: {type: Object, default: () => {return {x: 0, y:0, z: -5}}},
@@ -33,11 +33,15 @@ export default {
     zoomScale: {
       deep: true,
       handler (v) {
-        this.onContainerResize(this.global.rendererSize.width, this.global.rendererSize.height)
+        this.onContainerResize(this.renderer.size.width, this.renderer.size.height)
       }
     },
   },
   created () {
+    if (this.scene.cameras.hasOwnProperty(this.name)) {
+      new Error('Duplicate camera with the name "'
+                +this.name+'" already exists for this scene')
+    }
     if (!this._camera) {
       if (this.orthographic) {
         // Initial frustrum is recomputed again in onContainerResize
@@ -51,14 +55,22 @@ export default {
     this._camera.position.y = this.position.y
     this._camera.position.z = this.position.z
     this._camera.lookAt(new Three.Vector3(this.lookAt.x, this.lookAt.y, this.lookAt.z))
-
-    if(this.isGlobal) {
-      this.global.camera = this._camera
-      this.global.camera.onContainerResize = this.onContainerResize
+    
+    this._camera.onContainerResize = this.onContainerResize
+    this.scene.cameras[this.name] = this._camera
+    if(this.scene.currentCamera === null) {
+      this.scene.currentCamera = this.name
+    }
+  },
+  destroyed() {
+    delete this.scene.cameras[this.name]
+    if (this.scene.currentCamera === this.name) {
+      this.scene.currentCamera = null
     }
   },
   methods: {
     onContainerResize: function(width, height) {
+      console.log(width, height)
       if (this.orthographic) {
         if (this.orthoStatic) {
           this._camera.left = (this.frustrum.left)
