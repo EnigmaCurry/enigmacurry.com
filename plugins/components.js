@@ -1,6 +1,5 @@
 import Vue from 'vue'
 
-import GRenderer from '~/components/geometry/GRenderer.vue'
 import GObject3D from '~/components/geometry/GObject3D.vue'
 import GCamera from '~/components/geometry/GCamera.vue'
 import GLight from '~/components/geometry/GLight.vue'
@@ -10,7 +9,6 @@ import GGeometry from '~/components/geometry/GGeometry.vue'
 import GGrid from '~/components/geometry/GGrid.vue'
 import GGroup from '~/components/geometry/GGroup.vue'
 import GScene from '~/components/geometry/GScene.vue'
-Vue.component('g-renderer', GRenderer)
 Vue.component('g-object-3D', GObject3D)
 Vue.component('g-camera', GCamera)
 Vue.component('g-light', GLight)
