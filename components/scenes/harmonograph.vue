@@ -1,13 +1,9 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :clearAlpha="0.8" :antialias="true">
-    <scene :obj="scene">
-      <g-camera orthographic :zoomScale="zoom"/>
-
-      <g-grid :divisions="10" :size="zoom" v-if="showGrid"/>
-
-      <animation :fn="animate" />
-    </scene>
-  </g-renderer>
+  <g-scene :obj="scene">
+    <g-camera name="main" orthographic :zoomScale="zoom"/>
+     <g-grid :divisions="10" :size="zoom" v-if="showGrid"/>
+     <animation :fn="animate" />
+  </g-scene>
 </template>
 
 <script>
@@ -16,6 +12,7 @@ import * as TWEEN from '@tweenjs/tween.js'
 import Visibility from 'visibilityjs'
 import {shuffle} from 'underscore'
 import ColorScheme from 'color-scheme'
+import BackgroundImage from '~/components/BackgroundImage.vue'
 
 const randomInt = (min, max) => {
   min = Math.ceil(min)
@@ -26,10 +23,12 @@ const choice = (choices) => {
   return shuffle(choices)[0]
 }
 
-
 export default {
+  mixins: [BackgroundImage],
+  inject: ['renderer'],
   props: {
-    backgroundClass: {type: String, default: "pare4Dolia-8"},    
+    backgroundClass: {type: String, default: "pare4Dolia-8"},
+    backgroundAlpha: {type: Number, default: 0.8},
     animated: {type: Boolean, default: true},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
@@ -54,12 +53,8 @@ export default {
     this.newGraph()
     this.visibilityInterval = Visibility.every(this.graphInterval * 1000, this.newGraph)
   },
-  mounted() {
-    document.getElementById('bg').classList.add(this.backgroundClass)
-  },
   beforeDestroy() {
     Visibility.stop(this.visibilityInterval)
-    document.getElementById('bg').classList.remove(this.backgroundClass)
   },
   methods: {
     animate() {

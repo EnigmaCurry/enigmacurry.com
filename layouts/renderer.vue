@@ -31,20 +31,21 @@ export default {
     }
   },
   data() {
-    const renderer = new Three.WebGLRenderer()
+    const webGLRenderer = new Three.WebGLRenderer({antialias: true, alpha: true})
     return {
-      renderer,
+      webGLRenderer,
       sceneData: [], // List of GScenes (Scene, cameras, currentCamera)
       size: {width: 0, height: 0} //initialized in onResize
     }
   },
   created() {
     console.log("renderer layout created")
-    this.renderer.autoClear = false
+    this.webGLRenderer.autoClear = false
   },
   mounted() {
-    this.$refs.renderer.appendChild(this.renderer.domElement)
+    this.$refs.renderer.appendChild(this.webGLRenderer.domElement)
     this.onResize()
+    window.addEventListener('resize', this.onResize)
     this.animate()
   },
   methods: {
@@ -54,7 +55,7 @@ export default {
       } else {
         this.size = {width: this.$el.clientWidth, height: this.$el.clientHeight}
       }
-      this.renderer.setSize(this.size.width, this.size.height)
+      this.webGLRenderer.setSize(this.size.width, this.size.height)
       //Resize all cameras in all scenes:
       for (let sd=0; sd < this.sceneData.length; sd++){
         const cameras = this.sceneData[sd].cameras
@@ -66,7 +67,7 @@ export default {
       this.render()
     },
     render: function() {
-      this.renderer.clear()
+      this.webGLRenderer.clear()
       let scenesRendered = 0
       //Render all scenes with active cameras, in order:
       for (let sd=0; sd < this.sceneData.length; sd++){
@@ -75,10 +76,9 @@ export default {
           const scene = gscene.curObj
           const camera = gscene.cameras[gscene.currentCamera]
           if (scenesRendered > 0) {
-            this.renderer.clearDepth()
+            this.webGLRenderer.clearDepth()
           }
-          console.log()
-          this.renderer.render(scene, camera)
+          this.webGLRenderer.render(scene, camera)
           scenesRendered += 1
         }
       }

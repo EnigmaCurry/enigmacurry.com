@@ -1,11 +1,9 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :antialias="true">
-    <scene :obj="scene">
-      <g-camera orthographic :zoomScale="zoom"/>
-      <g-grid :size="100" :divisions="100" v-if="showGrid"/>
-      <animation :fn="animate" :speed="0.01"/>
-    </scene>
-  </g-renderer>
+  <g-scene :obj="scene">
+    <g-camera name="main" orthographic :zoomScale="zoom"/>
+    <g-grid :size="100" :divisions="100" v-if="showGrid"/>
+    <animation :fn="animate" :speed="0.01"/>
+  </g-scene>
 </template>
 
 <script>

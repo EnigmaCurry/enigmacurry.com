@@ -1,6 +1,6 @@
 <template>
   <g-scene :obj="scene">
-    <g-camera orthographic :zoomScale="zoom"/>
+    <g-camera name="main" orthographic :zoomScale="zoom"/>
     <g-grid :divisions="10" v-if="showGrid"/>
   </g-scene>
 </template>
@@ -15,7 +15,6 @@ export default {
     showGrid: {type: Boolean, default: true},
     zoom: {type: Number, default: 1}
   },
-  inject: ['renderer'],
   data() {
     return {
       scene: new Three.Scene()

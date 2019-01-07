@@ -1,14 +1,12 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="false" :antialias="true">
-    <scene>
-      <g-camera orthographic :zoomScale="1"/>
+  <g-scene>
+    <g-camera name="main" orthographic :zoomScale="1"/>
 
-      <!-- <g-grid :divisions="10"/> -->
-      <g-penrose-mesh :tileType="tileType" :scale="scale" :position="{x:0}" :rotation="rotation1" :iterations="iterations" :wireframe="wireframe" :wireColor="wireColor" :wireOpacity="wireOpacity"/>
+    <!-- <g-grid :divisions="10"/> -->
+    <g-penrose-mesh :tileType="tileType" :scale="scale" :position="{x:0}" :rotation="rotation1" :iterations="iterations" :wireframe="wireframe" :wireColor="wireColor" :wireOpacity="wireOpacity"/>
 
-      <animation :fn="animate" />
-    </scene>
-  </g-renderer>
+    <animation :fn="animate" />
+  </g-scene>
 </template>
 
 <script>

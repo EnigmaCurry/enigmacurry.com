@@ -1,44 +1,46 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :antialias="true">
-    <scene :obj="scene">
-      <g-camera orthographic :zoomScale="zoom"/>
+  <g-scene :obj="scene">
+    <g-camera name="main" orthographic :zoomScale="zoom"/>
 
-      <!-- <g-grid :divisions="10"/> -->
+    <!-- <g-grid :divisions="10"/> -->
 
-     <g-group name="earth" :position="earthPosition">
-        <g-mesh>
-          <g-geometry type="Circle" :args="[earthRadius, 64]" />
-          <material type="MeshBasic" :options="{color: 'blue'}" />
-        </g-mesh>
-      </g-group>
+   <g-group name="earth" :position="earthPosition">
+      <g-mesh>
+        <g-geometry type="Circle" :args="[earthRadius, 64]" />
+        <material type="MeshBasic" :options="{color: 'blue'}" />
+      </g-mesh>
+    </g-group>
 
-      <g-group name="sun" :position="sunPosition">
-        <g-mesh>
-          <g-geometry type="Circle" :args="[sunRadius, 64]" />
-          <material type="MeshBasic" :options="{color: 'yellow'}" />
-        </g-mesh>
-      </g-group>
+    <g-group name="sun" :position="sunPosition">
+      <g-mesh>
+        <g-geometry type="Circle" :args="[sunRadius, 64]" />
+        <material type="MeshBasic" :options="{color: 'yellow'}" />
+      </g-mesh>
+    </g-group>
 
-     <g-group name="planet" :position="planetPosition">
-        <g-mesh>
-          <g-geometry type="Circle" :args="[planetRadius, 64]" />
-          <g-material :obj="planetMaterial" />
-        </g-mesh>
-      </g-group>
-      <animation :fn="animate" :speed="1"/>
-    </scene>
-  </g-renderer>
+   <g-group name="planet" :position="planetPosition">
+      <g-mesh>
+        <g-geometry type="Circle" :args="[planetRadius, 64]" />
+        <g-material :obj="planetMaterial" />
+      </g-mesh>
+    </g-group>
+    <animation :fn="animate" :speed="1"/>
+  </g-scene>
 </template>
 
 <script>
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
+import BackgroundImage from '~/components/BackgroundImage.vue'
 
 export default {
+  mixins: [BackgroundImage],
+  inject: ['renderer'],
   props: {
     animated: {type: Boolean, default: true},
-    backgroundClass: {type: String, default: "deepfield-halfoct-ngon4"}
+    backgroundClass: {type: String, default: "deepfield-halfoct-ngon4"},
+    backgroundAlpha: {type: Number, default: 0.6},
   },
   data() {
     let AU = 1
@@ -104,9 +106,6 @@ export default {
   created() {
     this.orbitMaterial = new Three.LineBasicMaterial({color: 'white'})
     this.newSystem()
-  },
-  mounted() {
-    document.getElementById('bg').classList.add(this.backgroundClass)
   },
   methods: {
     newSystem() {
@@ -192,8 +191,5 @@ export default {
       }
     } 
   },
-  beforeDestroy() {
-    document.getElementById('bg').classList.remove(this.backgroundClass)
-  }
 }
 </script>

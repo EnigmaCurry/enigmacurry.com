@@ -1,12 +1,10 @@
 <template>
-  <g-renderer :animated="animated" class="renderer" ref="renderer" :transparent="true" :clearAlpha="0" :antialias="true">
-    <scene :obj="scene">
-      <g-camera orthographic :zoomScale="zoom"/>
+  <g-scene :obj="scene">
+    <g-camera name="main" orthographic :zoomScale="zoom"/>
 
-      <g-grid :divisions="10" v-if="showGrid"/>
-      <animation :fn="animate" />
-    </scene>
-  </g-renderer>
+    <g-grid :divisions="10" v-if="showGrid"/>
+    <animation :fn="animate" />
+  </g-scene>
 </template>
 
 <script>
@@ -16,11 +14,15 @@ import ColorScheme from 'color-scheme'
 import {shuffle} from 'underscore'
 import Visibility from 'visibilityjs'
 import chroma from 'chroma-js'
+import BackgroundImage from '~/components/BackgroundImage.vue'
 
 export default {
+  mixins: [BackgroundImage],
+  inject: ['renderer'],
   props: {
     animated: {type: Boolean, default: true},
     backgroundClass: {type: String, default: "mitosis"},
+    backgroundAlpha: {type: Number, default: 0},
     showGrid: {type: Boolean, default: false},
     showWires: {type: Boolean, default: false},
     zoom: {type: Number, default: 2},
@@ -103,13 +105,9 @@ export default {
     this.light3.position.set(0,0,1)
     this.scene.add(this.light3)
   },
-  mounted() {
-    document.getElementById('bg').classList.add(this.backgroundClass)
-  },
   beforeDestroy() {
     this.tweenGroup.removeAll()
     Visibility.stop(this.visibilityInterval)
-    document.getElementById('bg').classList.remove(this.backgroundClass)    
   },
   methods: {
     animate() {

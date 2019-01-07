@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     onContainerResize: function(width, height) {
-      console.log(width, height)
+      //console.log(width, height)
       if (this.orthographic) {
         if (this.orthoStatic) {
           this._camera.left = (this.frustrum.left)
