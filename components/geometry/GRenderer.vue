@@ -1,20 +1,21 @@
 <template>
-  <div>
+  <div class="grenderer-container">
     <slot></slot>
     <div ref="renderer" class="renderer"></div>
   </div>
 </template>
 
-<style>
+<style scoped>
+.grenderer-container {
+  height: 100%;
+  width: 100%;
+}
 .renderer {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
 }
 </style>
-
 
 <script>
 import * as Three from 'three'
