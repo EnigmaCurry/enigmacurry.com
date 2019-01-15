@@ -11,6 +11,7 @@ import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
+import Stats from "~/lib/stats"
 
 export default {
   mixins: [BackgroundImage],
@@ -37,7 +38,9 @@ export default {
   },
   methods: {
     animate(tt) {
+      this.stats.begin()
       this.universe.step()
+      this.stats.end()
     },
     getPreset(preset) {
       return {
@@ -97,6 +100,9 @@ export default {
     universeSettings.wrap = this.universeWrap
     universeSettings.forceScale = 0.01
     this.universe = this.newUniverse(universeSettings)
+
+    this.stats = new Stats()
+    document.body.appendChild(this.stats.dom)
   },
 }
 </script>
