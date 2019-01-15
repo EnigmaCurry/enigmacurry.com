@@ -20,13 +20,14 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
-    defaultPreset: {type: String, default: 'Balanced'},
+    defaultPreset: {type: String, default: 'Stringy'},
     particleScale: {type: Number, default: 0.5},
     particleSegments: {type: Number, default: 3},
     universeWidth: {type: Number, default: 200},
     universeHeight: {type: Number, default: 200},
-    universeWrap: {type: Boolean, default: false},
+    universeWrap: {type: Boolean, default: true},
     universeForceScale: {type: Number, default: 0.15},
+    numParticles: {type: Number, default: 1000},
     numSuperParticles: {type: Number, default: 3}
   },
   data() {
@@ -101,7 +102,7 @@ export default {
     universeSettings.height = this.universeHeight
     universeSettings.wrap = this.universeWrap
     universeSettings.forceScale = this.universeForceScale
-    universeSettings.numParticles = 2500
+    universeSettings.numParticles = this.numParticles
     this.universe = this.newUniverse(universeSettings)
     
     // Create a few Super Particles!
