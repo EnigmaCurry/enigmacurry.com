@@ -25,6 +25,8 @@
     "mathjs": "^5.2.3",
     "nuxt": "^2.0.0",
     "oimo": "^1.0.9",
+    "prob.js": "^1.0.6",
+    "random-js": "^1.0.8",
     "three": "^0.97.0",
     "underscore": "^1.9.1",
     "visibilityjs": "^2.0.2",
