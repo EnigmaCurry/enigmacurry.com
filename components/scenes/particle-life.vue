@@ -22,7 +22,7 @@ export default {
     zoom: {type: Number, default: 100},
     defaultPreset: {type: String, default: 'Gliders2'},
     particleScale: {type: Number, default: 0.5},
-    particleSegments: {type: Number, default: 32},
+    particleSegments: {type: Number, default: 3},
     universeWidth: {type: Number, default: 200},
     universeHeight: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: false},
