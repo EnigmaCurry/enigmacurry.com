@@ -66,6 +66,10 @@ const presets = $particles.presets = {
 		population: [9, 400],
 		seed: [-0.09, 0.06, 19.0, 20.0, 20.0, 72.0, 0.25, true]
 	},
+	Stringy2: {
+		population: [9, 400],
+		seed: [-0.04, 0.06, 19.0, 20.0, 20.0, 72.0, 0.25, true]
+	},
 }
 
 $particles.getSettingsForPreset = (preset) => {
