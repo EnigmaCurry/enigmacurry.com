@@ -1,6 +1,6 @@
 <template>
   <g-scene :obj="scene">
-    <g-camera name="main" orthographic :zoomScale="zoom" :position="{x:universeWidth / 2, y: universeHeight / 2, z:-1}" :lookAt="{x:universeWidth / 2, y:universeHeight / 2, z:0}"/>
+    <g-camera name="main" orthographic :zoomScale="zoom" :position="{x:universeSize.width / 2, y: universeSize.height / 2, z:-1}" :lookAt="{x:universeSize.width / 2, y:universeSize.height / 2, z:0}"/>
     <g-grid :divisions="10" v-if="showGrid"/>
     <animation :fn="animate" />
   </g-scene>
@@ -23,8 +23,7 @@ export default {
     defaultPreset: {type: String, default: 'Stringy2'},
     particleScale: {type: Number, default: 0.5},
     particleSegments: {type: Number, default: 3},
-    universeWidth: {type: Number, default: 200},
-    universeHeight: {type: Number, default: 200},
+    universeScale: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: true},
     universeForceScale: {type: Number, default: 0.15},
     numParticles: {type: Number, default: 1000},
@@ -36,7 +35,16 @@ export default {
       particleGeometries: {}, // particle_type -> Three.Geometry
       particleMaterials: {}, // particle_type -> Three.Material
       particleMeshes: {}, // particle_id -> Three.Mesh
-      lastStepTime: 0
+      lastStepTime: 0,
+      universeSize: {width: this.universeScale, height: this.universeScale}
+    }
+  },
+  watch: {
+    universeSize: {
+      handler(size) {
+        console.log(size)
+        this.universe.setSize(size.width, size.height)
+      }
     }
   },
   methods: {
@@ -98,8 +106,8 @@ export default {
   },
   created() {
     const universeSettings = this.getPreset(this.defaultPreset)
-    universeSettings.width = this.universeWidth
-    universeSettings.height = this.universeHeight
+    universeSettings.width = this.universeSize.width
+    universeSettings.height = this.universeSize.height
     universeSettings.wrap = this.universeWrap
     universeSettings.forceScale = this.universeForceScale
     universeSettings.numParticles = this.numParticles
@@ -120,9 +128,28 @@ export default {
     //   // superParticle.object = this.createParticleObject(superParticle, {r:1,g:1,b:1})
     //   console.log(superParticle)
     // }
-
+    
     this.stats = new Stats()
     document.body.appendChild(this.stats.dom)
   },
+  mounted() {
+    //Wait for the renderer to report a size:
+    console.log(this.universeSize.width, this.universeSize.height)
+    let intervalID = setInterval(() => {
+      let width = this.renderer.size.width
+      let height = this.renderer.size.height
+      if (width > 0 && height > 0) {
+        clearInterval(intervalID)
+        if (width > height) {
+          this.universeSize = {width: (width/height) * this.universeScale,
+                               height: this.universeScale}
+        } else {
+          this.universeSize = {width: this.universeScale,
+                               height: (height/width) * this.universeScale}
+        }
+        console.log(this.universeSize.width, this.universeSize.height)
+      }
+    }, 100)
+  }
 }
 </script>

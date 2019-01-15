@@ -36,6 +36,15 @@ export default {
         this.onContainerResize(this.renderer.size.width, this.renderer.size.height)
       }
     },
+    position: {
+      deep: true,
+      handler (v) {
+        console.log("heya")
+        this._camera.position.x = this.position.x
+        this._camera.position.y = this.position.y
+        this._camera.position.z = this.position.z
+      }
+    },    
   },
   created () {
     if (this.scene.cameras.hasOwnProperty(this.name)) {
