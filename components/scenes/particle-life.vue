@@ -20,7 +20,7 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
-    defaultPreset: {type: String, default: 'Gliders'},
+    defaultPreset: {type: String, default: 'Gliders2'},
     particleScale: {type: Number, default: 0.5},
     particleSegments: {type: Number, default: 32},
     universeWidth: {type: Number, default: 200},

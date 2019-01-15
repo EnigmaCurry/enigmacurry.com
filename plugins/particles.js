@@ -38,6 +38,10 @@ const presets = $particles.presets = {
 		population: [6, 400],
 		seed: [0.0, 0.06, 0.0, 20.0, 10.0, 50.0, 0.1, true]
 	},
+	Gliders2: {
+		population: [6, 400],
+		seed: [0.0, 0.06, 0.0, 20.0, 10.0, 50.0, 0.1, false]
+	},
 	Homogeneity: {
 		population: [4, 400],
 		seed: [0.0, 0.04, 10.0, 10.0, 10.0, 80.0, 0.05, true]
@@ -57,10 +61,6 @@ const presets = $particles.presets = {
 	'Small Clusters': {
 		population: [6, 600],
 		seed: [-0.005, 0.01, 10.0, 10.0, 20.0, 50.0, 0.01, false]
-	},
-	'Test1': {
-		population: [3, 400],
-		seed: [0.04, 0.02, 0.1, 10.0, 1.0, 150.0, 0.001, false]
 	},
 }
 
