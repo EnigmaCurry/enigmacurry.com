@@ -20,12 +20,13 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
-    defaultPreset: {type: String, default: 'Test1'},
+    defaultPreset: {type: String, default: 'Gliders'},
     particleScale: {type: Number, default: 0.5},
     particleSegments: {type: Number, default: 32},
     universeWidth: {type: Number, default: 200},
     universeHeight: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: false},
+    universeForceScale: {type: Number, default: 0.05}
   },
   data() {
     return {
@@ -98,7 +99,7 @@ export default {
     universeSettings.width = this.universeWidth
     universeSettings.height = this.universeHeight
     universeSettings.wrap = this.universeWrap
-    universeSettings.forceScale = 0.01
+    universeSettings.forceScale = this.universeForceScale
     this.universe = this.newUniverse(universeSettings)
 
     this.stats = new Stats()
