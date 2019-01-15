@@ -20,13 +20,14 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
-    defaultPreset: {type: String, default: 'Gliders2'},
+    defaultPreset: {type: String, default: 'Balanced'},
     particleScale: {type: Number, default: 0.5},
     particleSegments: {type: Number, default: 3},
     universeWidth: {type: Number, default: 200},
     universeHeight: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: false},
-    universeForceScale: {type: Number, default: 0.05}
+    universeForceScale: {type: Number, default: 0.15},
+    numSuperParticles: {type: Number, default: 3}
   },
   data() {
     return {
@@ -100,7 +101,24 @@ export default {
     universeSettings.height = this.universeHeight
     universeSettings.wrap = this.universeWrap
     universeSettings.forceScale = this.universeForceScale
+    universeSettings.numParticles = 2500
     this.universe = this.newUniverse(universeSettings)
+    
+    // Create a few Super Particles!
+    // const particleIndex=this.universe.particles.length - 1
+    // this.universe.setPopulation(this.universe.types.length + 1, particleIndex + 1 + this.numSuperParticles)
+    // for (let n=0; n < this.numSuperParticles; n++) {
+    //   console.log("hierer")
+    //   const superParticle = this.universe.particles[particleIndex + n]
+    //   // Object.assign(superParticle, {
+    //   //   x: universeSettings.width / 2, y: universeSettings.height / 2,
+    //   //   radius: 3,
+    //   //   mass: 3,
+    //   //   type: this.universe.types.length
+    //   // })
+    //   // superParticle.object = this.createParticleObject(superParticle, {r:1,g:1,b:1})
+    //   console.log(superParticle)
+    // }
 
     this.stats = new Stats()
     document.body.appendChild(this.stats.dom)

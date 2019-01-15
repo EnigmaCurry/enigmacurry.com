@@ -154,59 +154,59 @@ const colorFromHSV = (h, s, v) => {
   }
 }
 
-const makeParticle = $particles.makeParticle = (x=0, y=0, vx=0, vy=0, type=0, radius=1) => {
-  return { x, y, vx, vy, type, radius, id: uuid()}
+const makeParticle = $particles.makeParticle = ({object=null, x=0, y=0, vx=0, vy=0, type=0, radius=1, mass=1} = {}) => {
+  return { object, x, y, vx, vy, type, radius, mass, id: uuid()}
 }
 
 $particles.ParticleTypes = class ParticleTypes {
   constructor(size = 0) {
-    this.col = Array.from({ length: size }, () => ({ r: 0, g: 0, b: 0, a: 0 }))
+    this.colors = Array.from({ length: size }, () => ({ r: 0, g: 0, b: 0, a: 0 }))
     this.attract = Array(size * size).fill(0)
     this.minR = Array(size * size).fill(0)
     this.maxR = Array(size * size).fill(0)
   }
 
   resize(size) {
-    resizeArray(this.col, size, { r: 0, g: 0, b: 0, a: 0 })
+    resizeArray(this.colors, size, { r: 0, g: 0, b: 0, a: 0 })
     resizeArray(this.attract, size * size, 0)
     resizeArray(this.minR, size * size, 0)
     resizeArray(this.maxR, size * size, 0)
   }
 
   size() {
-    return this.col.length
+    return this.colors.length
   }
 
   getColor(i) {
-    return this.col[i]
+    return this.colors[i]
   }
 
   setColor(i, value) {
-    this.col[i] = value
+    this.colors[i] = value
   }
 
   getAttract(i, j) {
-    return this.attract[i * this.col.length + j]
+    return this.attract[i * this.colors.length + j]
   }
 
   setAttract(i, j, value) {
-    this.attract[i * this.col.length + j] = value
+    this.attract[i * this.colors.length + j] = value
   }
 
   getMinR(i, j) {
-    return this.minR[i * this.col.length + j]
+    return this.minR[i * this.colors.length + j]
   }
 
   setMinR(i, j, value) {
-    this.minR[i * this.col.length + j] = value
+    this.minR[i * this.colors.length + j] = value
   }
 
   getMaxR(i, j) {
-    return this.maxR[i * this.col.length + j]
+    return this.maxR[i * this.colors.length + j]
   }
 
   setMaxR(i, j, value) {
-    this.maxR[i * this.col.length + j] = value
+    this.maxR[i * this.colors.length + j] = value
   }
 }
 
@@ -262,6 +262,7 @@ $particles.Universe = class Universe {
 	setPopulation(numTypes, numParticles) {
 		this.types.resize(numTypes)
 		resizeArray(this.particles, numParticles, makeParticle())
+    //this.createObjects(this.createObjectFunc)
 	}
 
 	setSize(width, height) {
@@ -322,7 +323,7 @@ $particles.Universe = class Universe {
 			// Current particle
 			const p = this.particles[i]
       if (!this.objects.hasOwnProperty(p.id)) {
-        this.objects[p.id] = createObjectFunc(p, this.types.getColor(p.type))
+        this.objects[p.id] = p.object = createObjectFunc(p, this.types.getColor(p.type))
       }
     }
   }
@@ -384,8 +385,8 @@ $particles.Universe = class Universe {
 						R_SMOOTH * minR * (1.0 / (minR + R_SMOOTH) - 1.0 / (r + R_SMOOTH))
 				}
 
-				p.vx += f * dx * this.forceScale
-				p.vy += f * dy * this.forceScale
+				p.vx += f * dx * this.forceScale * p.mass
+				p.vy += f * dy * this.forceScale * p.mass
 			}
 
 			this.particles[i] = p
