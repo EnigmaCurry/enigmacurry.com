@@ -19,8 +19,12 @@
 
 <script>
 import * as Three from 'three'
+import Stats from "~/lib/stats"
 
 export default {
+  props: {
+    showStats: {type: Boolean, default: false},
+  },
   provide () {
     return {
       renderer: this,
@@ -38,6 +42,11 @@ export default {
   },
   created() {
     this.webGLRenderer.autoClear = false
+    if (this.showStats) {
+      this.stats = new Stats()
+      this.stats = new Stats()
+      document.body.appendChild(this.stats.dom)      
+    }
   },
   mounted() {
     this.$refs.renderer.appendChild(this.webGLRenderer.domElement)
@@ -85,7 +94,13 @@ export default {
         window.cancelAnimationFrame(this._animationRequestID)
       } else {
         this._animationRequestID = requestAnimationFrame(this.animate)
-        this.render()
+        if (this.showStats) {
+          this.stats.begin()
+          this.render()
+          this.stats.end()
+        } else {
+          this.render()
+        }
       }
     }
   },

@@ -11,13 +11,14 @@ import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
-import Stats from "~/lib/stats"
 
 export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
   props: {
     animated: {type: Boolean, default: false},
+    backgroundClass: {type: String, default: "oceanic-network"},
+    backgroundAlpha: {type: Number, default: 0.75},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
     defaultPreset: {type: String, default: 'Stringy2'},
@@ -49,9 +50,7 @@ export default {
   },
   methods: {
     animate(tt) {
-      this.stats.begin()
       this.universe.step()
-      this.stats.end()
     },
     getPreset(preset) {
       return {
@@ -128,9 +127,6 @@ export default {
     //   // superParticle.object = this.createParticleObject(superParticle, {r:1,g:1,b:1})
     //   console.log(superParticle)
     // }
-    
-    this.stats = new Stats()
-    document.body.appendChild(this.stats.dom)
   },
   mounted() {
     //Wait for the renderer to report a size:

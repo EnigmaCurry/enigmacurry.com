@@ -109,6 +109,10 @@
   background-image: url(~assets/img/fractal/Mitosis.1024.jpg);
 }
 
+#bg.oceanic-network {
+  background-image: url(~assets/img/fractal/oceanic-network.1080.jpg);
+}
+
 div#app {
   background: transparent;
 }
