@@ -18,7 +18,7 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     backgroundClass: {type: String, default: "oceanic-network"},
-    backgroundAlpha: {type: Number, default: 0.75},
+    backgroundAlpha: {type: Number, default: 0.55},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
     defaultPreset: {type: String, default: 'Stringy2'},
