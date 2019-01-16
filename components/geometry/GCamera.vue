@@ -39,7 +39,6 @@ export default {
     position: {
       deep: true,
       handler (v) {
-        console.log("heya")
         this._camera.position.x = this.position.x
         this._camera.position.y = this.position.y
         this._camera.position.z = this.position.z

@@ -22,8 +22,8 @@ export default {
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
     defaultPreset: {type: String, default: 'Stringy2'},
-    particleScale: {type: Number, default: 0.5},
-    particleSegments: {type: Number, default: 3},
+    particleScale: {type: Number, default: 0.65},
+    particleSegments: {type: Number, default: 32},
     universeScale: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: true},
     universeForceScale: {type: Number, default: 0.25},
@@ -71,7 +71,7 @@ export default {
       if (this.particleMaterials.hasOwnProperty(particle.type)) {
         mat = this.particleMaterials[particle.type]
       } else {
-        mat = this.particleMaterials[particle.type] = new Three.MeshBasicMaterial({color: c, transparent: true})
+        mat = this.particleMaterials[particle.type] = new Three.MeshBasicMaterial({color: c, transparent: true, opacity: 0.5})
       }
       let mesh = new Three.Mesh(geom, mat)
       mesh.position.x = particle.x
@@ -112,9 +112,9 @@ export default {
     universeSettings.numParticles = this.numParticles
     this.universe = this.newUniverse(universeSettings)
     
-    // Create a few Super Particles!
-    // const particleIndex=this.universe.particles.length - 1
-    // this.universe.setPopulation(this.universe.types.length + 1, particleIndex + 1 + this.numSuperParticles)
+    /// Super Particles!
+    const particleIndex=this.universe.particles.length - 1
+    //this.universe.setPopulation(this.universe.types.length + 1, particleIndex + 1 + this.numSuperParticles)
     // for (let n=0; n < this.numSuperParticles; n++) {
     //   console.log("hierer")
     //   const superParticle = this.universe.particles[particleIndex + n]
