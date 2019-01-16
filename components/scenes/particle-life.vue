@@ -20,13 +20,13 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
-    defaultPreset: {type: String, default: 'Stringy2'},
+    defaultPreset: {type: String, default: 'Gliders2'},
     particleScale: {type: Number, default: 0.5},
     particleSegments: {type: Number, default: 3},
     universeScale: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: true},
-    universeForceScale: {type: Number, default: 0.15},
-    numParticles: {type: Number, default: 1000},
+    universeForceScale: {type: Number, default: 0.25},
+    numParticles: {type: Number, default: 1500},
     numSuperParticles: {type: Number, default: 3}
   },
   data() {
