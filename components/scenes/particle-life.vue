@@ -51,6 +51,12 @@ export default {
   methods: {
     animate(tt) {
       this.universe.step()
+      for (let p=0; p < this.universe.particles.length; p++) {
+        const particle = this.universe.particles[p]
+        const mesh = this.particleMeshes[particle.id]
+        mesh.position.x = particle.x
+        mesh.position.y = particle.y
+      }
     },
     getPreset(preset) {
       return {
@@ -81,12 +87,15 @@ export default {
       return mesh
     },
     newUniverse(settings) {
+      const existingParticleIDs = Object.keys(this.particleMeshes)
+      for (let p=0; p < existingParticleIDs.length; p++) {
+        this.scene.remove(this.particleMeshes[existingParticleIDs[p]])
+      }
       const universe = new this.$particles.Universe(
         settings.numTypes,
         settings.numParticles,
         settings.width,
         settings.height,
-        this.createParticleObject,
         settings.forceScale
       )
       universe.wrap = settings.wrap
@@ -100,8 +109,14 @@ export default {
     		settings.friction,
 	    	settings.flatForce
     	)
+
+      for (let p=0; p < universe.particles.length; p++) {
+        const particle = universe.particles[p]
+        this.createParticleObject(particle, universe.types.colors[particle.type])
+      }
+
       return universe
-    }
+    },
   },
   created() {
     const universeSettings = this.getPreset(this.defaultPreset)

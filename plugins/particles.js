@@ -162,8 +162,8 @@ const colorFromHSV = (h, s, v) => {
   }
 }
 
-const makeParticle = $particles.makeParticle = ({object=null, x=0, y=0, vx=0, vy=0, type=0, radius=1, mass=1} = {}) => {
-  return { object, x, y, vx, vy, type, radius, mass, id: uuid()}
+const makeParticle = $particles.makeParticle = ({x=0, y=0, vx=0, vy=0, type=0, radius=1, mass=1} = {}) => {
+  return { x, y, vx, vy, type, radius, mass, id: uuid()}
 }
 
 $particles.ParticleTypes = class ParticleTypes {
@@ -219,16 +219,15 @@ $particles.ParticleTypes = class ParticleTypes {
 }
 
 $particles.Universe = class Universe {
-	constructor(numTypes, numParticles, width, height, createObjectFunc, forceScale=1) {
+	constructor(numTypes, numParticles, width, height, forceScale=1, range=null) {
 		this.randGen = Random.engines.mt19937().seed(Date.now())
 		this.types = new $particles.ParticleTypes()
 		this.particles = Array.from({ length: numParticles }, () => makeParticle())
-    this.objects = {} // uuid->Object3D
-    this.createObjectFunc = createObjectFunc
     this.forceScale = forceScale
 
 		this.setSize(width, height)
 		this.setPopulation(numTypes, numParticles)
+    this.range = range === null ? [0, numParticles] : range
 
 		this.centerX = this.width * 0.5
 		this.centerY = this.height * 0.5
@@ -264,13 +263,11 @@ $particles.Universe = class Universe {
 		this.flatForce = flatForce
 		this.setRandomTypes()
 		this.setRandomParticles()
-    this.createObjects(this.createObjectFunc)
 	}
 
 	setPopulation(numTypes, numParticles) {
 		this.types.resize(numTypes)
 		resizeArray(this.particles, numParticles, makeParticle())
-    //this.createObjects(this.createObjectFunc)
 	}
 
 	setSize(width, height) {
@@ -311,6 +308,10 @@ $particles.Universe = class Universe {
 		}
 	}
 
+  setParticles(particles) {
+    this.particles = particles
+  }
+
 	setRandomParticles() {
 		const randType = Prob.uniform(0, this.types.size() - 1)
 		const randUni = Prob.uniform(0, 1)
@@ -326,18 +327,8 @@ $particles.Universe = class Universe {
 		}
 	}
 
-  createObjects(createObjectFunc) {
-		for (let i = 0; i < this.particles.length; ++i) {
-			// Current particle
-			const p = this.particles[i]
-      if (!this.objects.hasOwnProperty(p.id)) {
-        this.objects[p.id] = p.object = createObjectFunc(p, this.types.getColor(p.type))
-      }
-    }
-  }
-
 	step() {
-		for (let i = 0; i < this.particles.length; ++i) {
+		for (let i = this.range[0]; i < this.range[1]; ++i) {
 			// Current particle
 			const p = this.particles[i]
 
@@ -404,7 +395,6 @@ $particles.Universe = class Universe {
 		for (let i = 0; i < this.particles.length; ++i) {
 			// Current particle
 			const p = this.particles[i]
-      const object = this.objects[p.id]
 
 			// Update position and velocity
 			p.x += p.vx
@@ -443,8 +433,6 @@ $particles.Universe = class Universe {
 				}
 			}
 
-      object.position.x = p.x
-      object.position.y = p.y
 			this.particles[i] = p
 		}
 	}
