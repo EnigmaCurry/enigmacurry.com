@@ -21,7 +21,7 @@ export default {
     backgroundAlpha: {type: Number, default: 0.55},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 100},
-    defaultPreset: {type: String, default: 'Stringy2'},
+    defaultPreset: {type: String, default: 'Gitter'},
     particleScale: {type: Number, default: 0.65},
     particleSegments: {type: Number, default: 32},
     universeScale: {type: Number, default: 200},

@@ -70,6 +70,14 @@ const presets = $particles.presets = {
 		population: [4, 400],
 		seed: [-0.04, 0.05, 19.0, 20.0, 20.0, 72.0, 0.05, false]
 	},
+	Stringy3: {
+		population: [4, 400],
+		seed: [-0.04, 0.05, 19.0, 20.0, 20.0, 72.0, 0.05, false]
+	},
+	Gitter: {
+		population: [3, 300],
+		seed: [-0.09, 1, 1.0, 20.0, 21, 60.0, 0.8, false]
+	},
 }
 
 $particles.getSettingsForPreset = (preset) => {
@@ -162,8 +170,9 @@ const colorFromHSV = (h, s, v) => {
   }
 }
 
-const makeParticle = $particles.makeParticle = ({x=0, y=0, vx=0, vy=0, type=0, radius=1, mass=1} = {}) => {
-  return { x, y, vx, vy, type, radius, mass, id: uuid()}
+const makeParticle = $particles.makeParticle = ({x=0, y=0, vx=0, vy=0, type=0} = {}) => {
+  const size = Math.random() > 0.90 ? 2 : 1
+  return { x, y, vx, vy, type, radius: size, mass: size, id: uuid()}
 }
 
 $particles.ParticleTypes = class ParticleTypes {
@@ -399,8 +408,8 @@ $particles.Universe = class Universe {
 			// Update position and velocity
 			p.x += p.vx
 			p.y += p.vy
-			p.vx *= 1.0 - this.friction
-			p.vy *= 1.0 - this.friction
+			p.vx *= (1.0 - this.friction) / p.mass
+			p.vy *= (1.0 - this.friction) / p.mass
 
 			// Check for wall collisions
 			if (this.wrap) {
