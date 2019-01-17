@@ -170,8 +170,14 @@ const colorFromHSV = (h, s, v) => {
   }
 }
 
-const makeParticle = $particles.makeParticle = ({x=0, y=0, vx=0, vy=0, type=0} = {}) => {
-  const size = Math.random() > 0.90 ? 2 : 1
+const makeParticle = $particles.makeParticle = ({x=0, y=0, vx=0, vy=0, type=0, sizePercentiles={0: 1}} = {}) => {
+  let size = 1
+  const randomRoll = Math.random()
+  Object.keys(sizePercentiles).sort().forEach((percentile) => {
+    if (randomRoll > percentile) {
+      size = sizePercentiles[percentile]
+    }
+  })
   return { x, y, vx, vy, type, radius: size, mass: size, id: uuid()}
 }
 
