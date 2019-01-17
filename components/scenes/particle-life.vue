@@ -28,16 +28,14 @@ export default {
     particleSegments: {type: Number, default: 32},
     universeScale: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: true},
-    universeForceScale: {type: Number, default: 0.25},
-    numParticles: {type: Number, default: 1000},
-    numSuperParticles: {type: Number, default: 3},
+    universeInterval: {type: Number, default: 40},
     playlist: {type: Array, default: () => [
-      {preset: "Stringy2", sizePercentiles: {0:1}},
-      {preset: "Stringy2", sizePercentiles: {0:1, 90:2}},
-      {preset: "Stringy2", sizePercentiles: {0:1, 90:2, 99: 10}},
-      {preset: "Gitter", sizePercentiles: {0:1}},
-      {preset: "Gitter", sizePercentiles: {0:1, 90:2}},
-      {preset: "Gitter", sizePercentiles: {0:1, 90:2, 99: 10}},
+      {preset: "Stringy2", forceScale: 0.25, numParticles: 1000, sizePercentiles: {0:1}},
+      {preset: "Stringy2", forceScale: 1, numParticles: 800, sizePercentiles: {0:1, 90:2}},
+      {preset: "Chaos", forceScale: 0.1, numParticles: 1000, sizePercentiles: {0:2, 90:3}},
+      {preset: "Small Clusters", forceScale: 1, numParticles: 1000, sizePercentiles: {0:1, 20:2, 90:3}},
+      {preset: "Gitter", forceScale: 0.45, numParticles: 1000, sizePercentiles: {0:1}},
+      {preset: "Gitter", forceScale: 0.1, numParticles: 1200, sizePercentiles: {0:1, 90:2, 99:3}},
     ]},
   },
   data() {
@@ -97,19 +95,17 @@ export default {
       return mesh
     },
     newUniverse(preset, settings={}) {
-      const defaults = {
+      settings = Object.assign({
         width: this.universeSize.width,
         height: this.universeSize.height,
         wrap: this.universeWrap,
-        forceScale: this.universeForceScale,
-        numParticles: this.numParticles
-      }
-      settings = Object.assign({}, defaults, this.getPreset(preset), settings)
-      console.log("New Universe", settings.sizePercentiles)
+      }, this.getPreset(preset), settings)
+      
       const existingParticleIDs = Object.keys(this.particleMeshes)
       for (let p=0; p < existingParticleIDs.length; p++) {
         this.scene.remove(this.particleMeshes[existingParticleIDs[p]])
       }
+      console.log({preset: settings.preset, numParticles: settings.numParticles, sizePercentiles: JSON.parse(JSON.stringify(settings.sizePercentiles))})
       const universe = new this.$particles.Universe(settings)
     	universe.reSeed(settings)
       
@@ -128,13 +124,16 @@ export default {
     handleKeyboardInput(event)  {
       var keyCode = event.which;
       if (keyCode == 32) { // Spacebar
+        Visibility.stop(this.visibilityInterval)
         this.newUniverseInterval()
+        this.visibilityInterval = Visibility.every(this.universeInterval * 1000, this.newUniverseInterval)
       }
     }
   },
   created() {
     this.newUniverseInterval()
     document.addEventListener("keydown", this.handleKeyboardInput)
+    this.visibilityInterval = Visibility.every(this.universeInterval * 1000, this.newUniverseInterval)
   },
   mounted() {
     //Wait for the renderer to report a size:
