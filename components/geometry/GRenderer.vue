@@ -44,7 +44,6 @@ export default {
     this.webGLRenderer.autoClear = false
     if (this.showStats) {
       this.stats = new Stats()
-      this.stats = new Stats()
       document.body.appendChild(this.stats.dom)      
     }
   },

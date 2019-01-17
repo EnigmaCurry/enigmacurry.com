@@ -26,6 +26,7 @@
     "nuxt": "^2.0.0",
     "oimo": "^1.0.9",
     "prob.js": "^1.0.6",
+    "promise-worker": "^2.0.0",
     "random-js": "^1.0.8",
     "three": "^0.97.0",
     "underscore": "^1.9.1",
@@ -42,6 +43,7 @@
     "raw-loader": "^0.5.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "svg-inline-loader": "^0.8.0"
+    "svg-inline-loader": "^0.8.0",
+    "worker-loader": "^2.0.0"
   }
 }

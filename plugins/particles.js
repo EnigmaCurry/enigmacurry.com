@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Random from 'random-js'
 import Prob from 'prob.js'
 import uuid from 'uuid/v4'
+import PromiseWorker from 'promise-worker'
+import ParticleLifeWorker from 'worker-loader!~/assets/script/particle-life.worker.js'
+import {chunk} from 'lodash'
 
 const $particles = Vue.prototype.$particles = { }
 export {
@@ -17,7 +20,7 @@ const RADIUS = 1
 const DIAMETER = 2.0 * RADIUS
 const R_SMOOTH = 2.0
 
-const presets = $particles.presets = {	
+const presets = $particles.presets = {
 	Balanced: {
 		population: [9, 400],
 		seed: [-0.02, 0.06, 0.0, 20.0, 20.0, 70.0, 0.05, false]
@@ -174,7 +177,7 @@ const makeParticle = $particles.makeParticle = ({x=0, y=0, vx=0, vy=0, type=0, s
   let size = 1
   const randomRoll = Math.random()
   Object.keys(sizePercentiles).sort().forEach((percentile) => {
-    if (randomRoll > percentile) {
+    if (randomRoll * 100 > percentile) {
       size = sizePercentiles[percentile]
     }
   })
@@ -234,10 +237,12 @@ $particles.ParticleTypes = class ParticleTypes {
 }
 
 $particles.Universe = class Universe {
-	constructor(numTypes, numParticles, width, height, forceScale=1, range=null) {
+	constructor(settings) {
+    this.settings = settings
+    const {numTypes, numParticles, width, height, forceScale=1, range=null, wrap=false, sizePercentiles={0: 1}} = settings
 		this.randGen = Random.engines.mt19937().seed(Date.now())
 		this.types = new $particles.ParticleTypes()
-		this.particles = Array.from({ length: numParticles }, () => makeParticle())
+		this.particles = Array.from({ length: numParticles }, () => makeParticle({sizePercentiles}))
     this.forceScale = forceScale
 
 		this.setSize(width, height)
@@ -255,10 +260,12 @@ $particles.Universe = class Universe {
 		this.maxRUpper = 0
 		this.friction = 0
 		this.flatForce = false
-		this.wrap = false
+		this.wrap = wrap
+    this.workers = []
+    this.currentStep = 0
 	}
 
-	reSeed(
+	reSeed({
 		attractMean,
 		attractStd,
 		minRLower,
@@ -267,7 +274,7 @@ $particles.Universe = class Universe {
 		maxRUpper,
 		friction,
 		flatForce
-	) {
+	}) {
 		this.attractMean = attractMean
 		this.attractStd = attractStd
 		this.minRLower = minRLower
@@ -323,10 +330,6 @@ $particles.Universe = class Universe {
 		}
 	}
 
-  setParticles(particles) {
-    this.particles = particles
-  }
-
 	setRandomParticles() {
 		const randType = Prob.uniform(0, this.types.size() - 1)
 		const randUni = Prob.uniform(0, 1)
@@ -342,7 +345,40 @@ $particles.Universe = class Universe {
 		}
 	}
 
-	step() {
+  brokeredStep() {
+    const numWorkers = 2 // navigator.hardwareConcurrency
+    const chunks = chunk(Array.from({length: this.particles.length}, (x,i) => i),
+                         Math.ceil(this.particles.length / numWorkers) )
+    const promises = []
+    if (this.workers.length != numWorkers) {
+      this.workers = []
+      for (let w=0; w < numWorkers; w++) {
+        this.workers.push(new PromiseWorker(new ParticleLifeWorker()))
+        promises.push(this.workers[w].postMessage({
+          action: "newUniverse",
+          settings: Object.assign({}, this.settings, {range:[chunks[w][0], chunks[w][chunks[w].length - 1]]})
+        }))
+      }
+      return Promise.all(promises)
+    } else {
+      for(let w = 0; w < this.workers.length; w++) {
+        promises.push(this.workers[w].postMessage("Hello"))
+      }
+      return Promise.all(promises).then(values => {
+        let i = 0
+        for(let x=0; x < values.length; x++) {
+          for(let v=0; v < values[x].length; v++) {
+            this.particles[i++] = values[x][v]
+          }
+        }
+      })
+    }
+  }
+
+	step(particles) {
+    if (particles) {
+      this.particles = particles
+    }
 		for (let i = this.range[0]; i < this.range[1]; ++i) {
 			// Current particle
 			const p = this.particles[i]
@@ -522,4 +558,8 @@ $particles.Universe = class Universe {
 			console.log('')
 		}
 	}
+
+  getRange() {
+    return this.particles.slice(this.range[0], this.range[1])
+  }
 }

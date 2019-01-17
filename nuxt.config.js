@@ -93,6 +93,18 @@ module.exports = {
       //     exclude: /(node_modules)/
       //   })
       // }
+
+      // @see https://github.com/nuxt/nuxt.js/pull/3480#issuecomment-404150387
+      config.output.globalObject = "this"
+
+      // if (ctx.isClient) {
+      //   //Web-workers work in client mode only:
+      //   config.module.rules.push({
+      //     test: /\.worker\.js$/,
+      //     use: { loader:'worker-loader' },
+      //     exclude: /(node_modules)/
+      //   })
+      // }
     }
   }
 }
