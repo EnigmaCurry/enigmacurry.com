@@ -28,7 +28,7 @@ export default {
     particleSegments: {type: Number, default: 32},
     universeScale: {type: Number, default: 200},
     universeWrap: {type: Boolean, default: true},
-    universeInterval: {type: Number, default: 40},
+    universeInterval: {type: Number, default: 120},
     playlist: {type: Array, default: () => [
       {preset: "Stringy2", forceScale: 0.25, numParticles: 1000, sizePercentiles: {0:1}},
       {preset: "Stringy2", forceScale: 1, numParticles: 800, sizePercentiles: {0:1, 90:2}},
