@@ -13,7 +13,7 @@ import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
-import fragmentShader from 'raw-loader!~/assets/shaders/tunnel.fragment.glsl'
+import fragmentShader from 'raw-loader!~/assets/shaders/creation.fragment.glsl'
 import ShaderToyTex1 from '~/assets/img/texture/shadertoy1.jpg'
 import ShaderToyTex2 from '~/assets/img/texture/shadertoy2.jpg'
 
