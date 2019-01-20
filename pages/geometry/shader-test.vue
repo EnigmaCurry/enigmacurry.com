@@ -10,7 +10,5 @@ export default {
   layout: 'renderer',
   mixins: [ScrollbarHide],
   components: {ShaderTest},
-  created() {
-  },
 }
 </script>

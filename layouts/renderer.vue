@@ -1,5 +1,5 @@
 <template>
-  <g-renderer :showStats="showStats">
+  <g-renderer>
     <base-layout header music-player />
   </g-renderer>
 </template>
@@ -10,10 +10,5 @@ import BaseLayout from '~/layouts/base.vue'
 
 export default {
   components: {GRenderer, BaseLayout},
-  data() {
-    return {
-      showStats: process.env.NODE_ENV === 'development'
-    }
-  }
 }
 </script>

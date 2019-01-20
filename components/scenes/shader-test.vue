@@ -47,7 +47,8 @@ export default {
       clock: new Three.Clock()
     }
   },
-  mounted() {   
+  mounted() {
+    this.renderer.showStats = true
     //Wait for the renderer to report a size:
     let intervalID = setInterval(() => {
       let width = this.renderer.size.width

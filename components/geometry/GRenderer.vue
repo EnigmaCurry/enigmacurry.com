@@ -20,11 +20,9 @@
 <script>
 import * as Three from 'three'
 import Stats from "~/lib/stats"
+import uuid from 'uuid/v4'
 
 export default {
-  props: {
-    showStats: {type: Boolean, default: false},
-  },
   provide () {
     return {
       renderer: this,
@@ -37,15 +35,23 @@ export default {
     return {
       webGLRenderer,
       sceneData: [], // List of GScenes (Scene, cameras, currentCamera)
-      size: {width: 0, height: 0} //initialized in onResize
+      size: {width: 0, height: 0}, //initialized in onResize,
+      showStats: process.env.NODE_ENV === 'development2',
+      stats: new Stats(),
+      dom_id: `threejs-stats-${uuid()}`
+    }
+  },
+  watch: {
+    showStats: {
+      handler(v) {
+        console.log("Show stats? " + v)
+        this.createStats()
+      }
     }
   },
   created() {
     this.webGLRenderer.autoClear = false
-    if (this.showStats) {
-      this.stats = new Stats()
-      document.body.appendChild(this.stats.dom)      
-    }
+    this.createStats()
   },
   mounted() {
     this.$refs.renderer.appendChild(this.webGLRenderer.domElement)
@@ -93,15 +99,24 @@ export default {
         window.cancelAnimationFrame(this._animationRequestID)
       } else {
         this._animationRequestID = requestAnimationFrame(this.animate)
-        if (this.showStats) {
-          this.stats.begin()
-          this.render()
-          this.stats.end()
-        } else {
-          this.render()
+        this.stats.begin()
+        this.render()
+        this.stats.end()
+      }
+    },
+    createStats: function() {
+      const el = document.getElementById(this.dom_id)
+      if (this.showStats) {
+        if(!el) {
+          this.stats.dom.id = this.dom_id          
+          document.body.appendChild(this.stats.dom)
+        }
+      } else {
+        if(el) {
+          document.body.removeChild(this.stats.dom)
         }
       }
-    }
+    },
   },
 }
 </script>
