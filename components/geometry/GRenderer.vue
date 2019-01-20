@@ -14,6 +14,8 @@
   position: absolute;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 </style>
 
@@ -44,7 +46,6 @@ export default {
   watch: {
     showStats: {
       handler(v) {
-        console.log("Show stats? " + v)
         this.createStats()
       }
     }
@@ -64,7 +65,11 @@ export default {
       if (typeof(toSize) != "undefined") {
         this.size = {width: toSize.width, height: toSize.height}
       } else {
-        this.size = {width: this.$el.clientWidth, height: this.$el.clientHeight}
+        this.size = {width: this.$refs.renderer.clientWidth, height: this.$refs.renderer.clientHeight}
+        //Apply a max-width to the renderer if the user zooms their browser out:
+        if(window.devicePixelRatio < 1) {
+          this.size = {width: this.size.width * window.devicePixelRatio, height: this.size.height * window.devicePixelRatio}
+        }
       }
       this.webGLRenderer.setSize(this.size.width, this.size.height)
       //Resize all cameras in all scenes:
