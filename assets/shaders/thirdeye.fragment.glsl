@@ -79,19 +79,19 @@ vec4 diffraction2(void)
 
 vec4 forceFields(void)
 {
-  vec2 p = -1.0 + 2.0 * vUv;
-  p.y = 0.9 * (p.x / p.y);
-  p.x = 0.2 * (p.y / p.x);
-  float l = length(p) * (length(p) / 2.);
-  float t = sin(iGlobalTime) * cos(iGlobalTime); 
+  vec2 p = -2.75 * 0.1219 * cos(vUv*vUv);
+  p.y = 0.001 * (p.y / p.x);
+  p.x = 0.000002 * (p.x / p.y);
+  float l = length(p * 12.) * (length(p) / 44.);
+  float t = sin(iGlobalTime/444.);
 
   vec3 c;
   for(int i=0; i < 3; i++) {
-    t += 2.27;
-    vec2 a = p + p/l * cos(t) * acos(t/7.);
-    c[i] = .01/length( fract(0.5+a)-0.5 );
+    t += 3.1;
+    vec2 a = p/l/t + p/l * cos(t) * asin(t/10.);
+    c[i] = cos(a.x*t) - cos(4. / t);
   }
-  return vec4(c/l, 0.);
+  return vec4(((c/t*t)/(0.1)), 0.);
 }
 
 vec4 spinner(void)
