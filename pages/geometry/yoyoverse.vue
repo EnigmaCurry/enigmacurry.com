@@ -9,6 +9,6 @@ import YoYoVerse from '~/components/scenes/yoyoverse.vue'
 export default {
   layout: 'renderer',
   mixins: [ScrollbarHide],
-  components: {SceneTest2}
+  components: {YoYoVerse}
 }
 </script>
