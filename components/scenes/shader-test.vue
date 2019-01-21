@@ -24,7 +24,7 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 0.5},
-    numScenes: {type: Number, default: 10},
+    numScenes: {type: Number, default: 9},
   },
   data() {
     const textureLoader = new Three.TextureLoader()

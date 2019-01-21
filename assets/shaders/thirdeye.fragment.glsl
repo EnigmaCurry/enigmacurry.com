@@ -208,16 +208,14 @@ void main(void) {
   } else if (scene == 3) {
     gl_FragColor = forceFields();
   } else if( scene == 4) {
-    gl_FragColor = spinner();
-  } else if( scene == 5) {
     gl_FragColor = retrograde();
-  } else if( scene == 6) {
+  } else if( scene == 5) {
     gl_FragColor = stagelights();
-  } else if( scene == 7) {
+  } else if( scene == 6) {
     gl_FragColor = dicewheel();
-  } else if( scene == 8) {
+  } else if( scene == 7) {
     gl_FragColor = pinwheel();
-  } else if( scene == 9) {
+  } else if( scene == 8) {
     gl_FragColor = transform();
   }
 }
