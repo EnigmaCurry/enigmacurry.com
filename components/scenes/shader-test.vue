@@ -46,7 +46,8 @@ export default {
       scene: new Three.Scene(),
       tUniform,
       shaderMat,
-      clock: new Three.Clock()
+      clock: new Three.Clock(),
+      shaderMesh: null,
     }
   },
   created() {
@@ -60,20 +61,36 @@ export default {
       let height = this.renderer.size.height
       if (width > 0 && height > 0) {
         clearInterval(intervalID)
-        const tObject = new Three.Mesh( new Three.PlaneGeometry( width/height, 1, 1, 1 ), this.shaderMat)
-        this.scene.add(tObject)
+        this.recreateShaderMesh()
+        window.addEventListener('resize', this.recreateShaderMesh)
       }
     }, 100)
     this.visibilityInterval = Visibility.every(30 * 1000, () => {
       this.tUniform.scene.value = (this.tUniform.scene.value + 1) % this.numScenes
-   })
+    })
   },
   beforeDestroy() {
     Visibility.stop(this.visibilityInterval)
+    window.removeEventListener('resize', this.recreateShaderMesh)
   },
   methods: {
     animate(tt) {
       this.tUniform.iGlobalTime.value += this.clock.getDelta()
+    },
+    recreateShaderMesh() {
+      let width = this.renderer.size.width
+      let height = this.renderer.size.height
+      let pWidth = width/height
+      let pHeight = 1
+      if (height > width) {
+        pWidth = 1
+        pHeight = height/width
+      }
+      if (this.shaderMesh != null) {
+        this.scene.remove(this.shaderMesh);
+      }
+      this.shaderMesh = new Three.Mesh( new Three.PlaneGeometry( pWidth, pHeight, 1, 1 ), this.shaderMat)
+      this.scene.add(this.shaderMesh)
     }
   }
 }

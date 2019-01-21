@@ -67,7 +67,7 @@ export default {
       } else {
         this.size = {width: this.$refs.renderer.clientWidth, height: this.$refs.renderer.clientHeight}
         //Apply a max-width to the renderer if the user zooms their browser out:
-        if(window.devicePixelRatio < 0.5) {
+        if(window.devicePixelRatio < 1) {
           this.size = {width: this.size.width * window.devicePixelRatio, height: this.size.height * window.devicePixelRatio}
         }
       }
