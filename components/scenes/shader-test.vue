@@ -64,7 +64,7 @@ export default {
         this.scene.add(tObject)
       }
     }, 100)
-    this.visibilityInterval = Visibility.every(10 * 1000, () => {
+    this.visibilityInterval = Visibility.every(30 * 1000, () => {
       this.tUniform.scene.value = (this.tUniform.scene.value + 1) % this.numScenes
    })
   },

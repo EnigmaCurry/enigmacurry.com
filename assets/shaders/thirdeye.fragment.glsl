@@ -204,8 +204,6 @@ void main(void) {
   } else if (scene == 1) {
     gl_FragColor = waters();
   } else if (scene == 2) {
-    gl_FragColor = diffraction();
-  } else if (scene == 2) {
     gl_FragColor = diffraction2();
   } else if (scene == 3) {
     gl_FragColor = forceFields();
