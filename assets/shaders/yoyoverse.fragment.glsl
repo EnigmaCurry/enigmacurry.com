@@ -27,7 +27,7 @@ vec4 yoyoverse2(void) {
   p.y = 0.4 * (p.x / p.y);
   p.x = 0.1 * (p.y / p.x);
   float l = length(p);
-  float t = atan(cos(iGlobalTime * 0.05) * 2.) * 1.5;
+  float t = atan(cos(iGlobalTime * 0.05) * 1.01) * 1.5;
 
   vec3 c;
   for(int i=0; i < 3; i++) {
@@ -43,7 +43,7 @@ vec4 yoyoverse3(void) {
   p.y = 3. * (p.x / p.y);
   p.x = 0.005 * (p.y / p.x);
   float l = length(p);
-  float t = atan(cos(iGlobalTime * 0.05) * 2.) * 1.5;
+  float t = atan(cos(iGlobalTime * 0.05) * 1.01) * 1.5;
 
   vec3 c;
   for(int i=0; i < 3; i++) {
@@ -59,7 +59,7 @@ vec4 yoyoverse4(void) {
   p.y = 3. * (p.x / p.y);
   p.x = 0.005 * (p.x / p.y);
   float l = length(p);
-  float t = atan(cos(iGlobalTime * 0.05) * 2.) * 1.5;
+  float t = atan(cos(iGlobalTime * 0.05) * 1.01) * 1.5;
 
   vec3 c;
   for(int i=0; i < 3; i++) {
