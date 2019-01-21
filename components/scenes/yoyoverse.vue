@@ -30,7 +30,7 @@ export default {
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
       scene: {type: "i", value: 0},
-      iGlobalTime: {type: 'f', value: 0.1},
+      iGlobalTime: {type: 'f', value: 0},
       iChannel0: {type: 't', value: textureLoader.load(ShaderToyTex1)},
       iChannel1: {type: 't', value: textureLoader.load(ShaderToyTex2)}
     }
