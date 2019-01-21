@@ -13,7 +13,7 @@ import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import Visibility from 'visibilityjs'
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
-import fragmentShader from 'raw-loader!~/assets/shaders/yoyoverse.fragment.glsl'
+import fragmentShader from 'raw-loader!~/assets/shaders/thirdeye.2.fragment.glsl'
 import ShaderToyTex1 from '~/assets/img/texture/shadertoy1.jpg'
 import ShaderToyTex2 from '~/assets/img/texture/shadertoy2.jpg'
 

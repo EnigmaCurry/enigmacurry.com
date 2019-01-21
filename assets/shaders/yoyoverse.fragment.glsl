@@ -88,16 +88,16 @@ vec4 yoyoverse5(void) {
 
 void main(void)
 {
-  float framemod = mod(iGlobalTime, 50.);
-  if(framemod < 10.) {
+  float framemod = mod(iGlobalTime, 500.);
+  if(framemod < 100.) {
     gl_FragColor = yoyoverse();
-  } else if (framemod < 20.) {
+  } else if (framemod < 200.) {
     gl_FragColor = yoyoverse2();
-  } else if (framemod < 30.) {
+  } else if (framemod < 300.) {
     gl_FragColor = yoyoverse3();
-  } else if (framemod < 40.) {
+  } else if (framemod < 400.) {
     gl_FragColor = yoyoverse4();
-  } else if (framemod < 50.) {
+  } else if (framemod < 500.) {
     gl_FragColor = yoyoverse5();
   } 
 }
