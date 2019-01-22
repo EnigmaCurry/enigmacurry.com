@@ -86,9 +86,73 @@ vec4 yoyoverse5(void) {
   return vec4(c/l, 0.);
 }
 
+vec4 yoyoverse6(void) {
+  vec2 p = -4.0 + 8.0 * vUv;
+  p.y = 3. * (p.x / p.y);
+  p.x = 0.005 * (p.x / p.y);
+  float l = length(p);
+  float t = tan(cos(iGlobalTime * 0.05));
+
+  vec3 c;
+  for(int i=0; i < 3; i++) {
+    t += 0.5 * cos(t);
+    vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
+    c[i] = 0.1/length( 9. * fract(0.95+a) - 0.15);
+  }
+  return vec4(c/l, 0.);
+}
+
+vec4 yoyoverse7(void) {
+  vec2 p = -4.0 + 8.0 * vUv;
+  p.y = 3. * (p.x / p.y);
+  p.x = 0.005 * (p.x / p.y);
+  float l = length(p);
+  float t = tan(cos(iGlobalTime * 0.05));
+
+  vec3 c;
+  for(int i=0; i < 3; i++) {
+    t += 0.5 * cos(t);
+    vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
+    c[i] = 0.02/length( 0.1 * fract(0.95+a) - 0.15);
+  }
+  return vec4(c/l, 0.);
+}
+
+vec4 yoyoverse8(void) {
+  vec2 p = -4.0 + 8.0 * vUv;
+  p.y = 3. * (p.x / p.y);
+  p.x = 0.005 * (p.x / p.y);
+  float l = length(p);
+  float t = tan(cos(iGlobalTime * 0.05));
+
+  vec3 c;
+  for(int i=0; i < 3; i++) {
+    t += 0.5 * cos(t);
+    vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
+    c[i] = 0.02/length( 0.1 * fract(0.95+a) - 0.15);
+  }
+  return vec4(c/l, 0.);
+}
+
+vec4 yoyoverseOctave(void) {
+  vec2 p = -4.0 + 8.0 * vUv;
+  p.y = 3. * (p.x / p.y);
+  p.x = 0.005 * (p.x / p.y);
+  float l = length(p);
+  float t = tan(cos(iGlobalTime * 0.05));
+
+  vec3 c;
+  for(int i=0; i < 3; i++) {
+    t += 0.015 * cos(t);
+    vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
+    c[i] = 0.02/length( 0.1 * fract(0.95+a) - 0.15);
+  }
+  return vec4(c/l, 0.);
+}
+
 void main(void)
 {
-  float framemod = mod(iGlobalTime, 400.);
+  float framemod = mod(iGlobalTime, 700.);
   if(framemod < 100.) {
     gl_FragColor = yoyoverse2();
   } else if (framemod < 200.) {
@@ -97,5 +161,11 @@ void main(void)
     gl_FragColor = yoyoverse4();
   } else if (framemod < 400.) {
     gl_FragColor = yoyoverse5();
-  } 
+  } else if (framemod < 500.) {
+    gl_FragColor = yoyoverse6();
+  } else if (framemod < 600.) {
+    gl_FragColor = yoyoverse7();
+  } else if (framemod < 700.) {
+    gl_FragColor = yoyoverseOctave();
+  }
 }
