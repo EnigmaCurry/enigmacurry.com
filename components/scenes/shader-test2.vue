@@ -13,7 +13,7 @@ import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import Visibility from 'visibilityjs'
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
-import fragmentShader from 'raw-loader!~/assets/shaders/thirdeye.2.fragment.glsl'
+import fragmentShader from 'raw-loader!~/assets/shaders/flamemarch.fragment.glsl'
 import ShaderToyTex1 from '~/assets/img/texture/shadertoy1.jpg'
 import ShaderToyTex2 from '~/assets/img/texture/shadertoy2.jpg'
 
@@ -25,7 +25,7 @@ export default {
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 0.5},
     numScenes: {type: Number, default: 9},
-    downscale: {type: Number, default: 4},    
+    downscale: {type: Number, default: 8},    
   },
   data() {
     const textureLoader = new Three.TextureLoader()
