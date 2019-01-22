@@ -6,7 +6,6 @@
     <v-app dark id="app">
       <v-navigation-drawer
         v-model="drawerShown"
-        mini-variant
         hide-overlay
         clipped
         temporary
