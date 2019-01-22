@@ -67,6 +67,10 @@ export default {
         this.size = {width: toSize.width, height: toSize.height}
       } else {
         this.size = {width: this.$refs.renderer.clientWidth, height: this.$refs.renderer.clientHeight}
+        //Apply a max-width to the renderer if the user zooms their browser out:
+        if(window.devicePixelRatio < 1) {
+          this.size = {width: this.size.width * window.devicePixelRatio, height: this.size.height * window.devicePixelRatio}
+        }
       }
       this.webGLRenderer.setSize(this.size.width, this.size.height)
       //Always render the screen resolution / downscale, not the browser zoom level:
