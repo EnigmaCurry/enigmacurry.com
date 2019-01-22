@@ -57,7 +57,7 @@ export default {
   },
   mounted() {
     this.renderer.onResize()
-    this.renderer.showStats = false
+    //this.renderer.showStats = true
     //Wait for the renderer to report a size:
     let intervalID = setInterval(() => {
       let width = this.renderer.size.width

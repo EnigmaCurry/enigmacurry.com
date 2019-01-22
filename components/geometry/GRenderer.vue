@@ -38,7 +38,7 @@ export default {
       webGLRenderer,
       sceneData: [], // List of GScenes (Scene, cameras, currentCamera)
       size: {width: 0, height: 0}, //initialized in onResize,
-      showStats: process.env.NODE_ENV === 'development2',
+      showStats: process.env.NODE_ENV === 'development',
       stats: new Stats(),
       dom_id: `threejs-stats-${uuid()}`,
       downscale: 1
