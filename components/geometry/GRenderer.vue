@@ -40,7 +40,8 @@ export default {
       size: {width: 0, height: 0}, //initialized in onResize,
       showStats: process.env.NODE_ENV === 'development2',
       stats: new Stats(),
-      dom_id: `threejs-stats-${uuid()}`
+      dom_id: `threejs-stats-${uuid()}`,
+      downscale: 1
     }
   },
   watch: {
@@ -66,12 +67,10 @@ export default {
         this.size = {width: toSize.width, height: toSize.height}
       } else {
         this.size = {width: this.$refs.renderer.clientWidth, height: this.$refs.renderer.clientHeight}
-        //Apply a max-width to the renderer if the user zooms their browser out:
-        if(window.devicePixelRatio < 1) {
-          this.size = {width: this.size.width * window.devicePixelRatio, height: this.size.height * window.devicePixelRatio}
-        }
       }
       this.webGLRenderer.setSize(this.size.width, this.size.height)
+      //Always render the screen resolution / downscale, not the browser zoom level:
+      this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
       //Resize all cameras in all scenes:
       for (let sd=0; sd < this.sceneData.length; sd++){
         const cameras = this.sceneData[sd].cameras
