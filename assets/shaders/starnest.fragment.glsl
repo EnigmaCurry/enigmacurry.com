@@ -28,18 +28,19 @@ vec4 starnest(void)
 	vec3 dir=vec3(uv*zoom,22.);
 	float time=iGlobalTime*speed+.25;
 
+  float modt = abs(sin(time)/3.);
 	//mouse rotation
 	//float a1=.5+iMouse.x/iResolution.x*2.;
-  float a1 = abs(sin(time)) * uv.y * dir.x/12.;
+  float a1 = modt * uv.y * dir.x/12.;
 	//float a2=.8+iMouse.y/iResolution.y*2.;
-  float a2 = abs(sin(time)) * uv.x * dir.y/2.;
+  float a2 = modt * uv.x * dir.y/2.;
 	mat2 rot1=mat2(cos(a1),sin(a1/time*time),-tan(a1),acos(a1));
 	mat2 rot2=mat2(atan(a2*time),sin(a2),-cos(pow(a2,12.)) + 0.2,cos(pow(a2,9.)));
 	dir.xz*=rot1;
 	dir.xy*=rot2;
 	vec3 from=vec3(1.,.5,0.5);
 	from+=vec3(time*2.,time,-2.);
-	from.xz*=rot1;
+	from.xz*=rot1 * rot2;
 	from.xy*=rot2;
 
 	//volumetric rendering
