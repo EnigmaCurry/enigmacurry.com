@@ -187,6 +187,7 @@ export default {
         { img: require('~/assets/img/icons/circumferencia.png'), title: 'Circumferencia', to: '/geometry/circumferencia' },
         { img: require('~/assets/img/icons/particle-life.png'), title: 'Particle Life', to: '/geometry/particle-life' },
         { img: require('~/assets/img/icons/yoyo.png'), title: 'yoyoverse', to: '/geometry/yoyoverse' },
+        { img: require('~/assets/img/icons/pingpong.png'), title: 'pingpongverse', to: '/geometry/pingpongverse' },
      ],
     }
   },
