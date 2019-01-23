@@ -14,6 +14,11 @@ const vec3 vd = vec3( -1.0, -1.0, -0.57735 );
 
 varying vec2 vUv;
 
+float remap(float original_value, float original_min, float original_max, float new_min, float new_max)
+{
+  return new_min + (((original_value - original_min) / (original_max - original_min)) * (new_max - new_min));
+}
+
 // return distance and address
 vec2 map( vec3 p )
 {
@@ -25,12 +30,12 @@ vec2 map( vec3 p )
   for( int i=0; i<8; i++ )
     {
 	    float d, t;
-      d = dot(p-va,p-va);              v=va; dm=d; t=0.0;
+      d = dot(p-va,p-va);              v=va; dm=d; t=2.0;
       d = dot(p-vb,p-vb); if( d<dm ) { v=vb; dm=d; t=1.0; }
       d = dot(p-vc,p-vc); if( d<dm ) { v=vc; dm=d; t=4.0; }
       d = dot(p-vd,p-vd); if( d<dm ) { v=vd; dm=d; t=16.0; }
-      p = v + 2.14*(p - v); r*= 2.0;
-      a = t + 16.0*a; s*= 4.0;
+      p = v + remap(abs(sin(iGlobalTime / 12.)), 0., 1., 2., 2.1) *(p - v); r*= 2.0;
+      a = t + 16.0*a; s*= remap(abs(tan(iGlobalTime / 4.)) * 13.,0.,50.,1.,4.);
     }
 	return vec2( (sqrt(dm)-1.0)/r, a/s );
 }
