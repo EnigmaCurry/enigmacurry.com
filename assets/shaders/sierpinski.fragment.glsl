@@ -17,19 +17,19 @@ varying vec2 vUv;
 // return distance and address
 vec2 map( vec3 p )
 {
-	float a = 2.0;
-  float s = 99. * (sin(iGlobalTime) / .00002);
-  float r = 4.;
+	float a = 1.0;
+  float s = (sin(iGlobalTime / 4444.)) * sin(iGlobalTime/222210.) - pow(cos(iGlobalTime/8222.),2.);
+  float r = 1.;
   float dm;
   vec3 v;
-  for( int i=0; i<9; i++ )
+  for( int i=0; i<8; i++ )
     {
 	    float d, t;
       d = dot(p-va,p-va);              v=va; dm=d; t=0.0;
       d = dot(p-vb,p-vb); if( d<dm ) { v=vb; dm=d; t=1.0; }
       d = dot(p-vc,p-vc); if( d<dm ) { v=vc; dm=d; t=4.0; }
       d = dot(p-vd,p-vd); if( d<dm ) { v=vd; dm=d; t=16.0; }
-      p = v + 2.1*(p - v); r*= 2.0;
+      p = v + 2.15*(p - v); r*= 2.0;
       a = t + 16.0*a; s*= 4.0;
     }
 	return vec2( (sqrt(dm)-1.0)/r, a/s );
@@ -97,8 +97,7 @@ vec3 render( in vec3 ro, in vec3 rd )
       // geometry
       vec3 pos = ro + tm.x*rd;
       vec3 nor = calcNormal( pos );
-      vec3 maa = vec3( 0.0 );
-      maa = 0.5 + 0.5*cos( 6.2831*tm.z + vec3(0.0,1.0,2.0) );
+      vec3 maa = 0.2 + 0.15*tan( 6.2831*tm.z + vec3(0.0,1.0,2.0) );
 
       float occ = calcOcclusion( pos, nor );
 
