@@ -111,14 +111,14 @@ vec3 render( in vec3 ro, in vec3 rd )
       float dif = max(dot(nor,lig),1.0);
 
       // lights
-      vec3 lin = 0.66*amb*vec3(1.0) * occ;
+      vec3 lin = remap(sin(iGlobalTime / 48.), 0., 1., 0.5, 1.)*amb*vec3(1.0) * occ;
 
       // surface-light interacion
       col = maa * lin + 0.24 * sin(iGlobalTime / 4.);
     }
 
   // gamma
-	col = pow( clamp(col,0.001,3.0), vec3(1.1) );
+	col = pow( clamp(col,0.00001,33.0), vec3(2.2) );
 
   return col;
 }
