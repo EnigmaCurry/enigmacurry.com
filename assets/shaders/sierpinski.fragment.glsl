@@ -32,7 +32,7 @@ vec2 map( vec3 p )
       p = v + 2.15*(p - v); r*= 2.0;
       a = t + 16.0*a; s*= 4.0;
     }
-	return vec2( (sqrt(dm)-1.0)/r, a/s );
+	return vec2( (sqrt(dm*1.2)-1.0)/r, a/s );
 }
 
 const float precis = 0.0002;
@@ -65,20 +65,20 @@ vec3 calcNormal( in vec3 pos )
 {
   vec3 eps = vec3(precis,0.0,0.0);
 	return normalize( vec3(
-                         map(pos+eps.xyy).x - map(pos-eps.xyy).x,
-                         map(pos+eps.yxy).x - map(pos-eps.yxy).x,
-                         map(pos+eps.yyx).x - map(pos-eps.yyx).x ) );
+                         map(pos+eps.xyy).x * map(pos-eps.xyy).x,
+                         map(pos+eps.yxy).x * map(pos-eps.yxy).x,
+                         map(pos+eps.yyx).x * map(pos-eps.yyx).x ) );
 }
 
 float calcOcclusion( in vec3 pos, in vec3 nor )
 {
 	float ao = 0.0;
   float sca = 1.0;
-  for( int i=0; i<8; i++ )
+  for( int i=0; i<9; i++ )
     {
-      float h = 0.02 + 0.45*pow(float(i)/7.0,1.5);
+      float h = 0.01 + 0.45*pow(float(i)/7.0,1.5);
       float d = map( pos + pow(h,2.)*nor ).x;
-      ao += -(d-h)*sca*cos(iGlobalTime*2.);
+      ao += -(d-h)*sca*cos(iGlobalTime / 2.);
       sca *= 0.95;
     }
   return clamp( 1.0 - 0.8*ao, 0.0, 1.0 );
@@ -97,7 +97,7 @@ vec3 render( in vec3 ro, in vec3 rd )
       // geometry
       vec3 pos = ro + tm.x*rd;
       vec3 nor = calcNormal( pos );
-      vec3 maa = 0.2 + 0.15*tan( 6.2831*tm.z + vec3(0.0,1.0,2.0) );
+      vec3 maa = 0.2 + 0.15*tan( 6.2831*tm.z + vec3(0.0,cos(iGlobalTime),sin(iGlobalTime)) );
 
       float occ = calcOcclusion( pos, nor );
 
