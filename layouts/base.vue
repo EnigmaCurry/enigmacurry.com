@@ -150,6 +150,9 @@ div#app {
   padding-right: 10px;
   max-width: 200px;
 }
+.v-navigation-drawer > .v-list .v-list__tile--active .v-list__tile__title {
+  color: #3abafa;
+}
 </style>
 
 <script>
