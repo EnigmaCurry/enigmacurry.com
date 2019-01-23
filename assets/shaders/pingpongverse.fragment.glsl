@@ -218,17 +218,17 @@ vec4 pingpong4(in float time, in float modt)
 
 
 void main(void) {
-	float time=iGlobalTime*speed;
+	float time=(iGlobalTime)*speed;
   float modt = abs(sin(time)/3.);
-
-  float framemod = mod(iGlobalTime, 420.);
-  if(framemod < 105.) {
+  float slen = 104.5; //scene length
+  float framemod = mod(iGlobalTime, slen * 4.);
+  if(framemod < slen * 1.) {
     gl_FragColor = pingpong1(time, modt);
-  } else if (framemod < 210.) {
+  } else if (framemod < slen * 2.) {
     gl_FragColor = pingpong2(time, modt);
-  } else if (framemod < 315.) {
+  } else if (framemod < slen * 3.) {
     gl_FragColor = pingpong3(time, modt);
-  } else if (framemod < 420.) {
+  } else if (framemod < slen * 4.) {
     gl_FragColor = pingpong4(time, modt);
   }
 }
