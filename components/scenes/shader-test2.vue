@@ -21,11 +21,10 @@ export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
   props: {
-    animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 0.5},
     numScenes: {type: Number, default: 9},
-    downscale: {type: Number, default: 2},
+    downscale: {type: Number, default: 3.},
   },
   data() {
     const textureLoader = new Three.TextureLoader()

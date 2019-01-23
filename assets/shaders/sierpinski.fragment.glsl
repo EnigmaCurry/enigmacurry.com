@@ -18,7 +18,7 @@ varying vec2 vUv;
 vec2 map( vec3 p )
 {
 	float a = 1.0;
-  float s = (sin(iGlobalTime / 4444.)) * sin(iGlobalTime/222210.) - pow(cos(iGlobalTime/8222.),2.);
+  float s = (sin(iGlobalTime / 4444.)) * sin(iGlobalTime/222210.) - pow(cos(iGlobalTime/8222.),3.);
   float r = 1.;
   float dm;
   vec3 v;
@@ -29,13 +29,13 @@ vec2 map( vec3 p )
       d = dot(p-vb,p-vb); if( d<dm ) { v=vb; dm=d; t=1.0; }
       d = dot(p-vc,p-vc); if( d<dm ) { v=vc; dm=d; t=4.0; }
       d = dot(p-vd,p-vd); if( d<dm ) { v=vd; dm=d; t=16.0; }
-      p = v + 2.15*(p - v); r*= 2.0;
+      p = v + 2.14*(p - v); r*= 2.0;
       a = t + 16.0*a; s*= 4.0;
     }
-	return vec2( (sqrt(dm*1.2)-1.0)/r, a/s );
+	return vec2( (sqrt(dm)-1.0)/r, a/s );
 }
 
-const float precis = 0.0002;
+const float precis = 0.00002;
 
 vec3 intersect( in vec3 ro, in vec3 rd )
 {
@@ -44,15 +44,15 @@ vec3 intersect( in vec3 ro, in vec3 rd )
 
 	// sierpinski
   float h = 1.0;
-  float t = 0.5;
+  float t = 0.;
 	float m = 0.0;
   vec2 r;
 	for( int i=0; i<100; i++ )
     {
-	    r = map( ro+rd*t );
+	    r = map( ro+rd*t ) * 1.2;
       if( r.x<precis || t>maxd ) break;
-      m = r.y;
-      t += r.x;
+      m = r.y * 2.;
+      t += r.x * 1.02;
     }
 
   if( t<maxd && r.x<precis )
@@ -97,23 +97,23 @@ vec3 render( in vec3 ro, in vec3 rd )
       // geometry
       vec3 pos = ro + tm.x*rd;
       vec3 nor = calcNormal( pos );
-      vec3 maa = 0.2 + 0.15*tan( 6.2831*tm.z + vec3(0.0,cos(iGlobalTime),sin(iGlobalTime)) );
+      vec3 maa = 0.4 + 0.15*tan( 6.2831*tm.z + vec3(0.0,cos(iGlobalTime),atan(iGlobalTime)) );
 
       float occ = calcOcclusion( pos, nor );
 
       // lighting
-      float amb = (0.5 + 0.5*nor.y);
-      float dif = max(dot(nor,lig),0.0);
+      float amb = (1.5 + 0.5*nor.y);
+      float dif = max(dot(nor,lig),1.0);
 
       // lights
-      vec3 lin = 1.5*amb*vec3(1.0) * occ;
+      vec3 lin = 0.66*amb*vec3(1.0) * occ;
 
       // surface-light interacion
-      col = maa * lin;
+      col = maa * lin + 0.24 * sin(iGlobalTime / 4.);
     }
 
   // gamma
-	col = pow( clamp(col,0.0,1.0), vec3(0.45) );
+	col = pow( clamp(col,0.001,3.0), vec3(1.1) );
 
   return col;
 }
@@ -122,7 +122,7 @@ void main()
 	vec2 q = vUv;
   vec2 p = -1.0 + 2.0 * q;
   p.x *= iResolution.x/iResolution.y;
-  vec2 m = vec2(0.35);
+  vec2 m = vec2(abs(sin(iGlobalTime / 33.)));
   //if( iMouse.z>0.0 ) m = iMouse.xy/iResolution.xy;
 
   //-----------------------------------------------------
@@ -130,7 +130,7 @@ void main()
   //-----------------------------------------------------
 	float an = 3.2 + 0.5*iGlobalTime - 6.2831*(m.x-0.5);
 
-	vec3 ro = vec3(1.5*sin(an),0.0,2.5*cos(an));
+	vec3 ro = vec3(2.5*sin(an/3.),sin(an / 4.),2.5*cos(an));
   vec3 ta = vec3(0.0,-0.5,0.0);
   vec3 ww = normalize( ta - ro );
   vec3 uu = normalize( cross(ww,vec3(0.0,1.0,0.0) ) );
