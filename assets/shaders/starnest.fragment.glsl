@@ -20,6 +20,11 @@ uniform vec2 iResolution;
 uniform float iGlobalTime;
 varying vec2 vUv;
 
+float remap(float original_value, float original_min, float original_max, float new_min, float new_max)
+{
+  return new_min + (((original_value - original_min) / (original_max - original_min)) * (new_max - new_min));
+}
+
 vec4 starnest(void)
 {
 	//get coords and direction
@@ -64,7 +69,8 @@ vec4 starnest(void)
 		fade*=distfading; // distance fading
 		s+=stepsize;
 	}
-	v=mix(vec3(length(v)),v,saturation * sin(time*2.)); //color adjust
+  float q = sin(modt * 22.);
+	v=mix(vec3(length(v)),v,saturation * q); //color adjust
 	return vec4(v*.01,1.);
 }
 
