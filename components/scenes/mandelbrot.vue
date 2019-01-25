@@ -41,14 +41,18 @@ export default {
       side: Three.DoubleSide
     } )
     const zoomList = [
-      /// Scene 1 - Zoom in 
+      /// Sceme 1 - Long permiter pan
+      {x: 0.250, y:0, zoom: 1090, colt:9, duration: 1},
+      {x: 0.260, y:0.002, zoom: 1, colt: 3, duration: 60},
+      /// Scene 2 - Long y axis pan
       {x: 0, y:0, zoom: 0.16, colt: 3, duration: 25},
       {x: 0, y:0, zoom: 0.9, colt: 33, duration: 5},
       {x: 0, y:0.818, zoom: 0.9, colt: 33, duration: 5},
       {x: 0, y:0.818, zoom: 25, colt: 33, duration: 50},
       {x: 0, y:0.818, zoom: 250, colt: 33, duration: 50},
-      {x: 0, y:0.681, zoom: 150, colt: 333, duration: 150},
-      /// Scene 2 - Long x axis pan
+      {x: 0, y:0.818, zoom: 590, colt: 33, duration: 50},
+      {x: 0, y:0.720, zoom: 150, colt: 333, duration: 150},
+      /// Scene 3 - Long x axis pan
       {x: 0, y:0, zoom: 0.16, colt: 3, duration: 25},
       {x: 0, y:0, zoom: 0.9, colt: 33, duration: 5},
       {x: -1.75, y: 0, zoom: 1.6, colt: 333, duration: 2},
