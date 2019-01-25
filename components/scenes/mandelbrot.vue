@@ -45,7 +45,7 @@ export default {
       {x: 0, y:0, zoom: 0.9, colt: 33, duration: 5},
       {x: -1.75, y: 0, zoom: 1.6, colt: 333, duration: 2},
       {x: -1.75, y: 0, zoom: 445.6, colt: 333, duration: 40},
-      {x: -1.45, y: 0, zoom: 45.6, colt: 33, duration: 300},
+      {x: -1.45, y: 0, zoom: 45.6, colt: 33, duration: 600},
       {x: -1.75, y: 0, zoom: 1.6, colt: 333, duration: 40},
     ]
     return {
