@@ -30,6 +30,9 @@ export default {
       scene: {type: "i", value: 0},
       iGlobalTime: {type: 'f', value: 0.1},
       iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
+      center: {type: 'v2', value: new Three.Vector2(-1.344662847231080, -0.40057895942731) },
+      zoom: {type: 'f', value: 0.1 },
+      tmod: {type: 'f', value: 3},
     }
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
