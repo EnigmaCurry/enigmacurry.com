@@ -24,10 +24,10 @@ vec4 colmod1 (float iter, float t) {
   }
 }
 
-vec4 mandelbrot(vec4 area, float t) {
+vec4 mandelbrot(vec2 center, float zoom, float t) {
   vec2 p = vUv - 0.5;
   p.x *= iResolution.x / iResolution.y;
-  vec2 c = vec2((area.z+area.x)/2.,(area.w+area.y)/2.0) + p  / distance(area.xy, area.zw);
+  vec2 c = center + p  / zoom;
 
   vec2 z;
   float iter;
@@ -48,10 +48,6 @@ void main(void)
   // center - the the coordinates of the center of focus
   // zoom - factor of zoom
   // colt - factor of time for color changes
-  vec4 area = vec4((-1. + center.x)*zoom,
-                   (-1. + center.y)*zoom,
-                   center.x*zoom,
-                   center.y*zoom);
-  gl_FragColor = mandelbrot(area, iGlobalTime * colt);
+  gl_FragColor = mandelbrot(center, zoom, iGlobalTime * colt);
 }
 

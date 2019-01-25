@@ -41,9 +41,12 @@ export default {
       side: Three.DoubleSide
     } )
     const zoomList = [
-      {x: 0, y:0, zoom: 0.16, colt: 933},
-      {x: -0.85, y:0.5, zoom: 0.9, colt: 33},
-      {x: 0.18, y: 0.5, zoom: 4.1, colt: 33},
+      {x: 0, y:0, zoom: 0.16, colt: 3, duration: 25},
+      {x: 0, y:0, zoom: 0.9, colt: 33, duration: 5},
+      {x: -1.75, y: 0, zoom: 1.6, colt: 333, duration: 2},
+      {x: -1.75, y: 0, zoom: 445.6, colt: 333, duration: 40},
+      {x: -1.45, y: 0, zoom: 45.6, colt: 33, duration: 300},
+      {x: -1.75, y: 0, zoom: 1.6, colt: 333, duration: 40},
     ]
     return {
       scene: new Three.Scene(),
@@ -54,7 +57,9 @@ export default {
       center,
       zoom,
       colt,
-      zoomList
+      zoomList,
+      tmod: 1,
+      tweenGroup: new TWEEN.Group()
     }
   },
   watch: {
@@ -75,12 +80,10 @@ export default {
     this.center.y = this.zoomList[0].y
     this.zoom = this.zoomList[0].zoom
     this.colt = this.zoomList[0].colt
-    this.newTravelInterval(() => {
-      const cb = () => {
-        this.newTravelInterval(cb)
-      }
-      cb()
-    })
+    const cb = () => {
+      this.newTravelInterval(cb)
+    }
+    this.newTravelInterval(cb)
   },
   mounted() {
     this.renderer.onResize()
@@ -97,6 +100,7 @@ export default {
     }, 100)
   },
   beforeDestroy() {
+    this.tweenGroup.removeAll()
     Visibility.stop(this.visibilityInterval)
     window.removeEventListener('resize', this.recreateShaderMesh)
     this.renderer.downscale /= this.downscale    
@@ -104,16 +108,16 @@ export default {
   methods: {
     animate(tt) {
       const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 222
-      TWEEN.update()
+      this.tweenGroup.update()
     },
     newTravelInterval(callback) {
-      console.log("New Travel Interval")
-      const settings = {x: this.center.x, y: this.center.y, zoom: this.zoom, colt: this.colt}
+      const settings = Object.assign({}, this.zoomList[0])
       this.zoomList.push(this.zoomList.shift())
       const zl = this.zoomList[0]
-      const tween = new TWEEN.Tween(settings)
-            .to(zl, 10000)
-            .easing(TWEEN.Easing.Quadratic.Out)
+      console.log("New Travel Interval", zl.duration, "x=",zl.x,"y=",zl.y)
+      const tween = new TWEEN.Tween(settings, this.tweenGroup)
+            .to(zl, zl.duration * 1000)
+            .easing(TWEEN.Easing.Quadratic.InOut)
             .onUpdate(() => {
               this.center.x = settings.x
               this.center.y = settings.y
