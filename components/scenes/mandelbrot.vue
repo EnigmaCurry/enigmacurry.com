@@ -20,7 +20,7 @@ export default {
   inject: ['renderer'],
   props: {
     showGrid: {type: Boolean, default: false},
-    downscale: {type: Number, default: 1.},
+    downscale: {type: Number, default: 2.},
   },
   data() {
     const center = new Three.Vector2(0,0)

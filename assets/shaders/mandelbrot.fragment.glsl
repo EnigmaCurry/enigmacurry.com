@@ -24,6 +24,39 @@ vec4 colmod1 (float iter, float t) {
   }
 }
 
+vec4 colmod2 (float iter, float t) {
+  float col = iter / iterLimit;
+  vec2 p = vUv - 0.5;
+  if (col > 0.99) {
+    return vec4(cos(t / p.x) * 0.15 * p.y,
+                sin(t / p.x) * 0.15 * p.y,
+                acos(t / p.x) * 0.15 * p.y,
+                1.0);
+  } else {
+    return vec4(col * 0.00001 + cos(t /33. * iter) + 0.15 * p.x,
+                col * 0.00002 + cos(t /44. * iter) + 0.15 * p.x,
+                col * 0.00005 + tan(t / 55. + iter ) + 0.15 * p.x,
+                1.0);
+  }
+}
+
+vec4 colmod3 (float iter, float t) {
+  float col = iter / iterLimit;
+  vec2 p = vUv - 0.5;
+  if (col > 0.99) {
+    return vec4(cos(t / p.x) * 0.15 * p.y,
+                sin(t / p.x) * 0.15 * p.y,
+                acos(t / p.x) * 0.15 * p.y,
+                1.0);
+  } else {
+    return vec4(col * 0.00001 + cos(t /33. * iter) + 0.15 * p.x,
+                col * 0.00002 + cos(t /44. * iter) + 0.15 * p.x,
+                col * 0.00005 + tan(t / 55. + iter ) + 0.15 * p.x,
+                1.0);
+  }
+}
+
+
 vec4 mandelbrot(vec2 center, float zoom, float t) {
   vec2 p = vUv - 0.5;
   p.x *= iResolution.x / iResolution.y;
@@ -39,7 +72,14 @@ vec4 mandelbrot(vec2 center, float zoom, float t) {
     }
   }
   //apply coloring as function of t:
-  return colmod1(iter, t);
+  float m = mod(t,300.);
+  if (m > 200.) {
+    return colmod1(iter, t);
+  } else if(m > 100.) {
+    return colmod2(iter, t);
+  } else {
+    return colmod3(iter, t);
+  }
 }
 
 void main(void)
