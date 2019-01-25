@@ -20,8 +20,17 @@ vec4 mandelbrot(vec4 area) {
     }
   }
   float col = iter / iterLimit;
-
-  return vec4(col, col, col, 1.0);
+  if (col > 0.99) {
+    return vec4(cos(iGlobalTime / p.x) * 0.15 * p.y,
+                sin(iGlobalTime / p.x) * 0.15 * p.y,
+                acos(iGlobalTime / p.x) * 0.15 * p.y,
+                1.0);
+  } else {
+    return vec4(col * 0.00001 + cos(iGlobalTime /22. * iter),
+                col * 0.00002 + cos(iGlobalTime /13. * iter),
+                col * 0.00005 + tan(iGlobalTime / 23. + iter ),
+                1.0);
+  }
 }
 
 void main(void)
