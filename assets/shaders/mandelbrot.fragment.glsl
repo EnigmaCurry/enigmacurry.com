@@ -2,9 +2,9 @@ uniform vec2 iResolution;
 uniform float iGlobalTime;
 uniform vec2 center;
 uniform float zoom;
-uniform float tmod;
+uniform float colt;
 
-#define iterLimit 256.0
+#define iterLimit 256.
 
 varying vec2 vUv;
 
@@ -47,8 +47,11 @@ void main(void)
   // Use uniforms as input parameters
   // center - the the coordinates of the center of focus
   // zoom - factor of zoom
-  // tmod - factor of time for color changes
-  vec4 area = vec4(-1.*center.x*zoom,-1.*center.y*zoom,center.x*zoom,center.y*zoom);
-  gl_FragColor = mandelbrot(area, iGlobalTime * tmod);
+  // colt - factor of time for color changes
+  vec4 area = vec4((-1. + center.x)*zoom,
+                   (-1. + center.y)*zoom,
+                   center.x*zoom,
+                   center.y*zoom);
+  gl_FragColor = mandelbrot(area, iGlobalTime * colt);
 }
 

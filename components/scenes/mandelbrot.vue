@@ -1,6 +1,6 @@
 <template>
   <g-scene :obj="scene">
-    <g-camera name="main" orthographic :zoomScale="zoom"/>
+    <g-camera name="main" orthographic :zoomScale="0.5"/>
     <g-grid :divisions="10" v-if="showGrid"/>
     <animation :fn="animate" />
   </g-scene>
@@ -20,19 +20,19 @@ export default {
   inject: ['renderer'],
   props: {
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 0.5},
-    numScenes: {type: Number, default: 9},
-    downscale: {type: Number, default: 3.},
+    downscale: {type: Number, default: 2.},
   },
   data() {
+    const center = new Three.Vector2(0,0)
+    const zoom = 1
+    const colt = 1
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
-      scene: {type: "i", value: 0},
       iGlobalTime: {type: 'f', value: 0.1},
-      iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
-      center: {type: 'v2', value: new Three.Vector2(-1.344662847231080, -0.40057895942731) },
-      zoom: {type: 'f', value: 0.1 },
-      tmod: {type: 'f', value: 3},
+      iResolution: {type: 'v2', value: new Three.Vector2() },
+      center: {type: 'v2', value: center },
+      zoom: {type: 'f', value: zoom},
+      colt: {type: 'f', value: colt},
     }
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
@@ -40,16 +40,47 @@ export default {
       fragmentShader: fragmentShader,
       side: Three.DoubleSide
     } )
+    const zoomList = [
+      {x: 0, y:0, zoom: 0.16, colt: 933},
+      {x: -0.85, y:0.5, zoom: 0.9, colt: 33},
+      {x: 0.18, y: 0.5, zoom: 4.1, colt: 33},
+    ]
     return {
       scene: new Three.Scene(),
       tUniform,
       shaderMat,
       clock: new Three.Clock(),
       shaderMesh: null,
+      center,
+      zoom,
+      colt,
+      zoomList
+    }
+  },
+  watch: {
+    "zoom": {
+      handler(v) {
+        this.tUniform.zoom.value = v
+      }
+    },
+    "colt": {
+      handler(v) {
+        this.tUniform.colt.value = v
+      }
     }
   },
   created() {
-    this.renderer.downscale *= this.downscale    
+    this.renderer.downscale *= this.downscale
+    this.center.x = this.zoomList[0].x
+    this.center.y = this.zoomList[0].y
+    this.zoom = this.zoomList[0].zoom
+    this.colt = this.zoomList[0].colt
+    this.newTravelInterval(() => {
+      const cb = () => {
+        this.newTravelInterval(cb)
+      }
+      cb()
+    })
   },
   mounted() {
     this.renderer.onResize()
@@ -64,9 +95,6 @@ export default {
         window.addEventListener('resize', this.recreateShaderMesh)
       }
     }, 100)
-    this.visibilityInterval = Visibility.every(30 * 1000, () => {
-      this.tUniform.scene.value = (this.tUniform.scene.value + 1) % this.numScenes
-    })
   },
   beforeDestroy() {
     Visibility.stop(this.visibilityInterval)
@@ -75,7 +103,26 @@ export default {
   },
   methods: {
     animate(tt) {
-      this.tUniform.iGlobalTime.value += this.clock.getDelta()
+      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 222
+      TWEEN.update()
+    },
+    newTravelInterval(callback) {
+      console.log("New Travel Interval")
+      const settings = {x: this.center.x, y: this.center.y, zoom: this.zoom, colt: this.colt}
+      this.zoomList.push(this.zoomList.shift())
+      const zl = this.zoomList[0]
+      const tween = new TWEEN.Tween(settings)
+            .to(zl, 10000)
+            .easing(TWEEN.Easing.Quadratic.Out)
+            .onUpdate(() => {
+              this.center.x = settings.x
+              this.center.y = settings.y
+              this.zoom = settings.zoom
+              this.colt = settings.colt
+            })
+            .onComplete(callback)
+            .start()
+      
     },
     recreateShaderMesh() {
       let width = this.renderer.size.width
