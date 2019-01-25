@@ -189,8 +189,9 @@ export default {
         { img: require('~/assets/img/icons/sri-yantra.png'), title: 'Sri Yantra', to: '/geometry/sri-yantra' },
         { img: require('~/assets/img/icons/circumferencia.png'), title: 'Circumferencia', to: '/geometry/circumferencia' },
         { img: require('~/assets/img/icons/particle-life.png'), title: 'Particle Life', to: '/geometry/particle-life' },
-        { img: require('~/assets/img/icons/yoyo.png'), title: 'yoyoverse', to: '/geometry/yoyoverse' },
-        { img: require('~/assets/img/icons/pingpong.png'), title: 'pingpongverse', to: '/geometry/pingpongverse' },
+        { img: require('~/assets/img/icons/yoyo.png'), title: 'Yo Yo Verse', to: '/geometry/yoyoverse' },
+        { img: require('~/assets/img/icons/pingpong.png'), title: 'Ping Pong Verse', to: '/geometry/pingpongverse' },
+        { img: require('~/assets/img/icons/mandelbrot.png'), title: 'Mandelbrot', to: '/geometry/mandelbrot' },
      ],
     }
   },
