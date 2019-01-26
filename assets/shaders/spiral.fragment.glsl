@@ -16,12 +16,12 @@ float spiral(vec2 p, float ratio, float rate, float scale) {
 
 void main(void) {
   float t = iGlobalTime;
-  float cmod = 500.;
-  vec2 p = (0.5 - vUv) * vec2(1, tan(t*1200000.));
+  float cmod = 2000.;
+  vec2 p = (0.5 - vUv) * vec2(1, cos(t*12000.));
   p.x = p.x * (iResolution.x/iResolution.y);
-  float col = 0.5 + 0.5 * spiral(p, spiralRatio, spiralRate, spiralScale);
-  gl_FragColor = vec4(sin(cmod*col),
-                      sin(cmod*col),
-                      cos(cmod*col),
+  float col = spiral(p, spiralRatio, spiralRate, spiralScale);
+  gl_FragColor = vec4(col * p.x * 14. * sin(t) * cmod,
+                      col * p.y * 23. * cmod * sin(t * cmod),
+                      col * p.x * 48. * cmod * cos(t * cmod),
                       1.0);
 }

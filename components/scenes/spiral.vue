@@ -86,8 +86,8 @@ export default {
   },
   methods: {
     animate(tt) {
-      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 200 / 200 / 200
-      this.tUniform.spiralRatio.value = 2 * Math.sin(t) + 0.005
+      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 200000
+      this.tUniform.spiralRatio.value = 2 * Math.sin(t) + 0.05
       this.tUniform.spiralScale.value = Math.sin(t * 2000)
       this.tUniform.spiralRate.value = Math.cos(t) + 0.432
       this.tweenGroup.update()
