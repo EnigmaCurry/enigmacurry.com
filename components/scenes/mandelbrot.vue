@@ -28,7 +28,7 @@ export default {
     const colt = 1
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
-      iGlobalTime: {type: 'f', value: 0.1},
+      iGlobalTime: {type: 'f', value: 0},
       iResolution: {type: 'v2', value: new Three.Vector2() },
       center: {type: 'v2', value: center },
       zoom: {type: 'f', value: zoom},
@@ -47,20 +47,20 @@ export default {
       /// Scene 2 - Long y axis pan
       {x: 0, y:0, zoom: 0.16, colt: 13, duration: 25},
       {x: 0, y:0.818, zoom: 0.9, colt: 33, duration: 5},
-      {x: 0, y:0.818, zoom: 25, colt: 333, duration: 50},
-      {x: 0, y:0.818, zoom: 250, colt: 99, duration: 50},
+      {x: 0, y:0.818, zoom: 25, colt: 45, duration: 50},
+      {x: 0, y:0.818, zoom: 250, colt: 45, duration: 50},
       {x: 0, y:0.818, zoom: 590, colt: 33, duration: 50},
       {x: 0.001, y:0.8218, zoom: 590, colt: 33, duration: 50},
-      {x: 0.001, y:0.8218, zoom: 590, colt: 99, duration: 50},
-      {x: 0.001, y:0.8218, zoom: 190, colt: 333, duration: 10},
-      {x: 0.001, y:0.8218, zoom: 19, colt: 333, duration: 10},
+      {x: 0.001, y:0.8218, zoom: 590, colt: 45, duration: 50},
+      {x: 0.001, y:0.8218, zoom: 190, colt: 33, duration: 10},
+      {x: 0.001, y:0.8218, zoom: 19, colt: 13, duration: 10},
       /// Scene 3 - Long x axis pan
       {x: 0, y:0, zoom: 0.16, colt: 3, duration: 5},
       {x: 0, y:0, zoom: 0.9, colt: 33, duration: 5},
-      {x: -1.75, y: 0, zoom: 1.6, colt: 333, duration: 2},
-      {x: -1.75, y: 0, zoom: 445.6, colt: 333, duration: 40},
-      {x: -1.45, y: 0, zoom: 45.6, colt: 33, duration: 600},
-      {x: -1.75, y: 0, zoom: 1.6, colt: 66, duration: 40},
+      {x: -1.75, y: 0, zoom: 1.6, colt: 45, duration: 2},
+      {x: -1.75, y: 0, zoom: 445.6, colt: 45, duration: 40},
+      {x: -1.45, y: 0, zoom: 45.6, colt: 6, duration: 600},
+      {x: -1.75, y: 0, zoom: 1.6, colt: 13, duration: 40},
       {x: 0, y:0, zoom: 0.16, colt: 3, duration: 30},
     ]
     return {
@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     animate(tt) {
-      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 222
+      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 22
       this.tweenGroup.update()
     },
     newTravelInterval(callback) {
