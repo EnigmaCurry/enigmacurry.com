@@ -86,10 +86,10 @@ export default {
   },
   methods: {
     animate(tt) {
-      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 200000
-      this.tUniform.spiralRatio.value = 2 * Math.sin(t) + Math.sin(t*2222) * 0.5 + 0.05
-      this.tUniform.spiralScale.value = 0.1
-      this.tUniform.spiralRate.value = 123 * Math.sin(t)
+      const t = this.tUniform.iGlobalTime.value += this.clock.getDelta() / 20000
+      this.tUniform.spiralRatio.value = 33 * Math.sin(t) + Math.sin(t*2222) * 0.5 + 0.05
+      this.tUniform.spiralScale.value = Math.abs(Math.sin(t * 2000)) * 3
+      this.tUniform.spiralRate.value = 1323 * Math.sin(t)
       this.tweenGroup.update()
     },
     newTravelInterval(callback) {
