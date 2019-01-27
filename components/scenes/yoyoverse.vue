@@ -21,16 +21,17 @@ export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
   props: {
-    animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     zoom: {type: Number, default: 0.5},
     numScenes: {type: Number, default: 9},
+    downscale: {type: Number, default: 1.},
   },
   data() {
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
       scene: {type: "i", value: 0},
-      iGlobalTime: {type: 'f', value: 0},
+      iGlobalTime: {type: 'f', value: 0.1},
+      iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
       iChannel0: {type: 't', value: textureLoader.load(ShaderToyTex1)},
       iChannel1: {type: 't', value: textureLoader.load(ShaderToyTex2)}
     }
@@ -51,10 +52,11 @@ export default {
     }
   },
   created() {
+    this.renderer.downscale *= this.downscale    
   },
   mounted() {
     this.renderer.onResize()
-    this.renderer.showStats = false
+    //this.renderer.showStats = true
     //Wait for the renderer to report a size:
     let intervalID = setInterval(() => {
       let width = this.renderer.size.width
@@ -72,6 +74,7 @@ export default {
   beforeDestroy() {
     Visibility.stop(this.visibilityInterval)
     window.removeEventListener('resize', this.recreateShaderMesh)
+    this.renderer.downscale /= this.downscale    
   },
   methods: {
     animate(tt) {
@@ -80,6 +83,7 @@ export default {
     recreateShaderMesh() {
       let width = this.renderer.size.width
       let height = this.renderer.size.height
+      this.tUniform.iResolution.value.set(width, height)
       let pWidth = width/height
       let pHeight = 1
       if (height > width) {

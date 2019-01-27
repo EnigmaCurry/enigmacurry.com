@@ -19,7 +19,7 @@ vec4 yoyoverse(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.01/length( fract(0.75+a) - 0.5);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse2(void) {
@@ -35,7 +35,7 @@ vec4 yoyoverse2(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.01/length( fract(0.75+a) - 0.5);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse3(void) {
@@ -51,7 +51,7 @@ vec4 yoyoverse3(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.01/length( fract(0.75+a) - 0.5);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse4(void) {
@@ -67,7 +67,7 @@ vec4 yoyoverse4(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.01/length( fract(0.75+a) - 0.5);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse5(void) {
@@ -83,7 +83,7 @@ vec4 yoyoverse5(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.01/length( fract(0.75+a) - 0.5);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse6(void) {
@@ -99,7 +99,7 @@ vec4 yoyoverse6(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.1/length( 9. * fract(0.95+a) - 0.15);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse7(void) {
@@ -115,7 +115,7 @@ vec4 yoyoverse7(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.02/length( 0.1 * fract(0.95+a) - 0.15);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverse8(void) {
@@ -131,7 +131,7 @@ vec4 yoyoverse8(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.02/length( 0.1 * fract(0.95+a) - 0.15);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 vec4 yoyoverseOctave(void) {
@@ -147,7 +147,7 @@ vec4 yoyoverseOctave(void) {
     vec2 a = 44.85 * (p/l * (sin(pow(t,3.))) * abs(1. + atan(l*9.-t*2.)));
     c[i] = 0.02/length( 0.1 * fract(0.95+a) - 0.15);
   }
-  return vec4(c/l, 0.);
+  return vec4(c/l, 1.);
 }
 
 void main(void)
