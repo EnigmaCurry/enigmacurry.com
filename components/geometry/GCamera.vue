@@ -30,6 +30,12 @@ export default {
     }
   },
   watch: {
+    zoom: {
+      deep: true,
+      handler (v) {
+        this.onContainerResize(this.renderer.size.width, this.renderer.size.height)
+      }
+    },
     zoomScale: {
       deep: true,
       handler (v) {
