@@ -17,6 +17,60 @@ import fragmentShader from 'raw-loader!~/assets/shaders/rectangular.fragment.gls
 import ShaderToyTex1 from '~/assets/img/texture/shadertoy1.jpg'
 import ShaderToyTex2 from '~/assets/img/texture/shadertoy2.jpg'
 
+const rectangleSquares = (size={width: 1920, height: 1080}, bailout=5) => {
+  // compute the square spiral for a rectangle of given size (width, height)
+  const divisions = []
+  let length = 0, remainder = 0, square = 0
+  if (size.width > size.height) {
+    remainder = size.width
+    square = size.height
+  } else {
+    remainder = size.height
+    square = size.width
+  }
+  while(length <= remainder) {
+    if (square <= remainder) {
+      length += square
+      divisions.push(square)
+      remainder -= square
+    } else {
+      length += remainder
+      remainder = 0
+    }
+  }
+  let nextSize = size.width > size.height ?
+      {width: remainder, height: square} : {width: square, height: remainder}
+  if (nextSize.width > 0 && nextSize.height > 0 && bailout > 1) {
+    const recurse = rectangleSquares(nextSize, bailout - 1)
+    divisions.push.apply(divisions, recurse)
+  }
+  return divisions
+}
+
+const rectangleAreas = (size={width: 1920, height: 1080}, bailout=5) => {
+  const divisions = rectangleSquares(size, bailout)
+  const areas = []
+  let direction = size.height > size.width ? 0 : 1 // 0=up 1=right 2=down 3=left
+  let x = 0, y = 0
+  for (let d=0; d < divisions.length; d++) {
+    const division = divisions[d]
+    areas.push({x1:x, y1:y, x2:x+division, y2:y+division})
+    if (direction == 0) {
+      y += division
+    } else if (direction == 1) {
+      x += division
+    } else if (direction == 2) {
+      y -= division
+    } else if (direction == 3) {
+      x -= division
+    }
+    if (division != divisions[d+1]) {
+      direction = (direction + 1) % 4
+    }
+  }
+  return areas
+}
+
 export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
@@ -32,7 +86,7 @@ export default {
       scene: {type: "i", value: 0},
       iGlobalTime: {type: 'f', value: 0.1},
       iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
-      rectWidth: {type: 'f', value: 1080},
+      rectWidth: {type: 'f', value: 1920},
       rectHeight: {type: 'f', value: 1080}
     }
     const shaderMat = new Three.ShaderMaterial( {
@@ -50,7 +104,10 @@ export default {
     }
   },
   created() {
-    this.renderer.downscale *= this.downscale    
+    this.renderer.downscale *= this.downscale
+    let o = rectangleAreas({width: this.tUniform.rectWidth.value, height: this.tUniform.rectHeight.value})
+    console.log(o)
+
   },
   mounted() {
     this.renderer.onResize()

@@ -14,30 +14,38 @@ vec4 areaToUv(vec4 area) {
 }
 
 vec4 draw(vec4 rectArea) {
+  vec2 p = vUv - 0.5;
+  p.x *= iResolution.x / iResolution.y;
   vec4 uvArea = areaToUv(rectArea);
   float d = 0.; /// How far away from the border?
   if (vUv.x < uvArea.x) {
-    /// Draw left border:
+    /// Draw left of border:
     d = smoothstep(uvArea.x, 0., vUv.x);
     return vec4(d,d,d,0.);
   } else if (vUv.x > uvArea.z) {
-    // Draw right border:
+    // Draw right of border:
     d = smoothstep(uvArea.z * iResolution.x, iResolution.x, vUv.x * iResolution.x);
     return vec4(d,d,d,0.);
   } else if (vUv.y < uvArea.y) {
-    // Draw bottom border:
+    // Draw bottom of border:
     d = smoothstep(uvArea.y, 0., vUv.y);
     return vec4(d,d,d,0.);
   } else if (vUv.y > uvArea.w) {
-    // Draw top border:
+    // Draw top of border:
     d = smoothstep(uvArea.w * iResolution.y, iResolution.y, vUv.y * iResolution.y);
     return vec4(d,d,d,0.);
   } else {
     /// Draw rectangle:
-    /// Draw background:
     float xs = smoothstep(uvArea.x, uvArea.z, vUv.x);
     float ys = smoothstep(uvArea.y, uvArea.w, vUv.y);
-    return vec4((xs+ys+0.15) * 1.,(xs*ys) * 1.,(xs-ys) * 1.,1.);
+    float border = 0.001;
+    if (xs < border || ys < border || xs > 1.-border || ys > 1.-border) {
+      /// Draw border:
+      return vec4(1.,1.,1.,1.);
+    } else {
+      /// Draw background:
+      return vec4((xs+ys+0.15) * 1.,(xs*ys) * 1.,(xs-ys) * 1.,1.);
+    }
   }
 }
 
