@@ -68,6 +68,7 @@ module.exports = {
     '@/plugins/tilings',
     '@/plugins/graphics',
     '@/plugins/particles',
+    '@/plugins/hexagons',
   ],
 
   /*

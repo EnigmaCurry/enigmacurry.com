@@ -5,6 +5,7 @@ export default {
     backgroundAlpha: {type: Number, default: 1}
   },
   mounted() {
+    this.renderer.onResize()
     document.getElementById('bg').classList.add(this.backgroundClass)
     this.renderer.webGLRenderer.setClearAlpha(this.backgroundAlpha)
   },
