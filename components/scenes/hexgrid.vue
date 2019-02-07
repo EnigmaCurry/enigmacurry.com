@@ -1,6 +1,7 @@
 <template>
   <g-scene :obj="scene">
     <g-camera name="main" orthographic :zoomScale="zoom"/>
+    <g-light :hex="0xffffff" :intensity="1" :position="{ y: 0, z: 1500 }"/>
     <g-grid :divisions="10" v-if="showGrid"/>
     <animation :fn="animate" />
   </g-scene>
@@ -45,6 +46,7 @@ export default {
     return {
       scene: new Three.Scene(),
       generationTime: 0,
+      cycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
       hexLayout: new this.$hexagons.Layout(this.$hexagons.Layout.flat,
                                            new Three.Vector2(this.hexSize, this.hexSize),
@@ -63,9 +65,9 @@ export default {
       }
     },
     reset(keepMeshes=0) {
-      console.log("reset:", keepMeshes)
       this.finished = false
       this.generation = 0
+      this.cycle += 1
       const origin = new this.$hexagons.Hex(0,0,0)
       this.origins = []
       if(keepMeshes) {
@@ -78,12 +80,44 @@ export default {
         this.hexMeshes = {}
         this.origins = []
         this.spirals = []
-        this.colors = [{start: "#EEFF00", end: "#000000"},
-                       {start: "#E8900C", end: "#000000"},
-                       {start: "#FF0000", end: "#000000"},
-                       {start: "#660CE8", end: "#000000"},
-                       {start: "#23BDFF", end: "#000000"},
-                       {start: "#FFFFFF", end: "#000000"}]
+        this.colors = [
+          [{start: "#EEFF00", end: "#000000"},
+           {start: "#E8900C", end: "#000000"},
+           {start: "#FF0000", end: "#000000"},
+           {start: "#660CE8", end: "#000000"},
+           {start: "#23BDFF", end: "#000000"},
+           {start: "#FFFFFF", end: "#000000"}
+          ],
+          [{start: "#3D5359", end: "#000000"},
+           {start: "#185E93", end: "#000000"},
+           {start: "#0E7F8C", end: "#000000"},
+           {start: "#B9CB4A", end: "#000000"},
+           {start: "#FE522C", end: "#000000"},
+           {start: "#FFFFFF", end: "#000000"}
+          ],
+          [{start: "#2F254C", end: "#000000"},
+           {start: "#2F8A91", end: "#000000"},
+           {start: "#FEF4BD", end: "#000000"},
+           {start: "#D8A9A1", end: "#000000"},
+           {start: "#AA4776", end: "#000000"},
+           {start: "#FFFFFF", end: "#000000"},
+          ],
+          [{start: "#1E3332", end: "#000000"},
+           {start: "#3F756B", end: "#000000"},
+           {start: "#7CABA4", end: "#000000"},
+           {start: "#F6F2E1", end: "#000000"},
+           {start: "#E0A35A", end: "#000000"},
+           {start: "#FFFFFF", end: "#000000"},
+          ],
+          [{start: "#818F9E", end: "#000000"},
+           {start: "#425066", end: "#000000"},
+           {start: "#414851", end: "#000000"},
+           {start: "#766041", end: "#000000"},
+           {start: "#DAB699", end: "#000000"},
+           {start: "#FFFFFF", end: "#000000"},
+          ],
+
+        ]
         this.getHexMesh(origin)
         for (let d=0; d < 6; d++) {
           this.spirals.push(spiralGenerator(this.generations, origin, d))
@@ -96,9 +130,9 @@ export default {
         for (let s=0; s < this.spirals.length; s++) {
           const spiral = this.spirals[s]
           const nHex = this.origins[s] = this.origins[s].neighbor(spiral.next().value)
-          const color = (new Three.Color(this.colors[s].start)).lerp(
-            new Three.Color(this.colors[s].end), this.generation / this.generations)
-          //console.log(color)
+          const colorInfo = this.colors[(this.cycle-1) % this.colors.length][s]
+          const color = (new Three.Color(colorInfo.start)).lerp(
+            new Three.Color(colorInfo.end), this.generation / this.generations)
           this.getHexMesh(nHex, color)
         }
       } else if (!this.finished) {
@@ -140,7 +174,7 @@ export default {
         isNew = true
         m = this._newHexMesh(hex, )
         color = color === undefined ? new Three.Color(1,1,1) : color
-        const mat = new Three.MeshBasicMaterial({color})
+        const mat = new Three.MeshLambertMaterial({color})
         const mesh = new Three.Mesh(this.hexGeometry, mat)
         const px = this.hexLayout.hexToPixel(hex)
         mesh.position.x = px.x
