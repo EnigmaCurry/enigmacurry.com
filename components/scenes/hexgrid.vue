@@ -36,17 +36,18 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 120},
+    zoom: {type: Number, default: 250},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
     generations: {type: Number, default: 120},
-    interval: {type: Number, default: 0.1},
+    interval: {type: Number, default: 0.01},
   },
   data() {
     return {
       scene: new Three.Scene(),
       generationTime: 0,
       cycle: 0,
+      colorCycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
       hexLayout: new this.$hexagons.Layout(this.$hexagons.Layout.flat,
                                            new Three.Vector2(this.hexSize, this.hexSize),
@@ -61,13 +62,14 @@ export default {
     animate(tt) {
       if (tt - this.generationTime > this.interval) {
         this.generationTime = tt
-        this.nextGeneration()
+        this.nextGeneration([this.spirals[this.cycle % this.spirals.length]])
       }
     },
-    reset(keepMeshes=0) {
+    reset({keepMeshes=false} = {}) {
       this.finished = false
       this.generation = 0
       this.cycle += 1
+      this.colorCycle += this.cycle % 6 === 0 ? 1 : 0
       const origin = new this.$hexagons.Hex(0,0,0)
       this.origins = []
       if(keepMeshes) {
@@ -125,45 +127,21 @@ export default {
         }
       }
     },
-    nextGeneration() {
+    nextGeneration(spirals, onComplete) {
       if (this.generation < this.generations) {
-        for (let s=0; s < this.spirals.length; s++) {
-          const spiral = this.spirals[s]
+        for (let s=0; s < spirals.length; s++) {
+          const spiral = spirals[s]
           const nHex = this.origins[s] = this.origins[s].neighbor(spiral.next().value)
-          const colorInfo = this.colors[(this.cycle-1) % this.colors.length][s]
+          const colorInfo = this.colors[this.colorCycle % this.colors.length][(this.cycle-1) % 6]
           const color = (new Three.Color(colorInfo.start)).lerp(
             new Three.Color(colorInfo.end), this.generation / this.generations)
           this.getHexMesh(nHex, color)
         }
-      } else if (!this.finished) {
-        // Do this stuff only once, at the end of all generations:
-        this.finished = true
-        this.finishedMeshes = Object.values(this.hexMeshes)
-        this.finishedColors = []
-        for( let h=0; h < this.finishedMeshes.length; h++) {
-          let m = this.finishedMeshes[h]
-          this.finishedColors.push(m.material.color.clone())
-        }
-        // In x seconds, start over completetly:
-        setTimeout(() => {
-          this.reset(1) //Keep existing meshes
-        }, 40 * 1000)
+        this.generation += 1
       } else {
-        // Do this stuff after the generations complete, but before we reset:
-        let meshes = this.finishedMeshes
-        let flashRate = Math.atan(Math.sin(this.generation/222)) + 0.5
-        let sineColor = new Three.Color(flashRate, flashRate, flashRate)
-        for(let h=0; h < meshes.length; h++) {
-          let color = meshes[h].material.color
-          let origColor = this.finishedColors[h]
-          if (Math.random() > 0.01) {
-            color.copy(origColor)
-          } else {
-            color.copy(new Three.Color(Math.atan(origColor.r/22) + 0.5, origColor.g, origColor.b))
-          }          
-        }
+        this.reset({keepMeshes: true})
+        if (onComplete != undefined) { onComplete() }
       }
-      this.generation += 1
     },
     _newHexMesh(hex, color=0xffffff) {
     },
