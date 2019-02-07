@@ -39,8 +39,8 @@ export default {
     zoom: {type: Number, default: 120},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    generations: {type: Number, default: 200},
-    interval: {type: Number, default: 0.0001},
+    generations: {type: Number, default: 120},
+    interval: {type: Number, default: 0.1},
   },
   data() {
     return {
@@ -156,7 +156,7 @@ export default {
         for(let h=0; h < meshes.length; h++) {
           let color = meshes[h].material.color
           let origColor = this.finishedColors[h]
-          color.copy(Math.random() > 0.01 ? origColor : origColor.lerp(sineColor, Math.random() > 0.95 ? 0.5 : 0.05))
+          color.copy(Math.random() > 0.01 ? origColor : origColor.lerp(sineColor, Math.random() > 0.99 ? 0.5 : 0.03 ))
         }
       }
       this.generation += 1
