@@ -116,7 +116,7 @@ export default {
            {start: "#DAB699", end: "#000000"},
            {start: "#FFFFFF", end: "#000000"},
           ],
-
+          
         ]
         this.getHexMesh(origin)
         for (let d=0; d < 6; d++) {
@@ -156,7 +156,11 @@ export default {
         for(let h=0; h < meshes.length; h++) {
           let color = meshes[h].material.color
           let origColor = this.finishedColors[h]
-          color.copy(Math.random() > 0.01 ? origColor : origColor.lerp(sineColor, Math.random() > 0.99 ? 0.5 : 0.3 ))
+          if (Math.random() > 0.01) {
+            color.copy(origColor)
+          } else {
+            color.copy(new Three.Color(Math.atan(origColor.r/22) + 0.5, origColor.g, origColor.b))
+          }          
         }
       }
       this.generation += 1
