@@ -35,11 +35,11 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 200},
+    zoom: {type: Number, default: 120},
     hexSize: {type: Number, default: 10},
-    hexBorder: {type: Number, default: 0.01},
-    generations: {type: Number, default: 100},
-    interval: {type: Number, default: 1},
+    hexBorder: {type: Number, default: 0.1},
+    generations: {type: Number, default: 200},
+    interval: {type: Number, default: 0.0001},
   },
   data() {
     return {
@@ -93,11 +93,29 @@ export default {
           //console.log(color)
           this.newHexMesh(nHex, color)
         }
-        this.generation += 1
       } else if (!this.finished) {
+        // Do this stuff only once, at the end of all generations:
         this.finished = true
-        setTimeout(this.reset, 30 * 1000)
+        this.finishedMeshes = Object.values(this.hexMeshes)
+        this.finishedColors = []
+        for( let h=0; h < this.finishedMeshes.length; h++) {
+          let m = this.finishedMeshes[h]
+          this.finishedColors.push(m.material.color.clone())
+        }
+        // In x seconds, start over completetly:
+        setTimeout(this.reset, 20 * 1000)
+      } else {
+        // Do this stuff after the generations complete, but before we reset:
+        let meshes = this.finishedMeshes
+        let flashRate = Math.atan(Math.sin(this.generation/222)) + 0.5
+        let sineColor = new Three.Color(flashRate, flashRate, flashRate)
+        for(let h=0; h < meshes.length; h++) {
+          let color = meshes[h].material.color
+          let origColor = this.finishedColors[h]
+          color.copy(Math.random() > 0.15 ? origColor : origColor.lerp(sineColor, 0.05))
+        }
       }
+      this.generation += 1
     },
     newHexMesh(hex, color=0xffffff) {
       const mat = new Three.MeshBasicMaterial({color})
