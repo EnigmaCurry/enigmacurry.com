@@ -62,8 +62,12 @@ export default {
         this.nextGeneration()
       }
     },
-    reset() {
-      this.scene.remove.apply(this.scene, Object.values(this.hexMeshes))
+    reset(keepMeshes=0) {
+      if(!keepMeshes) {
+        this.scene.remove.apply(this.scene, Object.values(this.hexMeshes))
+        this.hexMeshes = {}
+        this.origins = []
+      }
       this.finished = false
       this.generation = 0
       this.hexMeshes = {}
@@ -103,7 +107,7 @@ export default {
           this.finishedColors.push(m.material.color.clone())
         }
         // In x seconds, start over completetly:
-        setTimeout(this.reset, 20 * 1000)
+        setTimeout(this.reset, 120 * 1000)
       } else {
         // Do this stuff after the generations complete, but before we reset:
         let meshes = this.finishedMeshes
@@ -112,7 +116,7 @@ export default {
         for(let h=0; h < meshes.length; h++) {
           let color = meshes[h].material.color
           let origColor = this.finishedColors[h]
-          color.copy(Math.random() > 0.15 ? origColor : origColor.lerp(sineColor, 0.05))
+          color.copy(Math.random() > 0.01 ? origColor : origColor.lerp(sineColor, Math.random() > 0.95 ? 0.5 : 0.05))
         }
       }
       this.generation += 1
