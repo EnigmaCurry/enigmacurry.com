@@ -35,28 +35,32 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 740},
+    zoom: {type: Number, default: 200},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.01},
-    generations: {type: Number, default: 666},
-    interval: {type: Number, default: 100},
+    generations: {type: Number, default: 100},
+    interval: {type: Number, default: 1},
   },
   data() {
     return {
       scene: new Three.Scene(),
-      hexGeometry: new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6),
+      generationTime: 0,
+      hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
       hexLayout: new this.$hexagons.Layout(this.$hexagons.Layout.flat,
                                            new Three.Vector2(this.hexSize, this.hexSize),
                                            new Three.Vector2(0, 0)),
       hexMeshes: {}, /// 3-tuple stringified q,r,s -> mesh
     }
   },
-  mounted() {
+  created() {
     this.reset()
   },
   methods: {
     animate(tt) {
-      this.nextGeneration()      
+      if (tt - this.generationTime > this.interval) {
+        this.generationTime = tt
+        this.nextGeneration()
+      }
     },
     reset() {
       this.scene.remove.apply(this.scene, Object.values(this.hexMeshes))
@@ -71,7 +75,7 @@ export default {
                      {start: "#660CE8", end: "#000000"},
                      {start: "#23BDFF", end: "#000000"},
                      {start: "#FFFFFF", end: "#000000"}]
-      this.testMat = new Three.MeshBasicMaterial({color: 0xffffff})
+      //this.testMat = new Three.MeshBasicMaterial({color: 0xffffff})
       let origin = new this.$hexagons.Hex(0,0,0)
       this.newHexMesh(origin)
       for (let d=0; d < 6; d++) {
@@ -92,7 +96,7 @@ export default {
         this.generation += 1
       } else if (!this.finished) {
         this.finished = true
-        //setTimeout(this.reset, 20 * 1000)
+        setTimeout(this.reset, 30 * 1000)
       }
     },
     newHexMesh(hex, color=0xffffff) {
