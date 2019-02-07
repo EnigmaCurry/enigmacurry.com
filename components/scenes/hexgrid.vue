@@ -63,28 +63,32 @@ export default {
       }
     },
     reset(keepMeshes=0) {
-      if(!keepMeshes) {
+      console.log("reset:", keepMeshes)
+      this.finished = false
+      this.generation = 0
+      const origin = new this.$hexagons.Hex(0,0,0)
+      this.origins = []
+      if(keepMeshes) {
+        for (let d=0; d < 6; d++) {
+          this.spirals[d] = spiralGenerator(this.generations, origin, d)
+          this.origins.push(origin)
+        }
+      } else {
         this.scene.remove.apply(this.scene, Object.values(this.hexMeshes))
         this.hexMeshes = {}
         this.origins = []
-      }
-      this.finished = false
-      this.generation = 0
-      this.hexMeshes = {}
-      this.origins = []
-      this.spirals = []
-      this.colors = [{start: "#EEFF00", end: "#000000"},
-                     {start: "#E8900C", end: "#000000"},
-                     {start: "#FF0000", end: "#000000"},
-                     {start: "#660CE8", end: "#000000"},
-                     {start: "#23BDFF", end: "#000000"},
-                     {start: "#FFFFFF", end: "#000000"}]
-      //this.testMat = new Three.MeshBasicMaterial({color: 0xffffff})
-      let origin = new this.$hexagons.Hex(0,0,0)
-      this.newHexMesh(origin)
-      for (let d=0; d < 6; d++) {
-        this.spirals.push(spiralGenerator(this.generations, origin, d))
-        this.origins.push(origin)
+        this.spirals = []
+        this.colors = [{start: "#EEFF00", end: "#000000"},
+                       {start: "#E8900C", end: "#000000"},
+                       {start: "#FF0000", end: "#000000"},
+                       {start: "#660CE8", end: "#000000"},
+                       {start: "#23BDFF", end: "#000000"},
+                       {start: "#FFFFFF", end: "#000000"}]
+        this.getHexMesh(origin)
+        for (let d=0; d < 6; d++) {
+          this.spirals.push(spiralGenerator(this.generations, origin, d))
+          this.origins.push(origin)
+        }
       }
     },
     nextGeneration() {
@@ -95,7 +99,7 @@ export default {
           const color = (new Three.Color(this.colors[s].start)).lerp(
             new Three.Color(this.colors[s].end), this.generation / this.generations)
           //console.log(color)
-          this.newHexMesh(nHex, color)
+          this.getHexMesh(nHex, color)
         }
       } else if (!this.finished) {
         // Do this stuff only once, at the end of all generations:
@@ -107,7 +111,9 @@ export default {
           this.finishedColors.push(m.material.color.clone())
         }
         // In x seconds, start over completetly:
-        setTimeout(this.reset, 120 * 1000)
+        setTimeout(() => {
+          this.reset(1) //Keep existing meshes
+        }, 40 * 1000)
       } else {
         // Do this stuff after the generations complete, but before we reset:
         let meshes = this.finishedMeshes
@@ -121,29 +127,30 @@ export default {
       }
       this.generation += 1
     },
-    newHexMesh(hex, color=0xffffff) {
-      const mat = new Three.MeshBasicMaterial({color})
-      //const mat = this.testMat
-      const mesh = new Three.Mesh(this.hexGeometry, mat)
-      const px = this.hexLayout.hexToPixel(hex)
-      mesh.position.x = px.x
-      mesh.position.y = px.y
-      this.scene.add(mesh)
-      this.hexMeshes[hex.q + ',' + hex.r + ',' + hex.s] = mesh
-      return mesh
+    _newHexMesh(hex, color=0xffffff) {
     },
     getNeighborMesh(hex, direction, matIndex) {
-      const nHex = hex.neighbor(direction)
-      let m = this.getHexMesh(nHex)
-      let isNew = false
-      if(m === undefined) {
-        isNew = true
-        m = this.newHexMesh(nHex)
-      }
-      return {mesh: m, isNew, neighbor: nHex}
+      const neighbor = hex.neighbor(direction)
+      let {mesh, isNew}  = this.getHexMesh(neighbor)
+      return {mesh, isNew, neighbor}
     },
-    getHexMesh(hex) {
-      return this.hexMeshes[hex.q + ',' + hex.r + ',' + hex.s]
+    getHexMesh(hex, color=undefined) {
+      let isNew = false, m = this.hexMeshes[hex.q + ',' + hex.r + ',' + hex.s]
+      if (m === undefined) {
+        isNew = true
+        m = this._newHexMesh(hex, )
+        color = color === undefined ? new Three.Color(1,1,1) : color
+        const mat = new Three.MeshBasicMaterial({color})
+        const mesh = new Three.Mesh(this.hexGeometry, mat)
+        const px = this.hexLayout.hexToPixel(hex)
+        mesh.position.x = px.x
+        mesh.position.y = px.y
+        this.scene.add(mesh)
+        this.hexMeshes[hex.q + ',' + hex.r + ',' + hex.s] = mesh
+      } else if (color != undefined) {
+        m.material.color.copy(color)
+      }
+      return {mesh: m, isNew}
     }
   },
   beforeDestroy() {
