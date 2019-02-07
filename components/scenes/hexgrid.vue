@@ -156,7 +156,7 @@ export default {
         for(let h=0; h < meshes.length; h++) {
           let color = meshes[h].material.color
           let origColor = this.finishedColors[h]
-          color.copy(Math.random() > 0.01 ? origColor : origColor.lerp(sineColor, Math.random() > 0.99 ? 0.5 : 0.03 ))
+          color.copy(Math.random() > 0.01 ? origColor : origColor.lerp(sineColor, Math.random() > 0.99 ? 0.5 : 0.3 ))
         }
       }
       this.generation += 1
