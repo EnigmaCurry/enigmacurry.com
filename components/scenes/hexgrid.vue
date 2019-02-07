@@ -43,9 +43,6 @@ export default {
   data() {
     return {
       scene: new Three.Scene(),
-      generation: 0,
-      spirals: [],
-      origins: [],
       hexGeometry: new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6),
       hexMaterials: [
         new Three.MeshBasicMaterial({color: 0x666666}),
@@ -62,18 +59,27 @@ export default {
     }
   },
   mounted() {
-    let origin = new this.$hexagons.Hex(0,0,0)
-    this.newHexMesh(origin)    
-    for (let d=0; d < 6; d++) {
-      this.spirals.push(spiralGenerator(this.generations, origin, d))
-      this.origins.push(origin)
-    }
-    this.nextGeneration()
-    Visibility.every(100, () => {
-      this.nextGeneration()
-    })
+    this.reset()
   },
   methods: {
+    reset() {
+      this.scene.remove.apply(this.scene, Object.values(this.hexMeshes))
+      this.finished = false
+      this.generation = 0
+      this.hexMeshes = {}
+      this.origins = []
+      this.spirals = []
+      let origin = new this.$hexagons.Hex(0,0,0)
+      this.newHexMesh(origin)    
+      for (let d=0; d < 6; d++) {
+        this.spirals.push(spiralGenerator(this.generations, origin, d))
+        this.origins.push(origin)
+      }
+      this.nextGeneration()
+      this.visibilityInterval = Visibility.every(10, () => {
+        this.nextGeneration()
+      })
+    },
     nextGeneration() {
       if (this.generation < this.generations) {
         for (let s=0; s < this.spirals.length; s++) {
@@ -82,6 +88,10 @@ export default {
           this.newHexMesh(nHex, s)
         }
         this.generation += 1
+      } else if (!this.finished) {
+        this.finished = true
+        Visibility.stop(this.visibilityInterval)
+        setTimeout(this.reset, 10 * 1000)
       }
     },
     newHexMesh(hex, matIndex=0) {
