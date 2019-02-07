@@ -36,11 +36,10 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 250},
+    zoom: {type: Number, default: 500},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    generations: {type: Number, default: 120},
-    interval: {type: Number, default: 0.01},
+    generations: {type: Number, default: 360},
   },
   data() {
     return {
@@ -60,10 +59,8 @@ export default {
   },
   methods: {
     animate(tt) {
-      if (tt - this.generationTime > this.interval) {
-        this.generationTime = tt
-        this.nextGeneration([this.spirals[this.cycle % this.spirals.length]])
-      }
+      this.generationTime = tt
+      this.nextGeneration([this.spirals[this.cycle % this.spirals.length]])
     },
     reset({keepMeshes=false} = {}) {
       this.finished = false
