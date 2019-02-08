@@ -36,7 +36,6 @@ export default {
   props: {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
-    zoom: {type: Number, default: 500},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
     generations: {type: Number, default: 351},
@@ -47,6 +46,7 @@ export default {
     return {
       scene: new Three.Scene(),
       generationTime: 0,
+      zoom: 500,
       cycle: 0,
       colorCycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
@@ -66,6 +66,7 @@ export default {
       const spirals = [this.spirals[this.cycle % this.spirals.length],
                        this.spirals[(this.cycle+2) % this.spirals.length]]
       this.nextGeneration(spirals)
+      this.zoom = Math.atan(Math.sin(tt/22)) * 500 + 200
     },
     reset({keepMeshes=false} = {}) {
       this.finished = false
