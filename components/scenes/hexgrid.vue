@@ -43,6 +43,7 @@ export default {
     generations: {type: Number, default: 351},
     backgroundClass: {type: String, default: "stair-stalks"},
     backgroundAlpha: {type: Number, default: 0.8},
+    kaleidoscopeInterval: {type: Number, default: 10}
   },
   data() {
     let scene = new Three.Scene()
@@ -57,25 +58,52 @@ export default {
                                            new Three.Vector2(this.hexSize, this.hexSize),
                                            new Three.Vector2(0, 0)),
       hexMeshes: {}, /// 3-tuple stringified q,r,s -> mesh
+      tweenGroup: new TWEEN.Group(),
     }
   },
   created() {
+    this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
+    this.kaleidoShader.uniforms.sides.value = 1
+    this.kaleidoShader.enabled = false
     this.reset()
   },
   mounted() {
-    this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
-    this.kaleidoShader.enabled = false
-    this.kaleidoShader.uniforms.sides.value = 6
     this.renderer.addEffectPass(this.kaleidoShader)
+    let direction = 1
+    const kaleidoTween = () => {
+      let nextLevel = Math.floor(Math.random() * 10) + 1
+      if (Math.random() > 0.95) {
+        nextLevel = (Math.floor(Math.random() * 300)) + 1
+      } 
+      
+      this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
+        setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
+      })
+      direction *= -1
+    }
+    kaleidoTween()
   },
   methods: {
     animate(tt) {
       this.generationTime = tt
+      this.tweenGroup.update()
       // randomly choose two of the spirals:
       const spirals = [this.spirals[this.cycle % this.spirals.length],
                        this.spirals[(this.cycle+2) % this.spirals.length]]
       this.nextGeneration(spirals)
-      this.zoom = Math.atan(Math.sin(tt / 22)) * 700
+      this.zoom = Math.atan(Math.sin(tt / 22)) * 200 + 400
+    },
+    kaleidoZoom(level, interval, callback) {
+      const t = { level: this.kaleidoShader.uniforms.sides.value }
+      this.kaleidoTween = new TWEEN.Tween(t, this.tweenGroup)
+        .to({level}, interval * 1000)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .onUpdate(() => {
+          this.kaleidoShader.uniforms.sides.value = t.level
+          this.kaleidoShader.enabled = t.level > 0.1
+        })
+        .onComplete(callback === undefined ? () => {} : callback)
+        .start()
     },
     reset({keepMeshes=false} = {}) {
       this.finished = false
@@ -183,6 +211,7 @@ export default {
     }
   },
   beforeDestroy() {
+    this.tweenGroup.removeAll()    
   },
   
 }
