@@ -60,7 +60,10 @@ export default {
   methods: {
     animate(tt) {
       this.generationTime = tt
-      this.nextGeneration([this.spirals[this.cycle % this.spirals.length]])
+      // randomly choose two of the spirals:
+      const spirals = [this.spirals[this.cycle % this.spirals.length],
+                       this.spirals[(this.cycle+2) % this.spirals.length]]
+      this.nextGeneration(spirals)
     },
     reset({keepMeshes=false} = {}) {
       this.finished = false
