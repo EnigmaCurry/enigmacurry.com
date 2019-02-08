@@ -159,6 +159,7 @@ export default {
         m = this._newHexMesh(hex, )
         color = color === undefined ? new Three.Color(1,1,1) : color
         const mat = new Three.MeshLambertMaterial({color})
+        mat.opacity = 0.25
         const mesh = new Three.Mesh(this.hexGeometry, mat)
         const px = this.hexLayout.hexToPixel(hex)
         mesh.position.x = px.x
