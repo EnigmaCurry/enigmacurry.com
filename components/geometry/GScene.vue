@@ -2,6 +2,7 @@
 /* eslint-disable no-duplicate-imports */
 import { Scene } from 'three'
 import * as Three from 'three'
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/RenderPass"
 import GObject3D from '~/components/geometry/GObject3D.vue'
 import {filter} from 'underscore'
 
@@ -38,6 +39,8 @@ export default {
       window.THREE = Three
       window.scene = this.curObj
     }
+    let camera = this.cameras[this.currentCamera]
+    this.renderer.effectComposer.insertPass(new Three.RenderPass(this.curObj, camera), 0)
   },
   destroyed() {
     this.renderer.sceneData = filter(

@@ -21,6 +21,14 @@
 
 <script>
 import * as Three from 'three'
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/EffectComposer"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/GlitchPass"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/CopyShader"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/PixelShader"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/FXAAShader"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/DigitalGlitch"
+
 import Stats from "~/lib/stats"
 import uuid from 'uuid/v4'
 
@@ -33,9 +41,18 @@ export default {
     }
   },
   data() {
-    const webGLRenderer = new Three.WebGLRenderer({antialias: true, alpha: true})
+    const webGLRenderer = new Three.WebGLRenderer({alpha: true})
+    const effectComposer = new Three.EffectComposer(webGLRenderer)
+    const pixelPass = new Three.ShaderPass(Three.PixelShader)
+    pixelPass.uniforms['resolution'].value = new Three.Vector2()
+    pixelPass.uniforms['pixelSize'].value = 16
     return {
       webGLRenderer,
+      effectComposer,
+      copyPass: new Three.ShaderPass(Three.CopyShader),
+      antialiasPass: new Three.ShaderPass(Three.FXAAShader),
+      glitchPass: new Three.GlitchPass(),
+      pixelPass,
       sceneData: [], // List of GScenes (Scene, cameras, currentCamera)
       size: {width: 0, height: 0}, //initialized in onResize,
       showStats: process.env.NODE_ENV === 'development',
@@ -53,6 +70,17 @@ export default {
   },
   created() {
     this.webGLRenderer.autoClear = false
+    
+    this.effectComposer.addPass(this.antialiasPass)
+    this.antialiasPass.enabled = true
+    this.effectComposer.addPass(this.pixelPass)
+    this.pixelPass.enabled = false
+    this.effectComposer.addPass(this.glitchPass)
+    this.glitchPass.enabled = false
+    this.effectComposer.addPass(this.copyPass)
+
+    this.copyPass.renderToScreen = true
+    
     this.createStats()
   },
   mounted() {
@@ -73,6 +101,12 @@ export default {
         }
       }
       this.webGLRenderer.setSize(this.size.width, this.size.height)
+      this.effectComposer.setSize(this.size.width, this.size.height)
+      this.antialiasPass.uniforms['resolution'].value.set(1 / (this.size.width),
+                                                          1 / (this.size.height))
+      this.pixelPass.uniforms['resolution'].
+        value.set(this.size.width, this.size.height).multiplyScalar(window.devicePixelRatio)
+      console.log(this.pixelPass.uniforms)
       //Always render the screen resolution / downscale, not the browser zoom level:
       this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
       //Resize all cameras in all scenes:
@@ -86,21 +120,8 @@ export default {
       this.render()
     },
     render: function() {
-      this.webGLRenderer.clear()
-      let scenesRendered = 0
-      //Render all scenes with active cameras, in order:
-      for (let sd=0; sd < this.sceneData.length; sd++){
-        const gscene = this.sceneData[sd]
-        if (gscene.currentCamera != null) {
-          const scene = gscene.curObj
-          const camera = gscene.cameras[gscene.currentCamera]
-          if (scenesRendered > 0) {
-            this.webGLRenderer.clearDepth()
-          }
-          this.webGLRenderer.render(scene, camera)
-          scenesRendered += 1
-        }
-      }
+      //this.webGLRenderer.clear()
+      this.effectComposer.render()
     },
     animate: function({kill=false} = {}) {
       if (kill === true) {

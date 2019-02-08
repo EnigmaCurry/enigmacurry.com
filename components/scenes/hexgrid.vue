@@ -43,8 +43,9 @@ export default {
     backgroundAlpha: {type: Number, default: 0.8},
   },
   data() {
+    let scene = new Three.Scene()
     return {
-      scene: new Three.Scene(),
+      scene,
       generationTime: 0,
       zoom: 500,
       cycle: 0,
