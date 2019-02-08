@@ -39,7 +39,7 @@ export default {
     zoom: {type: Number, default: 500},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    generations: {type: Number, default: 360},
+    generations: {type: Number, default: 351},
     backgroundClass: {type: String, default: "stair-stalks"},
     backgroundAlpha: {type: Number, default: 0.8},
   },
