@@ -44,21 +44,30 @@ export default {
     const webGLRenderer = new Three.WebGLRenderer({alpha: true})
     const effectComposer = new Three.EffectComposer(webGLRenderer)
     const pixelPass = new Three.ShaderPass(Three.PixelShader)
+    const copyPass = new Three.ShaderPass(Three.CopyShader)
+    const antialiasPass = new Three.ShaderPass(Three.FXAAShader)
+    const glitchPass = new Three.GlitchPass()
     pixelPass.uniforms['resolution'].value = new Three.Vector2()
     pixelPass.uniforms['pixelSize'].value = 16
     return {
       webGLRenderer,
       effectComposer,
-      copyPass: new Three.ShaderPass(Three.CopyShader),
-      antialiasPass: new Three.ShaderPass(Three.FXAAShader),
-      glitchPass: new Three.GlitchPass(),
-      pixelPass,
       sceneData: [], // List of GScenes (Scene, cameras, currentCamera)
       size: {width: 0, height: 0}, //initialized in onResize,
       showStats: process.env.NODE_ENV === 'development',
       stats: new Stats(),
       dom_id: `threejs-stats-${uuid()}`,
-      downscale: 1
+      downscale: 1,
+      antialiasPass,
+      pixelPass,
+      glitchPass,
+      copyPass,
+      effectPasses: [
+        {pass: antialiasPass},
+        {pass: pixelPass, enabled: false, uniforms: {'pixelSize': 16}},
+        {pass: glitchPass, enabled: false},
+        {pass: copyPass, renderToScreen: true},
+      ]
     }
   },
   watch: {
@@ -70,16 +79,18 @@ export default {
   },
   created() {
     this.webGLRenderer.autoClear = false
-    
-    this.effectComposer.addPass(this.antialiasPass)
-    this.antialiasPass.enabled = true
-    this.effectComposer.addPass(this.pixelPass)
-    this.pixelPass.enabled = false
-    this.effectComposer.addPass(this.glitchPass)
-    this.glitchPass.enabled = false
-    this.effectComposer.addPass(this.copyPass)
-
-    this.copyPass.renderToScreen = true
+    for( let p=0; p < this.effectPasses.length; p++) {
+      const effect = this.effectPasses[p]
+      effect.pass.enabled = effect.enabled === false ? false : true
+      effect.pass.renderToScreen = effect.renderToScreen === true ? true : false
+      this.effectComposer.addPass(effect.pass)
+      const uniformNames = Object.keys(effect.uniforms === undefined ? {} : effect.uniforms)
+      for(let u=0; u < uniformNames.length; u++) {
+        const name = uniformNames[u]
+        const uniform = effect.pass.uniforms[name]
+        uniform.value = effect.uniforms[name]
+      }
+    }
     
     this.createStats()
   },
