@@ -91,7 +91,7 @@ export default {
       const spirals = [this.spirals[this.cycle % this.spirals.length],
                        this.spirals[(this.cycle+2) % this.spirals.length]]
       this.nextGeneration(spirals)
-      this.zoom = Math.atan(Math.sin(tt / 22)) * 200 + 400
+      this.zoom = Math.atan(Math.sin(tt / 22)) * 200 + 200
     },
     kaleidoZoom(level, interval, callback) {
       const t = { level: this.kaleidoShader.uniforms.sides.value }
