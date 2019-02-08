@@ -26,6 +26,8 @@ import "imports-loader?THREE=three!../../node_modules/three/examples/js/postproc
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/GlitchPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/CopyShader"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/PixelShader"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/SepiaShader"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/FXAAShader"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/DigitalGlitch"
 
@@ -46,6 +48,8 @@ export default {
     const pixelPass = new Three.ShaderPass(Three.PixelShader)
     const copyPass = new Three.ShaderPass(Three.CopyShader)
     const antialiasPass = new Three.ShaderPass(Three.FXAAShader)
+    const sepiaPass = new Three.ShaderPass(Three.SepiaShader)
+    const kaleidoPass = new Three.ShaderPass(Three.KaleidoShader)
     const glitchPass = new Three.GlitchPass()
     pixelPass.uniforms['resolution'].value = new Three.Vector2()
     pixelPass.uniforms['pixelSize'].value = 16
@@ -62,10 +66,14 @@ export default {
       pixelPass,
       glitchPass,
       copyPass,
+      sepiaPass,
+      kaleidoPass,
       effectPasses: [
         {pass: antialiasPass},
-        {pass: pixelPass, enabled: false, uniforms: {'pixelSize': 16}},
-        {pass: glitchPass, enabled: false},
+        {pass: pixelPass, enabled: false, uniforms: {pixelSize: 16}},
+        {pass: glitchPass, enabled: false, uniforms: {amount: 1}},
+        {pass: sepiaPass, enabled: false},
+        {pass: kaleidoPass, enabled: false, uniforms: {sides: 14}},
         {pass: copyPass, renderToScreen: true},
       ]
     }
