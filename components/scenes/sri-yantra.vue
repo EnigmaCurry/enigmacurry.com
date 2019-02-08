@@ -1,5 +1,5 @@
 <template>
-  <g-scene :obj="scene">
+  <g-scene :obj="scene" antialias>
     <g-camera name="main" orthographic :zoomScale="zoom"/>
 
     <g-grid :divisions="10" v-if="showGrid"/>

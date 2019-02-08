@@ -1,5 +1,5 @@
 <template>
-  <g-scene>
+<g-scene antialias>
     <g-camera name="main" orthographic :zoomScale=2></g-camera>
     <g-light randomize-color :hex="0x0000ff" :intensity="0.2" :position="{ y: -10, z: 500 }"/>
     <g-light randomize-color :hex="0xff0000" :intensity="0.2" :position="{ x: -10, z: 500 }"/>

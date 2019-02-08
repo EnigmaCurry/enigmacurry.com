@@ -69,7 +69,7 @@ export default {
       sepiaPass,
       kaleidoPass,
       effectPasses: [
-        {pass: antialiasPass},
+        {pass: antialiasPass, enabled: false},
         {pass: pixelPass, enabled: false, uniforms: {pixelSize: 16}},
         {pass: glitchPass, enabled: false, uniforms: {amount: 1}},
         {pass: sepiaPass, enabled: false},
@@ -113,7 +113,8 @@ export default {
       if (typeof(toSize) != "undefined") {
         this.size = {width: toSize.width, height: toSize.height}
       } else {
-        this.size = {width: this.$refs.renderer.clientWidth, height: this.$refs.renderer.clientHeight}
+        this.size = {width: this.$refs.renderer.clientWidth ? this.$refs.renderer.clientWidth : 0,
+                     height: this.$refs.renderer.clientHeight ? this.$refs.renderer.clientHeight : 0}
         //Apply a max-width to the renderer if the user zooms their browser out:
         if(window.devicePixelRatio < 1) {
           this.size = {width: this.size.width * window.devicePixelRatio, height: this.size.height * window.devicePixelRatio}

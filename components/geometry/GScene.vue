@@ -10,7 +10,8 @@ export default {
   mixins: [GObject3D],
   inject: ['renderer'],
   props: {
-    obj: { type: Object }
+    obj: { type: Object },
+    antialias: {type: Boolean, default: false}
   },
   provide() {
     return {
@@ -40,6 +41,7 @@ export default {
     }
     let camera = this.cameras[this.currentCamera]
     this.renderPass = new Three.RenderPass(this.curObj, camera)
+    this.renderer.antialiasPass.enabled = this.antialias
     this.renderer.effectComposer.insertPass(this.renderPass, 0)
   },
   destroyed() {
@@ -51,6 +53,7 @@ export default {
       this.renderer.effectComposer.passes,
       pass => { return pass != this.renderPass }
     )
+    this.renderer.antialiasPass.enabled = false
 
   }
 }
