@@ -106,7 +106,6 @@ export default {
                                                           1 / (this.size.height))
       this.pixelPass.uniforms['resolution'].
         value.set(this.size.width, this.size.height).multiplyScalar(window.devicePixelRatio)
-      console.log(this.pixelPass.uniforms)
       //Always render the screen resolution / downscale, not the browser zoom level:
       this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
       //Resize all cameras in all scenes:
