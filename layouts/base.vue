@@ -112,6 +112,10 @@
   background-image: url(~assets/img/fractal/oceanic-network.1080.jpg);
 }
 
+#bg.stair-stalks {
+  background-image: url(~assets/img/fractal/stair-stalks.1080.jpg);
+}
+
 div#app {
   background: transparent;
 }
