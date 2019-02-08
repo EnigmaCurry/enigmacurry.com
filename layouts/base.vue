@@ -192,6 +192,7 @@ export default {
         { img: require('~/assets/img/icons/yoyo.png'), title: 'Yo Yo Verse', to: '/geometry/yoyoverse' },
         { img: require('~/assets/img/icons/pingpong.png'), title: 'Ping Pong Verse', to: '/geometry/pingpongverse' },
         { img: require('~/assets/img/icons/mandelbrot.png'), title: 'Mandelbrot', to: '/geometry/mandelbrot' },
+        { img: require('~/assets/img/icons/hexgrid.png'), title: 'Hex Grid', to: '/geometry/hexgrid' },
      ],
     }
   },
