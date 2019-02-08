@@ -66,7 +66,7 @@ export default {
       const spirals = [this.spirals[this.cycle % this.spirals.length],
                        this.spirals[(this.cycle+2) % this.spirals.length]]
       this.nextGeneration(spirals)
-      this.zoom = Math.atan(Math.sin(tt/22)) * 500 + 200
+      this.zoom = Math.atan(Math.sin(tt / 22)) * 700
     },
     reset({keepMeshes=false} = {}) {
       this.finished = false
