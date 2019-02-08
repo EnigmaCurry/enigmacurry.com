@@ -100,7 +100,8 @@ export default {
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onUpdate(() => {
           this.kaleidoShader.uniforms.sides.value = t.level
-          this.kaleidoShader.enabled = t.level > 0.1
+          //this.kaleidoShader.enabled = t.level > 0.1
+          this.kaleidoShader.enabled = false
         })
         .onComplete(callback === undefined ? () => {} : callback)
         .start()
