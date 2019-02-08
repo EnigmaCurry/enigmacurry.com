@@ -12,6 +12,8 @@ import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
 
 function *spiralGenerator(generations, origin, direction) {
   let order=0, n=0, d=direction
@@ -59,6 +61,12 @@ export default {
   },
   created() {
     this.reset()
+  },
+  mounted() {
+    this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
+    this.kaleidoShader.enabled = false
+    this.kaleidoShader.uniforms.sides.value = 6
+    this.renderer.addEffectPass(this.kaleidoShader)
   },
   methods: {
     animate(tt) {

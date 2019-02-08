@@ -40,9 +40,13 @@ export default {
       window.scene = this.curObj
     }
     let camera = this.cameras[this.currentCamera]
+    // Setup default post processing effects on new scene mount
+    // This means scenes can do whatever post processing they want
+    // and get a clean slate each start.
+    this.renderer.effectComposer.passes = []
     this.renderPass = new Three.RenderPass(this.curObj, camera)
-    this.renderer.antialiasPass.enabled = this.antialias
-    this.renderer.effectComposer.insertPass(this.renderPass, 0)
+    this.renderer.effectComposer.addPass(this.renderPass)
+    this.renderer.setupPostProcessing()
   },
   destroyed() {
     this.renderer.sceneData = filter(
@@ -53,8 +57,6 @@ export default {
       this.renderer.effectComposer.passes,
       pass => { return pass != this.renderPass }
     )
-    this.renderer.antialiasPass.enabled = false
-
   }
 }
 </script>

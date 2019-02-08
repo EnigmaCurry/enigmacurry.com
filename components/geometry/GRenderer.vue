@@ -23,13 +23,7 @@
 import * as Three from 'three'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/EffectComposer"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
-import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/GlitchPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/CopyShader"
-import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/PixelShader"
-import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/SepiaShader"
-import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
-import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/FXAAShader"
-import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/DigitalGlitch"
 
 import Stats from "~/lib/stats"
 import uuid from 'uuid/v4'
@@ -45,14 +39,6 @@ export default {
   data() {
     const webGLRenderer = new Three.WebGLRenderer({alpha: true})
     const effectComposer = new Three.EffectComposer(webGLRenderer)
-    const pixelPass = new Three.ShaderPass(Three.PixelShader)
-    const copyPass = new Three.ShaderPass(Three.CopyShader)
-    const antialiasPass = new Three.ShaderPass(Three.FXAAShader)
-    const sepiaPass = new Three.ShaderPass(Three.SepiaShader)
-    const kaleidoPass = new Three.ShaderPass(Three.KaleidoShader)
-    const glitchPass = new Three.GlitchPass()
-    pixelPass.uniforms['resolution'].value = new Three.Vector2()
-    pixelPass.uniforms['pixelSize'].value = 16
     return {
       webGLRenderer,
       effectComposer,
@@ -62,19 +48,8 @@ export default {
       stats: new Stats(),
       dom_id: `threejs-stats-${uuid()}`,
       downscale: 1,
-      antialiasPass,
-      pixelPass,
-      glitchPass,
-      copyPass,
-      sepiaPass,
-      kaleidoPass,
-      effectPasses: [
-        {pass: antialiasPass, enabled: false},
-        {pass: pixelPass, enabled: false, uniforms: {pixelSize: 16}},
-        {pass: glitchPass, enabled: false, uniforms: {amount: 1}},
-        {pass: sepiaPass, enabled: false},
-        {pass: kaleidoPass, enabled: false, uniforms: {sides: 14}},
-        {pass: copyPass, renderToScreen: true},
+      defaultEffectChain: [
+        {pass: new Three.ShaderPass(Three.CopyShader), renderToScreen: true},
       ]
     }
   },
@@ -87,19 +62,7 @@ export default {
   },
   created() {
     this.webGLRenderer.autoClear = false
-    for( let p=0; p < this.effectPasses.length; p++) {
-      const effect = this.effectPasses[p]
-      effect.pass.enabled = effect.enabled === false ? false : true
-      effect.pass.renderToScreen = effect.renderToScreen === true ? true : false
-      this.effectComposer.addPass(effect.pass)
-      const uniformNames = Object.keys(effect.uniforms === undefined ? {} : effect.uniforms)
-      for(let u=0; u < uniformNames.length; u++) {
-        const name = uniformNames[u]
-        const uniform = effect.pass.uniforms[name]
-        uniform.value = effect.uniforms[name]
-      }
-    }
-    
+    this.setupPostProcessing()
     this.createStats()
   },
   mounted() {
@@ -122,10 +85,6 @@ export default {
       }
       this.webGLRenderer.setSize(this.size.width, this.size.height)
       this.effectComposer.setSize(this.size.width, this.size.height)
-      this.antialiasPass.uniforms['resolution'].value.set(1 / (this.size.width),
-                                                          1 / (this.size.height))
-      this.pixelPass.uniforms['resolution'].
-        value.set(this.size.width, this.size.height).multiplyScalar(window.devicePixelRatio)
       //Always render the screen resolution / downscale, not the browser zoom level:
       this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
       //Resize all cameras in all scenes:
@@ -165,6 +124,24 @@ export default {
         }
       }
     },
+    addEffectPass: function(effectPass) {
+      this.effectComposer.insertPass(effectPass, this.effectComposer.passes.length-1)
+    },
+    setupPostProcessing: function(chain=undefined) {
+      chain = chain === undefined ? this.defaultEffectChain : chain
+      for( let p=0; p < this.defaultEffectChain.length; p++) {
+        const effect = this.defaultEffectChain[p]
+        effect.pass.enabled = effect.enabled === false ? false : true
+        effect.pass.renderToScreen = effect.renderToScreen === true ? true : false
+        this.effectComposer.addPass(effect.pass)
+        const uniformNames = Object.keys(effect.uniforms === undefined ? {} : effect.uniforms)
+        for(let u=0; u < uniformNames.length; u++) {
+          const name = uniformNames[u]
+          const uniform = effect.pass.uniforms[name]
+          uniform.value = effect.uniforms[name]
+        }
+      }
+    }
   },
 }
 </script>
