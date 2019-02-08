@@ -24,6 +24,7 @@ import * as Three from 'three'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/EffectComposer"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/CopyShader"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/FXAAShader"
 
 import Stats from "~/lib/stats"
 import uuid from 'uuid/v4'
@@ -39,6 +40,7 @@ export default {
   data() {
     const webGLRenderer = new Three.WebGLRenderer({alpha: true})
     const effectComposer = new Three.EffectComposer(webGLRenderer)
+    const antialiasPass = new Three.ShaderPass(Three.FXAAShader)
     return {
       webGLRenderer,
       effectComposer,
@@ -48,9 +50,7 @@ export default {
       stats: new Stats(),
       dom_id: `threejs-stats-${uuid()}`,
       downscale: 1,
-      defaultEffectChain: [
-        {pass: new Three.ShaderPass(Three.CopyShader), renderToScreen: true},
-      ]
+      antialiasPass
     }
   },
   watch: {
@@ -85,6 +85,8 @@ export default {
       }
       this.webGLRenderer.setSize(this.size.width, this.size.height)
       this.effectComposer.setSize(this.size.width, this.size.height)
+      this.antialiasPass.uniforms['resolution'].value.set(1 / (this.size.width),
+                                                          1 / (this.size.height))
       //Always render the screen resolution / downscale, not the browser zoom level:
       this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
       //Resize all cameras in all scenes:
@@ -127,20 +129,17 @@ export default {
     addEffectPass: function(effectPass) {
       this.effectComposer.insertPass(effectPass, this.effectComposer.passes.length-1)
     },
-    setupPostProcessing: function(chain=undefined) {
-      chain = chain === undefined ? this.defaultEffectChain : chain
-      for( let p=0; p < this.defaultEffectChain.length; p++) {
-        const effect = this.defaultEffectChain[p]
-        effect.pass.enabled = effect.enabled === false ? false : true
-        effect.pass.renderToScreen = effect.renderToScreen === true ? true : false
-        this.effectComposer.addPass(effect.pass)
-        const uniformNames = Object.keys(effect.uniforms === undefined ? {} : effect.uniforms)
-        for(let u=0; u < uniformNames.length; u++) {
-          const name = uniformNames[u]
-          const uniform = effect.pass.uniforms[name]
-          uniform.value = effect.uniforms[name]
-        }
+    setupPostProcessing: function(renderPass, effects=[]) {
+      this.effectComposer.passes = []
+      if (renderPass != undefined) {
+        this.effectComposer.addPass(renderPass)
       }
+      for(let e=0; e < effects.length; e++){
+        this.effectComposer.addPass(effects[e])
+      }
+      const copyPass = new Three.ShaderPass(Three.CopyShader)
+      copyPass.renderToScreen = true
+      this.effectComposer.addPass(copyPass)
     }
   },
 }

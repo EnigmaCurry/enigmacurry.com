@@ -43,19 +43,16 @@ export default {
     // Setup default post processing effects on new scene mount
     // This means scenes can do whatever post processing they want
     // and get a clean slate each start.
-    this.renderer.effectComposer.passes = []
-    this.renderPass = new Three.RenderPass(this.curObj, camera)
-    this.renderer.effectComposer.addPass(this.renderPass)
-    this.renderer.setupPostProcessing()
+    const effects = []
+    if(this.antialias) {
+      effects.push(this.renderer.antialiasPass)
+    }
+    this.renderer.setupPostProcessing(new Three.RenderPass(this.curObj, camera), effects)
   },
   destroyed() {
     this.renderer.sceneData = filter(
       this.renderer.sceneData,
       gscene => {return gscene != this}
-    )
-    this.renderer.effectComposer.passes = filter(
-      this.renderer.effectComposer.passes,
-      pass => { return pass != this.renderPass }
     )
   }
 }
