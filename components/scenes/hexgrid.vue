@@ -72,14 +72,23 @@ export default {
     this.renderer.addEffectPass(this.kaleidoShader)
     let direction = 1
     const kaleidoTween = () => {
-      let nextLevel = Math.floor(Math.random() * 10) + 1
-      if (Math.random() > 0.95) {
+      let nextLevel
+      let r = Math.random()
+      if (r > 0.95) {
         nextLevel = (Math.floor(Math.random() * 300)) + 1
-      }      
+      } else if (r > 0.55) {
+        nextLevel = 1
+      } else {
+        nextLevel = Math.floor(Math.random() * 10) + 1
+      }
       this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
-        setTimeout(() => {
-          this.kaleidoShader.enabled = !this.kaleidoShader.enabled
-        }, 1000)
+        if (nextLevel === 1) {
+          setTimeout(() => {
+            this.kaleidoShader.enabled = false
+          }, 1000)
+        } else {
+          this.kaleidoShader.enabled = true
+        }
         setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
       })
       direction *= -1
