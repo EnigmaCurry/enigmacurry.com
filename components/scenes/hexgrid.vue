@@ -86,10 +86,11 @@ export default {
           setTimeout(() => {
             this.kaleidoShader.enabled = false
           }, 1000)
+          setTimeout(kaleidoTween, this.kaleidoscopeInterval * 3 * 1000)
         } else {
           this.kaleidoShader.enabled = true
+          setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
         }
-        setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
       })
       direction *= -1
     }
