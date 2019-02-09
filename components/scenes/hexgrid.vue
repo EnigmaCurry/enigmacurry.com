@@ -77,12 +77,14 @@ export default {
         nextLevel = (Math.floor(Math.random() * 300)) + 1
       }      
       this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
+        setTimeout(() => {
+          this.kaleidoShader.enabled = !this.kaleidoShader.enabled
+        }, 1000)
         setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
       })
       direction *= -1
     }
     kaleidoTween() //recursive..
-    this.visibilityInterval = Visibility.every(10 * 1000, () => { this.kaleidoShader.enabled = !this.kaleidoShader.enabled })
   },
   methods: {
     animate(tt) {
