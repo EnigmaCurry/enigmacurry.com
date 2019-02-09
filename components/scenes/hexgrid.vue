@@ -14,6 +14,7 @@ import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
+import Visibility from 'visibilityjs'
 
 function *spiralGenerator(generations, origin, direction) {
   let order=0, n=0, d=direction
@@ -42,8 +43,8 @@ export default {
     hexBorder: {type: Number, default: 0.1},
     generations: {type: Number, default: 351},
     backgroundClass: {type: String, default: "stair-stalks"},
-    backgroundAlpha: {type: Number, default: 0.8},
-    kaleidoscopeInterval: {type: Number, default: 10}
+    backgroundAlpha: {type: Number, default: 0.6},
+    kaleidoscopeInterval: {type: Number, default: 10},
   },
   data() {
     let scene = new Three.Scene()
@@ -74,14 +75,14 @@ export default {
       let nextLevel = Math.floor(Math.random() * 10) + 1
       if (Math.random() > 0.95) {
         nextLevel = (Math.floor(Math.random() * 300)) + 1
-      } 
-      
+      }      
       this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
         setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
       })
       direction *= -1
     }
-    kaleidoTween()
+    kaleidoTween() //recursive..
+    this.visibilityInterval = Visibility.every(10 * 1000, () => { this.kaleidoShader.enabled = !this.kaleidoShader.enabled })
   },
   methods: {
     animate(tt) {
@@ -100,8 +101,6 @@ export default {
         .easing(TWEEN.Easing.Quadratic.InOut)
         .onUpdate(() => {
           this.kaleidoShader.uniforms.sides.value = t.level
-          //this.kaleidoShader.enabled = t.level > 0.1
-          this.kaleidoShader.enabled = false
         })
         .onComplete(callback === undefined ? () => {} : callback)
         .start()
