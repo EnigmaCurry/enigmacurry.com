@@ -54,9 +54,10 @@ export default {
     hexBorder: {type: Number, default: 0.1},
     backgroundClass: {type: String, default: "nine-pow-cantor-general"},
     backgroundAlpha: {type: Number, default: 0.6},
-    kaleidoscopeEnabled: {type: Boolean, default: false},
+    kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},
-    isEndless: { type: Boolean, default: true}
+    isEndless: { type: Boolean, default: true},
+    generationInterval: {type: Number, default: 0.1}
   },
   data() {
     let scene = new Three.Scene()
@@ -73,6 +74,7 @@ export default {
       hexMeshes: {}, /// 3-tuple stringified q,r,s -> mesh
       hexMaterials: [], /// Array of each hexMesh's material, for easy uniform updates 
       tweenGroup: new TWEEN.Group(),
+      lastGenerationTime: (new Date().getTime() / 1000) + 2, //Delay 2 seconds before start
     }
   },
   created() {
@@ -88,7 +90,11 @@ export default {
   methods: {
     animate(tt) {
       this.tweenGroup.update()
-      this.nextGeneration(this.spirals)
+      const t = new Date().getTime() / 1000
+      if (t - this.lastGenerationTime > this.generationInterval) {
+        this.lastGenerationTime = t
+        this.nextGeneration(this.spirals)
+      }
       for (let h=0; h < this.hexMaterials.length; h++){
         this.hexMaterials[h].uniforms.iTime.value = tt
         this.hexMaterials[h].uniforms.iGeneration.value = this.generation
@@ -236,7 +242,7 @@ export default {
                      iGeneration: {type: 'i', value: 0},
                      iCreation: {type: 'i', value: this.generation},
                      iCreatedTime: {type: 'f', value: (new Date().getTime() - this.createdTime) / 1000},
-                     iOpacity: {type: 'f', value: 0.25}},
+                     iOpacity: {type: 'f', value: 0.125}},
           vertexShader,
           fragmentShader,
           side: Three.DoubleSide
