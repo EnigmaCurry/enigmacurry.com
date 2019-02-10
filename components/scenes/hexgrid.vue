@@ -52,7 +52,7 @@ export default {
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    backgroundClass: {type: String, default: "pare4Dolia-8"},
+    backgroundClass: {type: String, default: "pare4Dolia-pair-of-four-dull-olyas"},
     backgroundAlpha: {type: Number, default: 0.6},
     kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},
@@ -63,7 +63,7 @@ export default {
     let scene = new Three.Scene()
     return {
       scene,
-      generations: squareSpiralNumber(17),
+      generations: squareSpiralNumber(14),
       zoom: 200,
       cycle: 0,
       colorCycle: 0,
@@ -115,7 +115,7 @@ export default {
       let direction = 1
       const kaleidoTween = () => {
         let nextLevel
-        let min = 4
+        let min = 1
         let r = Math.random()
         if (r > 0.95) {
           nextLevel = (Math.floor(Math.random() * 300)) + 1
