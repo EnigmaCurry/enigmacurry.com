@@ -65,7 +65,7 @@ export default {
     return {
       scene,
       generations: squareSpiralNumber(14),
-      zoom: 200,
+      zoom: 100,
       cycle: 0,
       colorCycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
