@@ -56,6 +56,7 @@ export default {
     backgroundAlpha: {type: Number, default: 0.6},
     kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},
+    kaleidozoomInterval: {type: Number, default: 30},
     isEndless: { type: Boolean, default: true},
     generationInterval: {type: Number, default: 0.1}
   },
@@ -124,7 +125,7 @@ export default {
         } else {
           nextLevel = Math.floor(Math.random() *(10-min+1) + min)
         }
-        this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
+        this.kaleidoZoom(nextLevel, this.kaleidozoomInterval, () => {
           this.kaleidoShader.enabled = true
           for (let h=0; h < this.hexMaterials.length; h++){
             this.hexMaterials[h].uniforms.iKaleidoscope.value = true
