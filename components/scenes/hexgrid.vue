@@ -15,7 +15,7 @@ import BackgroundImage from '~/components/BackgroundImage.vue'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
 import Visibility from 'visibilityjs'
-import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
+import vertexShader from 'raw-loader!~/assets/shaders/hexshader.vertex.glsl'
 import fragmentShader from 'raw-loader!~/assets/shaders/hexshader.fragment.glsl'
 
 function *spiralGenerator(generations, origin, direction) {
@@ -52,7 +52,7 @@ export default {
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    backgroundClass: {type: String, default: "nine-pow-cantor-general"},
+    backgroundClass: {type: String, default: "pare4Dolia-8"},
     backgroundAlpha: {type: Number, default: 0.6},
     kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},
@@ -63,8 +63,8 @@ export default {
     let scene = new Three.Scene()
     return {
       scene,
-      generations: squareSpiralNumber(15),
-      zoom: 300,
+      generations: squareSpiralNumber(17),
+      zoom: 200,
       cycle: 0,
       colorCycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
@@ -80,7 +80,7 @@ export default {
   created() {
     this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
     this.kaleidoShader.uniforms.sides.value = 1
-    this.kaleidoShader.enabled = false
+    this.kaleidoShader.enabled = this.kaleidoscopeEnabled
     this.reset()
   },
   mounted() {
@@ -115,24 +115,21 @@ export default {
       let direction = 1
       const kaleidoTween = () => {
         let nextLevel
+        let min = 4
         let r = Math.random()
         if (r > 0.95) {
           nextLevel = (Math.floor(Math.random() * 300)) + 1
         } else if (r > 0.55) {
-          nextLevel = 1
+          nextLevel = min
         } else {
-          nextLevel = Math.floor(Math.random() * 10) + 1
+          nextLevel = Math.floor(Math.random() *(10-min+1) + min)
         }
         this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
-          if (nextLevel === 1) {
-            setTimeout(() => {
-              this.kaleidoShader.enabled = false
-            }, 1000)
-            setTimeout(kaleidoTween, this.kaleidoscopeInterval * 3 * 1000)
-          } else {
-            this.kaleidoShader.enabled = true
-            setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
-          }
+          this.kaleidoShader.enabled = true
+          for (let h=0; h < this.hexMaterials.length; h++){
+            this.hexMaterials[h].uniforms.iKaleidoscope.value = true
+          }            
+          setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
         })
         direction *= -1
       }
@@ -195,7 +192,7 @@ export default {
            {start: "#DAB699", end: "#333333"},
            {start: "#FFFFFF", end: "#333333"},
           ],
-          
+        
         ]
         this.getHexMesh(origin)
         for (let d=0; d < 6; d++) {
@@ -242,7 +239,8 @@ export default {
                      iGeneration: {type: 'i', value: 0},
                      iCreation: {type: 'i', value: this.generation},
                      iCreatedTime: {type: 'f', value: (new Date().getTime() - this.createdTime) / 1000},
-                     iOpacity: {type: 'f', value: 0.125}},
+                     iOpacity: {type: 'f', value: 0.125},
+                     iKaleidoscope: {type: 'b', value: true}},
           vertexShader,
           fragmentShader,
           side: Three.DoubleSide
