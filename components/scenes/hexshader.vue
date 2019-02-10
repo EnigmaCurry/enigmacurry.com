@@ -52,11 +52,11 @@ export default {
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    backgroundClass: {type: String, default: "stair-stalks"},
+    backgroundClass: {type: String, default: "nine-pow-cantor-general"},
     backgroundAlpha: {type: Number, default: 0.6},
     kaleidoscopeEnabled: {type: Boolean, default: false},
     kaleidoscopeInterval: {type: Number, default: 10},
-    isEndless: { type: Boolean, default: false}
+    isEndless: { type: Boolean, default: true}
   },
   data() {
     let scene = new Three.Scene()
@@ -230,7 +230,6 @@ export default {
         m = this._newHexMesh(hex, )
         color = color === undefined ? new Three.Color(1,1,1) : color
         //const mat = new Three.MeshLambertMaterial({color})
-        console.log((new Date().getTime() - this.createdTime) / 1000)
         const mat = new Three.ShaderMaterial( {
           uniforms: {iColor: {type:'v3', value: color},
                      iTime: {type: 'f', value: 0},
@@ -250,7 +249,7 @@ export default {
         this.scene.add(mesh)
         this.hexMeshes[hex.q + ',' + hex.r + ',' + hex.s] = mesh
       } else if (color != undefined) {
-        m.material.color.copy(color)
+        m.material.uniforms.iColor.value.copy(color)
       }
       return {mesh: m, isNew}
     }
