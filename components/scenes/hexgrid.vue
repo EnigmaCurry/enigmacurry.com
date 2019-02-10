@@ -15,6 +15,8 @@ import BackgroundImage from '~/components/BackgroundImage.vue'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
 import Visibility from 'visibilityjs'
+import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
+import fragmentShader from 'raw-loader!~/assets/shaders/hexshader.fragment.glsl'
 
 function *spiralGenerator(generations, origin, direction) {
   let order=0, n=0, d=direction
@@ -33,6 +35,15 @@ function *spiralGenerator(generations, origin, direction) {
   }
 }
 
+function squareSpiralNumber(order) {
+  // generation = 0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 91, 105
+  let generations = 0
+  for (let o = 1; o <= order; o++) {
+    generations += o
+  }
+  return generations
+}
+
 export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
@@ -41,17 +52,19 @@ export default {
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.1},
-    generations: {type: Number, default: 351},
-    backgroundClass: {type: String, default: "stair-stalks"},
+    backgroundClass: {type: String, default: "nine-pow-cantor-general"},
     backgroundAlpha: {type: Number, default: 0.6},
+    kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},
+    isEndless: { type: Boolean, default: true},
+    generationInterval: {type: Number, default: 0.1}
   },
   data() {
     let scene = new Three.Scene()
     return {
       scene,
-      generationTime: 0,
-      zoom: 500,
+      generations: squareSpiralNumber(15),
+      zoom: 300,
       cycle: 0,
       colorCycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
@@ -59,7 +72,9 @@ export default {
                                            new Three.Vector2(this.hexSize, this.hexSize),
                                            new Three.Vector2(0, 0)),
       hexMeshes: {}, /// 3-tuple stringified q,r,s -> mesh
+      hexMaterials: [], /// Array of each hexMesh's material, for easy uniform updates 
       tweenGroup: new TWEEN.Group(),
+      lastGenerationTime: (new Date().getTime() / 1000) + 2, //Delay 2 seconds before start
     }
   },
   created() {
@@ -70,41 +85,20 @@ export default {
   },
   mounted() {
     this.renderer.addEffectPass(this.kaleidoShader)
-    let direction = 1
-    const kaleidoTween = () => {
-      let nextLevel
-      let r = Math.random()
-      if (r > 0.95) {
-        nextLevel = (Math.floor(Math.random() * 300)) + 1
-      } else if (r > 0.55) {
-        nextLevel = 1
-      } else {
-        nextLevel = Math.floor(Math.random() * 10) + 1
-      }
-      this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
-        if (nextLevel === 1) {
-          setTimeout(() => {
-            this.kaleidoShader.enabled = false
-          }, 1000)
-          setTimeout(kaleidoTween, this.kaleidoscopeInterval * 3 * 1000)
-        } else {
-          this.kaleidoShader.enabled = true
-          setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
-        }
-      })
-      direction *= -1
-    }
-    kaleidoTween() //recursive..
+    this.setupKaleidoTweens()
   },
   methods: {
     animate(tt) {
-      this.generationTime = tt
       this.tweenGroup.update()
-      // randomly choose two of the spirals:
-      const spirals = [this.spirals[this.cycle % this.spirals.length],
-                       this.spirals[(this.cycle+2) % this.spirals.length]]
-      this.nextGeneration(spirals)
-      this.zoom = Math.atan(Math.sin(tt / 22)) * 200 + 200
+      const t = new Date().getTime() / 1000
+      if (t - this.lastGenerationTime > this.generationInterval) {
+        this.lastGenerationTime = t
+        this.nextGeneration(this.spirals)
+      }
+      for (let h=0; h < this.hexMaterials.length; h++){
+        this.hexMaterials[h].uniforms.iTime.value = tt
+        this.hexMaterials[h].uniforms.iGeneration.value = this.generation
+      }
     },
     kaleidoZoom(level, interval, callback) {
       const t = { level: this.kaleidoShader.uniforms.sides.value }
@@ -117,10 +111,40 @@ export default {
         .onComplete(callback === undefined ? () => {} : callback)
         .start()
     },
+    setupKaleidoTweens() {
+      let direction = 1
+      const kaleidoTween = () => {
+        let nextLevel
+        let r = Math.random()
+        if (r > 0.95) {
+          nextLevel = (Math.floor(Math.random() * 300)) + 1
+        } else if (r > 0.55) {
+          nextLevel = 1
+        } else {
+          nextLevel = Math.floor(Math.random() * 10) + 1
+        }
+        this.kaleidoZoom(nextLevel, this.kaleidoscopeInterval, () => {
+          if (nextLevel === 1) {
+            setTimeout(() => {
+              this.kaleidoShader.enabled = false
+            }, 1000)
+            setTimeout(kaleidoTween, this.kaleidoscopeInterval * 3 * 1000)
+          } else {
+            this.kaleidoShader.enabled = true
+            setTimeout(kaleidoTween, this.kaleidoscopeInterval * 1000)
+          }
+        })
+        direction *= -1
+      }
+      if (this.kaleidoscopeEnabled) {
+        kaleidoTween() /// recursive timeout..
+      }
+    },
     reset({keepMeshes=false} = {}) {
       this.finished = false
       this.generation = 0
       this.cycle += 1
+      this.createdTime = new Date().getTime()
       this.colorCycle += this.cycle % 6 === 0 ? 1 : 0
       const origin = new this.$hexagons.Hex(0,0,0)
       this.origins = []
@@ -132,6 +156,7 @@ export default {
       } else {
         this.scene.remove.apply(this.scene, Object.values(this.hexMeshes))
         this.hexMeshes = {}
+        this.hexMaterials = []
         this.origins = []
         this.spirals = []
         this.colors = [
@@ -184,15 +209,17 @@ export default {
         for (let s=0; s < spirals.length; s++) {
           const spiral = spirals[s]
           const nHex = this.origins[s] = this.origins[s].neighbor(spiral.next().value)
-          const colorInfo = this.colors[this.colorCycle % this.colors.length][(this.cycle-1) % 6]
+          const colorInfo = this.colors[this.colorCycle % this.colors.length][(this.cycle-1+s) % 6]
           const color = (new Three.Color(colorInfo.start)).lerp(
             new Three.Color(colorInfo.end), this.generation / this.generations)
           this.getHexMesh(nHex, color)
         }
         this.generation += 1
-      } else {
+      } else if (this.isEndless) {
         this.reset({keepMeshes: true})
-        if (onComplete != undefined) { onComplete() }
+      }
+      if (onComplete != undefined) {
+        onComplete()
       }
     },
     _newHexMesh(hex, color=0xffffff) {
@@ -208,8 +235,19 @@ export default {
         isNew = true
         m = this._newHexMesh(hex, )
         color = color === undefined ? new Three.Color(1,1,1) : color
-        const mat = new Three.MeshLambertMaterial({color})
-        mat.opacity = 0.25
+        //const mat = new Three.MeshLambertMaterial({color})
+        const mat = new Three.ShaderMaterial( {
+          uniforms: {iColor: {type:'v3', value: color},
+                     iTime: {type: 'f', value: 0},
+                     iGeneration: {type: 'i', value: 0},
+                     iCreation: {type: 'i', value: this.generation},
+                     iCreatedTime: {type: 'f', value: (new Date().getTime() - this.createdTime) / 1000},
+                     iOpacity: {type: 'f', value: 0.125}},
+          vertexShader,
+          fragmentShader,
+          side: Three.DoubleSide
+        } )
+        this.hexMaterials.push(mat)
         const mesh = new Three.Mesh(this.hexGeometry, mat)
         const px = this.hexLayout.hexToPixel(hex)
         mesh.position.x = px.x
@@ -217,7 +255,7 @@ export default {
         this.scene.add(mesh)
         this.hexMeshes[hex.q + ',' + hex.r + ',' + hex.s] = mesh
       } else if (color != undefined) {
-        m.material.color.copy(color)
+        m.material.uniforms.iColor.value.copy(color)
       }
       return {mesh: m, isNew}
     }
