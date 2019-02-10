@@ -100,6 +100,7 @@ export default {
         this.hexMaterials[h].uniforms.iTime.value = tt
         this.hexMaterials[h].uniforms.iGeneration.value = this.generation
       }
+      this.zoom = (Math.atan(Math.sin(tt/22)) * 100) + 200
     },
     kaleidoZoom(level, interval, callback) {
       const t = { level: this.kaleidoShader.uniforms.sides.value }
