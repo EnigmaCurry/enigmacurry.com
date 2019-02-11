@@ -80,7 +80,7 @@ export default {
   },
   created() {
     this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
-    this.kaleidoShader.uniforms.sides.value = 1
+    this.kaleidoShader.uniforms.sides.value = 2
     this.kaleidoShader.enabled = this.kaleidoscopeEnabled
     this.reset()
   },
@@ -106,7 +106,7 @@ export default {
       const t = { level: this.kaleidoShader.uniforms.sides.value }
       this.kaleidoTween = new TWEEN.Tween(t, this.tweenGroup)
         .to({level}, interval * 1000)
-        .easing(TWEEN.Easing.Quadratic.InOut)
+        .easing(TWEEN.Easing.Elastic.InOut)
         .onUpdate(() => {
           this.kaleidoShader.uniforms.sides.value = t.level
         })
@@ -241,7 +241,7 @@ export default {
                      iGeneration: {type: 'i', value: 0},
                      iCreation: {type: 'i', value: this.generation},
                      iCreatedTime: {type: 'f', value: (new Date().getTime() - this.createdTime) / 1000},
-                     iOpacity: {type: 'f', value: 0.125},
+                     iOpacity: {type: 'f', value: 0.25},
                      iKaleidoscope: {type: 'b', value: true}},
           vertexShader,
           fragmentShader,

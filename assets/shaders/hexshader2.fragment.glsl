@@ -12,9 +12,9 @@ void main(void)
   float g = float(iGeneration);
   float c = float(iCreation);
   float v = vUv.x * 3.;
-  float t = (iTime/(float(iCreation))*pow(v,333.)) + float(iCreation) * 20.;
+  float t = pow(fract(iTime/(float(iCreation))*pow(v,333.)) + float(iCreation) * 20., 0.5);
   t += sin((distance(g,c) / vUv.y) / 222.);
   float i = smoothstep(-1., 1., sin(t*22.));
-  vec3 color = vec3(i + (iColor.r/v),i + (iColor.g/v), v + iColor.b);
-  gl_FragColor = vec4(color, iOpacity) * 0.5;
+  vec3 color = vec3(i + (iColor.r/t),i + (iColor.g/v) + sin(t), v + tan(iColor.b * v));
+  gl_FragColor = vec4(color, 0.1);
 }
