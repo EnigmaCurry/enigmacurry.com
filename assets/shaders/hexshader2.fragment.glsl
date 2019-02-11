@@ -16,5 +16,6 @@ void main(void)
   t += sin((distance(g,c) / vUv.y) / 222.);
   float i = smoothstep(-1., 1., sin(t*22.));
   vec3 color = vec3(i + (iColor.r/t),i + (iColor.g/v) + sin(t), v + tan(iColor.b * v));
-  gl_FragColor = vec4(color, 0.1);
+  float a = smoothstep(-1., 1., sin(t*sqrt(g)/22.)) + 0.2;
+  gl_FragColor = vec4(color, a);
 }

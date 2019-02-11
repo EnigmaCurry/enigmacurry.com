@@ -106,7 +106,7 @@ export default {
       const t = { level: this.kaleidoShader.uniforms.sides.value }
       this.kaleidoTween = new TWEEN.Tween(t, this.tweenGroup)
         .to({level}, interval * 1000)
-        .easing(TWEEN.Easing.Elastic.InOut)
+        .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(() => {
           this.kaleidoShader.uniforms.sides.value = t.level
         })
@@ -117,14 +117,12 @@ export default {
       let direction = 1
       const kaleidoTween = () => {
         let nextLevel
-        let min = 2
+        let min = 2, max = 10
         let r = Math.random()
-        if (r > 0.95) {
-          nextLevel = (Math.floor(Math.random() * 300)) + 1
-        } else if (r > 0.55) {
+        if (r > 0.55) {
           nextLevel = min
         } else {
-          nextLevel = Math.floor(Math.random() *(10-min+1) + min)
+          nextLevel = Math.floor(Math.random() *(max-min+1) + min)
         }
         this.kaleidoZoom(nextLevel, this.kaleidozoomInterval, () => {
           this.kaleidoShader.enabled = true
@@ -241,11 +239,12 @@ export default {
                      iGeneration: {type: 'i', value: 0},
                      iCreation: {type: 'i', value: this.generation},
                      iCreatedTime: {type: 'f', value: (new Date().getTime() - this.createdTime) / 1000},
-                     iOpacity: {type: 'f', value: 0.25},
+                     iOpacity: {type: 'f', value: 0.3},
                      iKaleidoscope: {type: 'b', value: true}},
           vertexShader,
           fragmentShader,
-          side: Three.DoubleSide
+          side: Three.DoubleSide,
+          transparent: true
         } )
         this.hexMaterials.push(mat)
         const mesh = new Three.Mesh(this.hexGeometry, mat)
