@@ -51,12 +51,12 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
-    hexBorder: {type: Number, default: 0.1},
-    backgroundClass: {type: String, default: "pare4Dolia-pair-of-four-dull-olyas"},
+    hexBorder: {type: Number, default: 0.91},
+    backgroundClass: {type: String, default: "stair-stalks"},
     backgroundAlpha: {type: Number, default: 0.6},
     kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},
-    kaleidozoomInterval: {type: Number, default: 30},
+    kaleidozoomInterval: {type: Number, default: 3},
     isEndless: { type: Boolean, default: true},
     generationInterval: {type: Number, default: 0.1}
   },
@@ -117,7 +117,7 @@ export default {
       let direction = 1
       const kaleidoTween = () => {
         let nextLevel
-        let min = 1
+        let min = 2
         let r = Math.random()
         if (r > 0.95) {
           nextLevel = (Math.floor(Math.random() * 300)) + 1
