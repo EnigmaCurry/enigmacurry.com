@@ -10,7 +10,7 @@
 <script>
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
-import {shuffle} from 'underscore'
+import {shuffle, sample} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
@@ -80,7 +80,7 @@ export default {
   },
   created() {
     this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
-    this.kaleidoShader.uniforms.sides.value = 2
+    this.kaleidoShader.uniforms.sides.value = 3
     this.kaleidoShader.enabled = this.kaleidoscopeEnabled
     this.reset()
   },
@@ -116,14 +116,7 @@ export default {
     setupKaleidoTweens() {
       let direction = 1
       const kaleidoTween = () => {
-        let nextLevel
-        let min = 2, max = 10
-        let r = Math.random()
-        if (r > 0.55) {
-          nextLevel = min
-        } else {
-          nextLevel = Math.floor(Math.random() *(max-min+1) + min)
-        }
+        const nextLevel = sample([1,2,3,4,5,6,7,8,9,10])
         this.kaleidoZoom(nextLevel, this.kaleidozoomInterval, () => {
           this.kaleidoShader.enabled = true
           for (let h=0; h < this.hexMaterials.length; h++){
