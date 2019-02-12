@@ -52,7 +52,7 @@ export default {
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
     hexBorder: {type: Number, default: 0.21},
-    backgroundClass: {type: String, default: "stair-stalks"},
+    backgroundClass: {type: String, default: "splash-grid"},
     backgroundAlpha: {type: Number, default: 0.6},
     kaleidoscopeEnabled: {type: Boolean, default: true},
     kaleidoscopeInterval: {type: Number, default: 10},

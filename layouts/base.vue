@@ -116,6 +116,10 @@
   background-image: url(~assets/img/fractal/stair-stalks.1080.jpg);
 }
 
+#bg.splash-grid {
+  background-image: url(~assets/img/fractal/splash-grid.12.1080.jpg);
+}
+
 div#app {
   background: transparent;
 }
