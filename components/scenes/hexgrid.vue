@@ -51,7 +51,7 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
-    hexBorder: {type: Number, default: 0.21},
+    hexBorder: {type: Number, default: 0.01},
     backgroundClass: {type: String, default: "nine-pow-cantor-general"},
     backgroundAlpha: {type: Number, default: 0.46},
     kaleidoscopeEnabled: {type: Boolean, default: false},
