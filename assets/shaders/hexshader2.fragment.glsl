@@ -36,5 +36,9 @@ void main(void)
   float a = smoothstep(-1., 1., sin(t*(sqrt(g)/22.))) + 0.2;
 
   float p = plateaus(iTime, 4., 2.);
-  gl_FragColor = vec4((1./p) * iColor.r, iColor.g, p * iColor.b, a);
+  if (mod(floor(vUv.x*7.), 3.) == 0.) {
+    gl_FragColor = vec4((1./p) * iColor.r, iColor.g, p * iColor.b, 1.);
+  } else {
+    gl_FragColor = vec4((1./p) * iColor.r/p*u, iColor.g/g, iColor.b/u, 0.4);
+  }
 }
