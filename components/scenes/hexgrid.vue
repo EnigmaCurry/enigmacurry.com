@@ -10,13 +10,13 @@
 <script>
 import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
-import {shuffle} from 'underscore'
+import {shuffle, sample} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
 import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/KaleidoShader"
 import Visibility from 'visibilityjs'
-import vertexShader from 'raw-loader!~/assets/shaders/hexshader.vertex.glsl'
-import fragmentShader from 'raw-loader!~/assets/shaders/hexshader.fragment.glsl'
+import vertexShader from 'raw-loader!~/assets/shaders/hexshader2.vertex.glsl'
+import fragmentShader from 'raw-loader!~/assets/shaders/hexshader2.fragment.glsl'
 
 function *spiralGenerator(generations, origin, direction) {
   let order=0, n=0, d=direction
@@ -51,12 +51,12 @@ export default {
     animated: {type: Boolean, default: false},
     showGrid: {type: Boolean, default: false},
     hexSize: {type: Number, default: 10},
-    hexBorder: {type: Number, default: 0.1},
-    backgroundClass: {type: String, default: "pare4Dolia-pair-of-four-dull-olyas"},
-    backgroundAlpha: {type: Number, default: 0.6},
-    kaleidoscopeEnabled: {type: Boolean, default: true},
+    hexBorder: {type: Number, default: 0.21},
+    backgroundClass: {type: String, default: "nine-pow-cantor-general"},
+    backgroundAlpha: {type: Number, default: 0.46},
+    kaleidoscopeEnabled: {type: Boolean, default: false},
     kaleidoscopeInterval: {type: Number, default: 10},
-    kaleidozoomInterval: {type: Number, default: 30},
+    kaleidozoomInterval: {type: Number, default: 23},
     isEndless: { type: Boolean, default: true},
     generationInterval: {type: Number, default: 0.1}
   },
@@ -65,7 +65,7 @@ export default {
     return {
       scene,
       generations: squareSpiralNumber(14),
-      zoom: 100,
+      zoom: 250,
       cycle: 0,
       colorCycle: 0,
       hexGeometry: new Three.BufferGeometry().fromGeometry(new Three.CircleGeometry((1 - this.hexBorder) * this.hexSize, 6)),
@@ -80,7 +80,7 @@ export default {
   },
   created() {
     this.kaleidoShader = new Three.ShaderPass(Three.KaleidoShader)
-    this.kaleidoShader.uniforms.sides.value = 1
+    this.kaleidoShader.uniforms.sides.value = 3
     this.kaleidoShader.enabled = this.kaleidoscopeEnabled
     this.reset()
   },
@@ -106,7 +106,7 @@ export default {
       const t = { level: this.kaleidoShader.uniforms.sides.value }
       this.kaleidoTween = new TWEEN.Tween(t, this.tweenGroup)
         .to({level}, interval * 1000)
-        .easing(TWEEN.Easing.Quadratic.InOut)
+        .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(() => {
           this.kaleidoShader.uniforms.sides.value = t.level
         })
@@ -116,16 +116,7 @@ export default {
     setupKaleidoTweens() {
       let direction = 1
       const kaleidoTween = () => {
-        let nextLevel
-        let min = 1
-        let r = Math.random()
-        if (r > 0.95) {
-          nextLevel = (Math.floor(Math.random() * 300)) + 1
-        } else if (r > 0.55) {
-          nextLevel = min
-        } else {
-          nextLevel = Math.floor(Math.random() *(10-min+1) + min)
-        }
+        const nextLevel = sample([1,2,3,4,5,6,7,8,9,10])
         this.kaleidoZoom(nextLevel, this.kaleidozoomInterval, () => {
           this.kaleidoShader.enabled = true
           for (let h=0; h < this.hexMaterials.length; h++){
@@ -241,11 +232,12 @@ export default {
                      iGeneration: {type: 'i', value: 0},
                      iCreation: {type: 'i', value: this.generation},
                      iCreatedTime: {type: 'f', value: (new Date().getTime() - this.createdTime) / 1000},
-                     iOpacity: {type: 'f', value: 0.125},
+                     iOpacity: {type: 'f', value: 0.3},
                      iKaleidoscope: {type: 'b', value: true}},
           vertexShader,
           fragmentShader,
-          side: Three.DoubleSide
+          side: Three.DoubleSide,
+          transparent: true
         } )
         this.hexMaterials.push(mat)
         const mesh = new Three.Mesh(this.hexGeometry, mat)
