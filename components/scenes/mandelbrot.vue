@@ -41,6 +41,7 @@ export default {
       side: Three.DoubleSide
     } )
     const zoomList = [
+      
       /// Sceme 1 - Long permiter pan
       {x: 0.250, y:0, zoom: 1090, colt:99, duration: 20},
       {x: 0.260, y:0.002, zoom: 1, colt: 33, duration: 60},
@@ -51,6 +52,11 @@ export default {
       {x: 0, y:0.818, zoom: 250, colt: 45, duration: 50},
       {x: 0, y:0.818, zoom: 590, colt: 33, duration: 50},
       {x: 0.001, y:0.8218, zoom: 590, colt: 33, duration: 50},
+
+      {x: 0.001, y:0.8221, zoom: 1590, colt: 33, duration: 3},
+      {x: 0.001042, y:0.8221, zoom: 109590, colt: 33, duration: 33},
+      {x: 0.001, y:0.8221, zoom: 1590, colt: 33, duration: 30},
+
       {x: 0.001, y:0.8218, zoom: 590, colt: 45, duration: 50},
       {x: 0.001, y:0.8218, zoom: 190, colt: 33, duration: 10},
       {x: 0.001, y:0.8218, zoom: 19, colt: 13, duration: 10},
