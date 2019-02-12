@@ -1,5 +1,5 @@
 <template>
-  <g-scene :obj="scene">
+  <g-scene :obj="scene" :downscale="downscale">
     <g-camera name="main" orthographic :zoomScale="0.5"/>
     <g-grid :divisions="10" v-if="showGrid"/>
     <animation :fn="animate" />
@@ -99,7 +99,6 @@ export default {
     }
   },
   created() {
-    this.renderer.downscale *= this.downscale
     this.center.x = this.zoomList[0].x
     this.center.y = this.zoomList[0].y
     this.zoom = this.zoomList[0].zoom
@@ -127,7 +126,6 @@ export default {
     this.tweenGroup.removeAll()
     Visibility.stop(this.visibilityInterval)
     window.removeEventListener('resize', this.recreateShaderMesh)
-    this.renderer.downscale /= this.downscale
   },
   methods: {
     animate(tt) {

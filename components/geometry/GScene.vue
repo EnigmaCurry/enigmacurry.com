@@ -11,7 +11,8 @@ export default {
   inject: ['renderer'],
   props: {
     obj: { type: Object },
-    antialias: {type: Boolean, default: false}
+    antialias: {type: Boolean, default: false},
+    downscale: {type: Number, default: 1}
   },
   provide() {
     return {
@@ -31,6 +32,7 @@ export default {
   },
   created() {
     this.renderer.sceneData.push(this)
+    this.renderer.downscale *= this.downscale
   },
   mounted () {
     // for threejs-inspector to work
@@ -50,6 +52,7 @@ export default {
     this.renderer.setupPostProcessing(new Three.RenderPass(this.curObj, camera), effects)
   },
   destroyed() {
+    this.renderer.downscale /= this.downscale
     this.renderer.sceneData = filter(
       this.renderer.sceneData,
       gscene => {return gscene != this}
