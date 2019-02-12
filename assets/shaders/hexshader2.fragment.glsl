@@ -27,19 +27,19 @@ void main(void)
 {
   float g = float(iGeneration);
   float c = float(iCreation);
-  float v = vUv.x * sin(iTime / 4.) + 1.;
+  float v = vUv.x * sin(iTime / 44.) + 1.;
   float u = vUv.y * atan(cos(g/14.)) + 1.;
   float t = pow(fract(iTime/(float(iCreation))*pow(v,333.)) + float(iCreation) * 20., 0.5);
   float tmod = mod(iTime, t*u);
   t += log(dot(c,g)) / (vUv.x/u);
-  float i = smoothstep(-1., 1., sin(t*22.));
+  float i = smoothstep(-1., 1., sin(t/22.));
   vec3 color = vec3(i + (iColor.r/t),i + (iColor.g/v) + sin(t), v + tan(iColor.b * v));
   float a = smoothstep(-1., 1., sin(t*(sqrt(g)/22.))) + 0.2;
 
   float p = plateaus(iTime, 4., 2.);
-  if (mod(floor(vUv.x*c*tmod*0.01), 44.) == 0.) {
+  if (mod(floor(vUv.x*c*tmod*0.01), 443./c) == 0.) {
     gl_FragColor = vec4((1./p) * iColor.r, iColor.g, p * iColor.b, 0.7);
   } else {
-    gl_FragColor = vec4((1./p) * iColor.r/p*u, iColor.g/g*tmod, iColor.b/u, 0.4);
+    gl_FragColor = vec4((1./p) * iColor.r/p*u, iColor.g/u, iColor.b/u, 0.4);
   }
 }
