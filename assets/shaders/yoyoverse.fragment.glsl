@@ -154,18 +154,18 @@ void main(void)
 {
   float framemod = mod(iGlobalTime, 700.);
   if(framemod < 100.) {
-    gl_FragColor = yoyoverse2();
+    gl_FragColor = mix(yoyoverse2(), yoyoverse3(), framemod/100.);
   } else if (framemod < 200.) {
-    gl_FragColor = yoyoverse3();
+    gl_FragColor = mix(yoyoverse3(), yoyoverse4(), (framemod-100.)/100.);
   } else if (framemod < 300.) {
-    gl_FragColor = yoyoverse4();
+    gl_FragColor = mix(yoyoverse4(), yoyoverse5(), (framemod-200.)/100.);
   } else if (framemod < 400.) {
-    gl_FragColor = yoyoverse5();
+    gl_FragColor = mix(yoyoverse5(), yoyoverse6(), (framemod-300.)/100.);
   } else if (framemod < 500.) {
-    gl_FragColor = yoyoverse6();
+    gl_FragColor = mix(yoyoverse6(), yoyoverse7(), (framemod-400.)/100.);
   } else if (framemod < 600.) {
-    gl_FragColor = yoyoverse7();
+    gl_FragColor = mix(yoyoverse7(), yoyoverseOctave(), (framemod-500.)/100.);
   } else if (framemod < 700.) {
-    gl_FragColor = yoyoverseOctave();
+    gl_FragColor = mix(yoyoverseOctave(), yoyoverse2(), (framemod-600.)/100.);
   }
 }
