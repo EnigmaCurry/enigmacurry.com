@@ -125,7 +125,7 @@ export default {
     this.tweenGroup.removeAll()
     Visibility.stop(this.visibilityInterval)
     window.removeEventListener('resize', this.recreateShaderMesh)
-    this.renderer.downscale /= this.downscale    
+    this.renderer.downscale /= this.downscale
   },
   methods: {
     animate(tt) {

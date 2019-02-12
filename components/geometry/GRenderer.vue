@@ -83,12 +83,18 @@ export default {
           this.size = {width: this.size.width * window.devicePixelRatio, height: this.size.height * window.devicePixelRatio}
         }
       }
+      //Downscale:
+      this.size.width /= this.downscale
+      this.size.height /= this.downscale
       this.webGLRenderer.setSize(this.size.width, this.size.height)
+      this.webGLRenderer.domElement.style.width = this.size.width * this.downscale + 'px'
+      this.webGLRenderer.domElement.style.height = this.size.height * this.downscale + 'px'
+      console.log(this.size.width * this.downscale, this.webGLRenderer.domElement.style.height)
       this.effectComposer.setSize(this.size.width, this.size.height)
       this.antialiasPass.uniforms['resolution'].value.set(1 / (this.size.width),
                                                           1 / (this.size.height))
-      //Always render the screen resolution / downscale, not the browser zoom level:
-      this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
+      //this.webGLRenderer.setPixelRatio(window.devicePixelRatio / this.downscale)
+
       //Resize all cameras in all scenes:
       for (let sd=0; sd < this.sceneData.length; sd++){
         const cameras = this.sceneData[sd].cameras
