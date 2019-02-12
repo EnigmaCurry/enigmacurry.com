@@ -27,9 +27,10 @@ void main(void)
 {
   float g = float(iGeneration);
   float c = float(iCreation);
-  float v = vUv.x * 3.;
+  float v = vUv.x * sin(iTime / 4.) + 1.;
+  float u = vUv.y * atan(cos(g) / 14.) + 1.;
   float t = pow(fract(iTime/(float(iCreation))*pow(v,333.)) + float(iCreation) * 20., 0.5);
-  t += dot(c,v) / (vUv.x/vUv.y);
+  t += dot(c,g) / (vUv.x/u);
   float i = smoothstep(-1., 1., sin(t*22.));
   vec3 color = vec3(i + (iColor.r/t),i + (iColor.g/v) + sin(t), v + tan(iColor.b * v));
   float a = smoothstep(-1., 1., sin(t*(sqrt(g)/22.))) + 0.2;
