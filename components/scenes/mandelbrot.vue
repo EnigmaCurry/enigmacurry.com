@@ -1,5 +1,5 @@
 <template>
-  <g-scene :obj="scene" :downscale="downscale">
+  <g-scene :obj="scene" :downscale="downscale" antialias>
     <g-camera name="main" orthographic :zoomScale="0.5"/>
     <g-grid :divisions="10" v-if="showGrid"/>
     <animation :fn="animate" />
