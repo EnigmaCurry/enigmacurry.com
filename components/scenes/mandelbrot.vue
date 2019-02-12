@@ -50,7 +50,8 @@ export default {
       {x: 0, y:0.818, zoom: 0.9, colt: 33, duration: 5},
       {x: 0, y:0.818, zoom: 25, colt: 45, duration: 50},
       {x: 0, y:0.818, zoom: 250, colt: 45, duration: 50},
-      {x: 0, y:0.818, zoom: 590, colt: 33, duration: 50},
+      {x: 0.002, y:0.8177, zoom: 1590, colt: 33, duration: 50},
+      {x: 0.002, y:0.8174, zoom: 590, colt: 33, duration: 50},
       {x: 0.001, y:0.8218, zoom: 590, colt: 33, duration: 50},
 
       {x: 0.001, y:0.8221, zoom: 1590, colt: 33, duration: 3},
