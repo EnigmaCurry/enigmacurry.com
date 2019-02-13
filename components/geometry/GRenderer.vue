@@ -89,7 +89,6 @@ export default {
       this.webGLRenderer.setSize(this.size.width, this.size.height)
       this.webGLRenderer.domElement.style.width = this.size.width * this.downscale + 'px'
       this.webGLRenderer.domElement.style.height = this.size.height * this.downscale + 'px'
-      console.log(this.size.width * this.downscale, this.webGLRenderer.domElement.style.height)
       this.effectComposer.setSize(this.size.width, this.size.height)
       this.antialiasPass.uniforms['resolution'].value.set(1 / (this.size.width),
                                                           1 / (this.size.height))

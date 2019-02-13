@@ -136,7 +136,6 @@ export default {
       const settings = Object.assign({}, this.zoomList[0])
       this.zoomList.push(this.zoomList.shift())
       const zl = this.zoomList[0]
-      console.log("New Travel Interval", zl.duration, "x=",zl.x,"y=",zl.y)
       const tween = new TWEEN.Tween(settings, this.tweenGroup)
             .to(zl, zl.duration * 1000)
             .easing(TWEEN.Easing.Quadratic.InOut)

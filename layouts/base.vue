@@ -132,6 +132,7 @@ div#app {
 }
 .fadeIn {
   opacity: 1;
+  background-color: rgba(33,33,33, 0.5);
 }
 .fadeOut {
   opacity: 0;
