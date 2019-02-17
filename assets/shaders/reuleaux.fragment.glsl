@@ -18,12 +18,12 @@ vec2 rotateVec2(in vec2 v, in vec2 axis, in float angle) {
   return vrot + axis;
 }
 
-float reuleauxTriangle(in vec2 _p, in vec2 _center, in float r, in float rotation) {
+vec3 reuleauxTriangle(in vec2 _p, in vec2 _center, in float r) {
   vec2 top = vec2(_center.x, _center.y + (sqrt(3.)/2.) * r/2.);
   vec2 left = vec2(top.x-(r/2.), top.y-1. * (sqrt(3.)/2.) * r);
   vec2 right = vec2(top.x+r/2., top.y-1. * (sqrt(3.)/2.) * r);
   /// Rotate triangle
-  float angle = sin(iTime / 2.) * 2.1;
+  float angle = sin(iTime / 22.) * 8.4;
   top = rotateVec2(top, _center, angle);
   left = rotateVec2(left, _center, angle);
   right = rotateVec2(right, _center, angle);
@@ -32,9 +32,10 @@ float reuleauxTriangle(in vec2 _p, in vec2 _center, in float r, in float rotatio
   float c2 = circle(_p, left, r);
   float c3 = circle(_p, right, r);
   if ( c1 > 0. && c2 > 0. && c3 > 0.){
-    return 1.;
+    float c = cos(_p.x * abs(sin(iTime/4.)) * 333. + 333.) * 15.;
+    return vec3(1.0 - c, c, _p.x * c);
   } else {
-    return 0.;
+    return vec3(0.);
   }
 }
 
@@ -51,25 +52,20 @@ void main(void)
   }
   float width = 0.5;
   float radius = width / 2.;
-  float rotation = 0.;
-  vec3 color = vec3(reuleauxTriangle(p, vec2(0., 0.), radius, rotation));
-  color += vec3(reuleauxTriangle(p, vec2(radius, 0.), radius, rotation));
-  color += vec3(reuleauxTriangle(p, vec2(-radius, 0.), radius, rotation));
-  color += vec3(reuleauxTriangle(p,
-                                 vec2(-radius/2., (sqrt(3.)/2.) * radius),
-                                 radius,
-                                 rotation));
-  color += vec3(reuleauxTriangle(p,
-                                 vec2(radius/2., (sqrt(3.)/2.) * radius),
-                                 radius,
-                                 rotation));
-  color += vec3(reuleauxTriangle(p,
-                                 vec2(-radius/2., 0. - (sqrt(3.)/2.) * radius),
-                                 radius,
-                                 rotation));
-  color += vec3(reuleauxTriangle(p,
-                                 vec2(radius/2., 0. - (sqrt(3.)/2.) * radius),
-                                 radius,
-                                 rotation));
- gl_FragColor = vec4(color, 1.);
+  vec3 color = reuleauxTriangle(p, vec2(0., 0.), radius);
+  color += reuleauxTriangle(p, vec2(radius, 0.), radius);
+  color += reuleauxTriangle(p, vec2(-radius, 0.), radius);
+  color += reuleauxTriangle(p,
+                            vec2(-radius/2., (sqrt(3.)/2.) * radius),
+                            radius);
+  color += reuleauxTriangle(p,
+                            vec2(radius/2., (sqrt(3.)/2.) * radius),
+                            radius);
+  color += reuleauxTriangle(p,
+                            vec2(-radius/2., 0. - (sqrt(3.)/2.) * radius),
+                            radius);
+  color += reuleauxTriangle(p,
+                            vec2(radius/2., 0. - (sqrt(3.)/2.) * radius),
+                            radius);
+ gl_FragColor = vec4(color, 0.6);
 }
