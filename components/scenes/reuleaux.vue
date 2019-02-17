@@ -13,7 +13,7 @@ import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import Visibility from 'visibilityjs'
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
-import fragmentShader from 'raw-loader!~/assets/shaders/constant-width.fragment.glsl'
+import fragmentShader from 'raw-loader!~/assets/shaders/reuleaux.fragment.glsl'
 
 export default {
   mixins: [BackgroundImage],

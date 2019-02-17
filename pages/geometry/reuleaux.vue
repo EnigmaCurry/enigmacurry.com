@@ -1,14 +1,14 @@
 <template>
-  <constant-width-scene />
+  <reuleaux-scene />
 </template>
 
 <script>
 import ScrollbarHide from '~/components/ScrollbarHide.vue'
-import ConstantWidthScene from '~/components/scenes/constant-width.vue'
+import ReuleauxScene from '~/components/scenes/reuleaux.vue'
 
 export default {
   layout: 'renderer',
   mixins: [ScrollbarHide],
-  components: {ConstantWidthScene},
+  components: {ReuleauxScene},
 }
 </script>
