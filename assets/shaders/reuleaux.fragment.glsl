@@ -30,7 +30,7 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
   vec2 right = vec2(top.x+r/2., top.y-1. * (sqrt(3.)/2.) * r);
   vec2 center = vec2(_rotCenter.x, _rotCenter.y + 0.333 * distance(_rotCenter, top));
   /// Rotate triangle
-  float angle = sin(iTime/14.) * cos(iTime/2.) * 4.;
+  float angle = sin(iTime/14.) * cos(iTime/6.) * 4.;
   top = rotateVec2(top, _rotCenter, angle);
   left = rotateVec2(left, _rotCenter, angle);
   right = rotateVec2(right, _rotCenter, angle);
@@ -45,9 +45,9 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
   float dright = distance(_p, right);
   float dcenter = distance(_p, center);
   float dthreshold = 0.008;
-  float dline1 = line(_p, top, left, 1.);
-  float dline2 = line(_p, left, right, 1.);
-  float dline3 = line(_p, right, top, 1.);
+  float dline1 = line(_p, top, left, 0.2);
+  float dline2 = line(_p, left, right, 0.2);
+  float dline3 = line(_p, right, top, 0.2);
 
   vec3 color = vec3(0.);
   if ( c1 > 0. && c2 > 0. && c3 > 0.){
@@ -71,7 +71,7 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
                    smoothstep(0.,.01,dcenter * smoothstep(-1.,1., cos(iTime/8.)))
                    );
     } else if (dline1 < dthreshold || dline2 < dthreshold || dline3 < dthreshold) {
-      color = vec3(0.1);
+      color = vec3(smoothstep(-1., 0.1 * _p.x, atan(sin(iTime/4.))));
     }
   }
 
