@@ -19,11 +19,11 @@ vec2 rotateVec2(in vec2 v, in vec2 axis, in float angle) {
 }
 
 vec3 reuleauxTriangle(in vec2 _p, in vec2 _center, in float r) {
-  vec2 top = vec2(_center.x, _center.y + (sqrt(3.)/2.) * r/2.);
+  vec2 top = vec2(_center.x, _center.y + (sqrt(3.)/2.) * r);
   vec2 left = vec2(top.x-(r/2.), top.y-1. * (sqrt(3.)/2.) * r);
   vec2 right = vec2(top.x+r/2., top.y-1. * (sqrt(3.)/2.) * r);
   /// Rotate triangle
-  float angle = sin(iTime / 22.) * 8.4;
+  float angle = sin(iTime / (8. + smoothstep(-1., 1., sin(iTime)))) * 4.;
   top = rotateVec2(top, _center, angle);
   left = rotateVec2(left, _center, angle);
   right = rotateVec2(right, _center, angle);
@@ -31,12 +31,30 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _center, in float r) {
   float c1 = circle(_p, top, r);
   float c2 = circle(_p, left, r);
   float c3 = circle(_p, right, r);
+  float d = distance(_p, _center);
+  float dtop = distance(_p, top);
+  float dleft = distance(_p, left);
+  float dright = distance(_p, right);
+  vec3 color = vec3(0.);
   if ( c1 > 0. && c2 > 0. && c3 > 0.){
     float c = atan(cos((_p.x/_p.y) * abs(sin(iTime/14.)) * 13. + 3.) * 15.);
-    return smoothstep(vec3(0.),vec3(1.0 - c, c, _p.x * c), vec3(abs(sin(iTime/18.))));
-  } else {
-    return vec3(0.);
+    color = smoothstep(
+                      vec3(smoothstep(-1.48, 1.48, atan(cos(iTime/8.)*22.*sin(iTime/2.)))),
+                      vec3(1.0 - c, c, _p.x * c),
+                      vec3(smoothstep(-PI/4., PI/4.,atan(sin(iTime/3.))))
+                        - distance(_p, _center)
+                      );
+    if (d < 0.005) {
+      color = vec3(smoothstep(0.,.01,d * smoothstep(-1.,1., sin(iTime/2.))),
+                   smoothstep(0.,.01,d * smoothstep(-1.,1., sin(iTime/4.))),
+                   smoothstep(0.,.01,d * smoothstep(-1.,1., sin(iTime/8.)))
+                   );
+    } else if (dtop < 0.005 || dleft < 0.005 || dright < 0.005) {
+      color = vec3(1.);
+    } 
   }
+
+  return color;
 }
 
 vec4 bgScene(in vec3 _color, in vec2 _p) {
