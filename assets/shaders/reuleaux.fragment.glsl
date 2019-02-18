@@ -32,13 +32,21 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _center, in float r) {
   float c2 = circle(_p, left, r);
   float c3 = circle(_p, right, r);
   if ( c1 > 0. && c2 > 0. && c3 > 0.){
-    float c = cos(_p.x * abs(sin(iTime/4.)) * 333. + 333.) * 15.;
-    return vec3(1.0 - c, c, _p.x * c);
+    float c = atan(cos((_p.x/_p.y) * abs(sin(iTime/14.)) * 13. + 3.) * 15.);
+    return smoothstep(vec3(0.),vec3(1.0 - c, c, _p.x * c), vec3(abs(sin(iTime/18.))));
   } else {
     return vec3(0.);
   }
 }
 
+vec4 bgScene(in vec3 _color, in vec2 _p) {
+  float c = atan(cos((_p.x/_p.y) * abs(sin(iTime/14.)) * 13. + 3.) * 15.);
+  if (_color == vec3(0.)) {
+    return vec4(vec3(120. + c, c-12., _p.x * c), 0.1);
+  } else {
+    return vec4(_color, 1.);
+  }
+}
 
 void main(void)
 {
@@ -67,5 +75,5 @@ void main(void)
   color += reuleauxTriangle(p,
                             vec2(radius/2., 0. - (sqrt(3.)/2.) * radius),
                             radius);
- gl_FragColor = vec4(color, 0.6);
+  gl_FragColor = bgScene(color, p);
 }
