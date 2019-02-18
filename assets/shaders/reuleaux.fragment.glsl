@@ -48,6 +48,7 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
   float dline1 = line(_p, top, left, 1.);
   float dline2 = line(_p, left, right, 1.);
   float dline3 = line(_p, right, top, 1.);
+
   vec3 color = vec3(0.);
   if ( c1 > 0. && c2 > 0. && c3 > 0.){
     float c = atan(cos((_p.x/_p.y) * abs(sin(iTime/14.)) * 13. + 3.) * 15.);
@@ -63,7 +64,7 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
                    smoothstep(0.,.01,drot * smoothstep(-1.,1., sin(iTime/8.)))
                    );
     } else if (dtop < dthreshold || dleft < dthreshold || dright < dthreshold) {
-      color = vec3(1.);
+      color = vec3(0.8);
     } else if (dcenter < dthreshold) {
       color = vec3(smoothstep(0.,.01,dcenter * smoothstep(-1.,1., cos(iTime/2.))),
                    smoothstep(0.,.01,dcenter * smoothstep(-1.,1., cos(iTime/4.))),
