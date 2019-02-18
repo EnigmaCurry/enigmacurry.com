@@ -52,7 +52,7 @@ export default {
   },
   mounted() {
     // Add after image effect:
-    const effectPass = new Three.AfterimagePass(0.8)
+    const effectPass = new Three.AfterimagePass(0.7)
     this.renderer.addEffectPass(effectPass)
     
     //this.renderer.showStats = true
