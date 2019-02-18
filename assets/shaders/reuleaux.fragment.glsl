@@ -69,7 +69,7 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
 vec4 bgScene(in vec3 _color, in vec2 _p) {
   float c = atan(cos((_p.x/_p.y) * abs(sin(iTime/14.)) * 13. + 3.) * 15.);
   if (_color == vec3(0.)) {
-    return vec4(vec3(120. + c, c-12., _p.x * c), 0.1);
+    return vec4(vec3(120. + c, _p.y*c, _p.x * c), smoothstep(-1., 1., sin(iTime/12.)));
   } else {
     return vec4(_color, 1.);
   }
