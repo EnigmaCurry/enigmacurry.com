@@ -98,8 +98,8 @@ vec3 tint(in vec3 color, in vec3 base, in float amount) {
 void main(void)
 {
   //Center and normalize zoom:
-  vec2 p = vUv - 0.5;
-  //zoom : p /= 22.;
+  float zoom = smoothstep(-1., 1., sin(iTime/12.)) + 0.5;
+  vec2 p = (vUv - 0.5) / zoom;
   if (iResolution.x > iResolution.y) {
     p.x *= iResolution.x/iResolution.y;
   } else {
@@ -112,7 +112,7 @@ void main(void)
   color += tint(vec3(0.294,0.,0.50980), reuleauxTriangle(p, vec2(radius, 0.), radius), tintAmount);
   color += tint(vec3(1.,0.64706,0.), reuleauxTriangle(p, vec2(-radius, 0.), radius), tintAmount);
   color += tint(vec3(1.,0.,0.), reuleauxTriangle(p,
-                            vec2(-radius/2., (sqrt(3.)/2.) * radius),
+                                                 vec2(-radius/2., (sqrt(3.)/2.) * radius),
                                                  radius), tintAmount);
   color += tint(vec3(0.,0.,1.), reuleauxTriangle(p,
                             vec2(radius/2., (sqrt(3.)/2.) * radius),
@@ -123,5 +123,22 @@ void main(void)
   color += tint(vec3(0.93333, 0.50980, 0.93333), reuleauxTriangle(p,
                             vec2(radius/2., 0. - (sqrt(3.)/2.) * radius),
                                                                         radius), tintAmount);
+
+  color += reuleauxTriangle(p, vec2(radius*2., 0.), radius);
+  color += reuleauxTriangle(p, vec2(-radius*2., 0.), radius);
+  color += reuleauxTriangle(p, vec2(-3.*radius/2., (sqrt(3.)/2.) * radius), radius);
+  color += reuleauxTriangle(p, vec2(3.*radius/2., (sqrt(3.)/2.) * radius), radius);
+  color += reuleauxTriangle(p, vec2(-3.*radius/2., -(sqrt(3.)/2.) * radius), radius);
+  color += reuleauxTriangle(p, vec2(3.*radius/2., -(sqrt(3.)/2.) * radius), radius);
+
+  color += reuleauxTriangle(p, vec2(radius, (sqrt(3.)/2.) * 2. * radius), radius);
+  color += reuleauxTriangle(p, vec2(0., (sqrt(3.)/2.) * 2. * radius), radius);
+  color += reuleauxTriangle(p, vec2(-radius, (sqrt(3.)/2.) * 2. * radius), radius);
+
+  color += reuleauxTriangle(p, vec2(radius, (sqrt(3.)/2.) * -2. * radius), radius);
+  color += reuleauxTriangle(p, vec2(0., (sqrt(3.)/2.) * -2. * radius), radius);
+  color += reuleauxTriangle(p, vec2(-radius, (sqrt(3.)/2.) * -2. * radius), radius);
+
+
   gl_FragColor = bgScene(color, p);
 }
