@@ -30,7 +30,7 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
   vec2 right = vec2(top.x+r/2., top.y-1. * (sqrt(3.)/2.) * r);
   vec2 center = vec2(_rotCenter.x, _rotCenter.y + 0.333 * distance(_rotCenter, top));
   /// Rotate triangle
-  float angle = sin(iTime / (8. + smoothstep(-1., 44., sin(iTime)))) * 8.;
+  float angle = sin(iTime/14.) * cos(iTime/2.) * 4.;
   top = rotateVec2(top, _rotCenter, angle);
   left = rotateVec2(left, _rotCenter, angle);
   right = rotateVec2(right, _rotCenter, angle);
