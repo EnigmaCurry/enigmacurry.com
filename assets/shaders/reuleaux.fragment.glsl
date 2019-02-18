@@ -75,6 +75,14 @@ vec4 bgScene(in vec3 _color, in vec2 _p) {
   }
 }
 
+vec3 tint(in vec3 color, in vec3 base, in float amount) {
+  if (base !=  vec3(0.)) {
+    return mix(base, color, amount);
+  } else {
+    return base;
+  }
+}
+
 void main(void)
 {
   //Center and normalize zoom:
@@ -87,20 +95,21 @@ void main(void)
   }
   float width = 0.5;
   float radius = width / 2.;
-  vec3 color = reuleauxTriangle(p, vec2(0., 0.), radius);
-  color += reuleauxTriangle(p, vec2(radius, 0.), radius);
-  color += reuleauxTriangle(p, vec2(-radius, 0.), radius);
-  color += reuleauxTriangle(p,
+  float tintAmount = smoothstep(-4.,8.,sin(iTime/2.));
+  vec3 color = tint(vec3(0.,1.,0.), reuleauxTriangle(p, vec2(0., 0.), radius), tintAmount);
+  color += tint(vec3(75./255.,0.,130./255.), reuleauxTriangle(p, vec2(radius, 0.), radius), tintAmount);
+  color += tint(vec3(1.,165./255.,0.), reuleauxTriangle(p, vec2(-radius, 0.), radius), tintAmount);
+  color += tint(vec3(1.,0.,0.), reuleauxTriangle(p,
                             vec2(-radius/2., (sqrt(3.)/2.) * radius),
-                            radius);
-  color += reuleauxTriangle(p,
+                                                 radius), tintAmount);
+  color += tint(vec3(0.,0.,1.), reuleauxTriangle(p,
                             vec2(radius/2., (sqrt(3.)/2.) * radius),
-                            radius);
-  color += reuleauxTriangle(p,
+                                                 radius), tintAmount);
+  color += tint(vec3(1.,1.,0.), reuleauxTriangle(p,
                             vec2(-radius/2., 0. - (sqrt(3.)/2.) * radius),
-                            radius);
-  color += reuleauxTriangle(p,
+                                                 radius), tintAmount);
+  color += tint(vec3(238./255., 130./255., 238./255.), reuleauxTriangle(p,
                             vec2(radius/2., 0. - (sqrt(3.)/2.) * radius),
-                            radius);
+                                                                        radius), tintAmount);
   gl_FragColor = bgScene(color, p);
 }
