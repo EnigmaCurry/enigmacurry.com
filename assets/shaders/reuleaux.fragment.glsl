@@ -30,7 +30,19 @@ vec3 reuleauxTriangle(in vec2 _p, in vec2 _rotCenter, in float r) {
   vec2 right = vec2(top.x+r/2., top.y-1. * (sqrt(3.)/2.) * r);
   vec2 center = vec2(_rotCenter.x, _rotCenter.y + 0.333 * distance(_rotCenter, top));
   /// Rotate triangle
-  float angle = sin(iTime/14.) * cos(iTime/6.) * 4.;
+  float angle = 0.;
+  float tmod = mod(iTime, 60.);
+  float sigh = sin(iTime/110.) * cos(iTime*1.) * 4.;
+  float wave = sin(iTime/14.) * cos(iTime/6.) * 4.;
+  if (tmod < 15.) {
+    angle = sigh;
+  } else if (tmod < 30.) {
+    angle = mix(sigh, wave, (tmod - 15.) / 15.);
+  } else if (tmod < 45.) {
+    angle = wave;
+  } else if (tmod < 60.) {
+    angle = mix(wave, sigh, (tmod - 45.) / 15.);
+  }
   top = rotateVec2(top, _rotCenter, angle);
   left = rotateVec2(left, _rotCenter, angle);
   right = rotateVec2(right, _rotCenter, angle);
