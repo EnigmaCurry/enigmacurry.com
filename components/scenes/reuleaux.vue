@@ -14,6 +14,9 @@ import BackgroundImage from '~/components/BackgroundImage.vue'
 import Visibility from 'visibilityjs'
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
 import fragmentShader from 'raw-loader!~/assets/shaders/reuleaux.fragment.glsl'
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/ShaderPass"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/postprocessing/AfterimagePass"
+import "imports-loader?THREE=three!../../node_modules/three/examples/js/shaders/AfterimageShader"
 
 export default {
   mixins: [BackgroundImage],
@@ -48,6 +51,10 @@ export default {
     this.renderer.downscale *= this.downscale    
   },
   mounted() {
+    // Add after image effect:
+    const effectPass = new Three.AfterimagePass(0.8)
+    this.renderer.addEffectPass(effectPass)
+    
     //this.renderer.showStats = true
     this.waitForRendererMount(() => {
       this.recreateShaderProjectionScreen()
