@@ -2,7 +2,9 @@ import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import Vue from 'vue'
 import canvg from 'canvg'
+import TextTexture from 'three.texttexture'
 import {$tilings} from '~/plugins/tilings.js'
+
 const $textures = Vue.prototype.$textures = {}
 
 class CanvasRenderer {
@@ -58,4 +60,23 @@ $textures.tilingTexture = ({tileType, materials, size=256, scale=1, tileFrustrum
   renderer.render()
 
   return {tilingGroup, renderer}
+}
+
+$textures.textSurface = (params) => {
+  // Pass any TextTexture parameter :
+  params = Object.assign({
+    width: 1, height: 1,
+    text: "",
+    transparent: true,
+    fontFamily: 'monospace',
+    fontSize: Math.pow(2, 10), // Treat this as texture resolution
+  }, params)
+  let box = new Three.Mesh(
+    new Three.PlaneGeometry(params.width, params.height),
+    new Three.MeshBasicMaterial({
+      transparent: params.transparent,
+      map: new TextTexture(params)
+    })
+  )
+  return box
 }

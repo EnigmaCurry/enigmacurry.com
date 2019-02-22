@@ -50,6 +50,12 @@ export default {
         this._camera.position.z = this.position.z
       }
     },    
+    lookAt: {
+      deep: true,
+      handler (v) {
+        this._camera.lookAt(new Three.Vector3(this.lookAt.x, this.lookAt.y, this.lookAt.z))
+      }
+    },    
   },
   created () {
     if (this.scene.cameras.hasOwnProperty(this.name)) {

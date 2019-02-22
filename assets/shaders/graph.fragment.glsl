@@ -1,8 +1,9 @@
 uniform float iTime;
 uniform vec2 iResolution;
+uniform vec2 iCenter;
+uniform float iZoom;
 varying vec2 vUv;
 
-#define iZoom 0.5
 #define iField 20.
 #define iCenter vec2(0., 0.)
 #define PI 3.14159
@@ -35,6 +36,7 @@ float func1(float x) {
 }
 
 float plot(in vec2 p) {
+  // http://glslsandbox.com/e#52722.2
   const float e = 0.001;
   p.y -= func1(p.x);
   float g = (func1(p.x + e) - func1(p.x - e)) / (PI * e);
@@ -43,7 +45,7 @@ float plot(in vec2 p) {
 
 void main(void)
 {
-  vec2 p = (vUv - 0.5 + iCenter) / iZoom;
+  vec2 p = (vUv - 0.5 + iCenter) / (iZoom / 2.);
   p.x *= iResolution.x/iResolution.y;
   vec3 buf = axes(p, 300.);
   buf += smoothstep(0.011, 0.0, plot(p));
