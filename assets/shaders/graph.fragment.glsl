@@ -7,7 +7,7 @@ varying vec2 vUv;
 
 #define PI 3.14159
 
-/// Dynamic programming of each function passed into the template:
+/// Metaprogram of each function passed into the template:
 {% for f in functions %}
 float func_{{ loop.index0 }}(in float x) {
   return {{ f.def }};
