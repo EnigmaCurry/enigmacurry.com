@@ -1,3 +1,8 @@
+//// This is a nunjucks template
+//// Required params:
+////  funcName
+////  funcDef
+
 uniform float iTime;
 uniform vec2 iResolution;
 uniform vec2 iCenter;
@@ -7,15 +12,17 @@ varying vec2 vUv;
 
 #define PI 3.14159
 
-float func1(float x) {
-  return sin(x);
+{% for name, def in functions %}
+float {{ name }}(float x) {
+  return {{ def }};
 }
+{% endfor %}
 
 float plot(in vec2 p) {
   // http://glslsandbox.com/e#52722.2
   const float e = 0.001;
-  p.y -= func1(p.x);
-  float g = (func1(p.x + e) - func1(p.x - e)) / (PI * e);
+  p.y -= {{ function }}(p.x);
+  float g = ({{ function }}(p.x + e) - {{ function }}(p.x - e)) / (PI * e);
   return abs(p.y * cos(atan(g)));
 }
 

@@ -13,7 +13,8 @@ import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
 import Visibility from 'visibilityjs'
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
-import fragmentShader from 'raw-loader!~/assets/shaders/graph.fragment.glsl'
+import fragmentShaderTemplate from 'raw-loader!~/assets/shaders/graph.fragment.glsl'
+import nunjucks from 'nunjucks'
 
 export default {
   mixins: [BackgroundImage],
@@ -33,6 +34,14 @@ export default {
       iZoom: {type: 'f', value: zoom},
       iStrokeWidth: {type: 'f', value: 0.003},
     }
+    const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
+                                                 {'function': 'crazy',
+                                                  'functions': {
+                                                    sine: 'sin(x)',
+                                                    crazy: 'sin(x+cos(x))'
+                                                  }
+                                                 })
+                                                 
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
       vertexShader: vertexShader,
