@@ -106,9 +106,10 @@ export default {
       let pWidth = (width/height) * 2
       let pHeight = 2
       if (height > width) {
-        pWidth = 1
-        pHeight = height/width
+         pWidth = 2
+         pHeight = (height/width) * 2
       }
+      console.log((pWidth/pHeight) * 2)
       if (this.shaderMesh != null) {
         this.scene.remove(this.shaderMesh)
       }

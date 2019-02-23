@@ -36,7 +36,11 @@ vec3 layer(in vec3 buf, in vec3 color) {
 void main(void)
 {
   vec2 p = (vUv - 0.5 + iCenter) / (iZoom / 2.);
-  p.x *= iResolution.x/iResolution.y;
+  if (iResolution.x > iResolution.y) {
+    p.x *= iResolution.x/iResolution.y;
+  } else {
+    p.y *= iResolution.y/iResolution.x;
+  }
 
   // Layer all functions passed into the template:
   vec3 buf = vec3(0.);
