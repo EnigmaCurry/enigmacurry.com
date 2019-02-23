@@ -41,7 +41,7 @@ void main(void)
   // Layer all functions passed into the template:
   vec3 buf = vec3(0.);
   {% for f in functions %}
-  buf = layer(buf, line(plot_{{ loop.index0 }}(p.xy), {{ f.stroke }}, {{ f.color }}));
+  buf = layer(buf, line(plot_{{ loop.index0 }}(p.xy), {{ f.stroke * 0.001 }}, {{ f.color }}));
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {

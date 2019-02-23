@@ -39,13 +39,13 @@ export default {
     }
     const functions = [
       {def: 'sin(x/2.)*9.',
-       stroke: '0.003',
+       stroke: 5,
        color: colorToVec(new Three.Color(0,1,1))},
       {def: 'sin(x)',
-       stroke: '0.003',
+       stroke: 3,
        color: colorToVec(new Three.Color(1,0,0))},
       {def: 'sin(x+cos(x))',
-       stroke: '0.003',
+       stroke: 3,
        color: colorToVec(new Three.Color(0,1,0))}
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
