@@ -38,12 +38,13 @@ export default {
       iZoom: {type: 'f', value: zoom},
     }
     const functions = [
-      {name: 'sine',
-       def: 'sin(x)',
+      {def: 'sin(x/2.)*9.',
+       stroke: '0.003',
+       color: colorToVec(new Three.Color(0,1,1))},
+      {def: 'sin(x)',
        stroke: '0.003',
        color: colorToVec(new Three.Color(1,0,0))},
-      {name: 'crazy',
-       def: 'sin(x+cos(x))',
+      {def: 'sin(x+cos(x))',
        stroke: '0.003',
        color: colorToVec(new Three.Color(0,1,0))}
     ]

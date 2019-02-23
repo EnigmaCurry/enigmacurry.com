@@ -9,14 +9,14 @@ varying vec2 vUv;
 
 /// Dynamic programming of each function passed into the template:
 {% for f in functions %}
-float {{ f.name }}(in float x) {
+float func_{{ loop.index0 }}(in float x) {
   return {{ f.def }};
 }
-float plot_{{ f.name }}(in vec2 p) {
+float plot_{{ loop.index0 }}(in vec2 p) {
   // http://glslsandbox.com/e#52722.2
   const float e = 0.001;
-  p.y -= {{ f.name }}(p.x);
-  float g = ({{ f.name }}(p.x + e) - {{ f.name }}(p.x - e)) / (PI * e);
+  p.y -= func_{{ loop.index0 }}(p.x);
+  float g = (func_{{ loop.index0 }}(p.x + e) - func_{{ loop.index0 }}(p.x - e)) / (PI * e);
   return abs(p.y * cos(atan(g)));
 }
 {% endfor %}
@@ -41,7 +41,7 @@ void main(void)
   // Layer all functions passed into the template:
   vec3 buf = vec3(0.);
   {% for f in functions %}
-  buf = layer(buf, line(plot_{{ f.name }}(p.xy), {{ f.stroke }}, {{ f.color }}));
+  buf = layer(buf, line(plot_{{ loop.index0 }}(p.xy), {{ f.stroke }}, {{ f.color }}));
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {
