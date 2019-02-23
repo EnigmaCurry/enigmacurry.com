@@ -1,7 +1,7 @@
 <template>
-  <g-scene :obj="scene">
-    <g-camera name="main" ref="camera" orthographic :zoomScale="1"/>
-    <g-grid :divisions="10" v-if="showGrid"/>
+  <g-scene :obj="scene" antialias>
+    <g-camera name="main" ref="camera" orthographic :zoomScale="zoom"/>
+    <g-grid :divisions="20" :size="20" v-if="showGrid"/>
     <animation :fn="animate" />
   </g-scene>
 </template>
@@ -20,23 +20,25 @@ export default {
   inject: ['renderer'],
   props: {
     showGrid: {type: Boolean, default: true},
-    numScenes: {type: Number, default: 9},
     downscale: {type: Number, default: 1},
   },
   data() {
+    const zoom = 15
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
       scene: {type: "i", value: 0},
       iTime: {type: 'f', value: 0.1},
       iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
       iCenter: {type: 'v2', value: new Three.Vector2(0, 0)},
-      iZoom: {type: 'f', value: 1},
+      iZoom: {type: 'f', value: zoom},
+      iStrokeWidth: {type: 'f', value: 0.003},
     }
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
-      side: Three.DoubleSide
+      side: Three.DoubleSide,
+      transparent: true,
     } )
     return {
       scene: new Three.Scene(),
@@ -44,6 +46,14 @@ export default {
       shaderMat,
       clock: new Three.Clock(),
       shaderMesh: null,
+      zoom,
+    }
+  },
+  watch: {
+    zoom: {
+      handler(v) {
+        this.resizeShaderMesh()
+      }
     }
   },
   created() {
@@ -68,12 +78,16 @@ export default {
     animate(tt) {
       this.tUniform.iTime.value += this.clock.getDelta()
     },
+    resizeShaderMesh() {
+      this.shaderMesh.scale.copy(new Three.Vector3(this.zoom, this.zoom, this.zoom))
+      this.tUniform.iZoom.value = 1/this.zoom
+    },
     recreateShaderProjectionScreen() {
       let width = this.renderer.size.width
       let height = this.renderer.size.height
       this.tUniform.iResolution.value.set(width, height)
-      let pWidth = width/height
-      let pHeight = 1
+      let pWidth = (width/height) * 2
+      let pHeight = 2
       if (height > width) {
         pWidth = 1
         pHeight = height/width
@@ -84,11 +98,11 @@ export default {
       this.shaderMesh = new Three.Mesh( new Three.PlaneGeometry( pWidth, pHeight),
                                         this.shaderMat)
       this.scene.add(this.shaderMesh)
-      const txt = this.$textures.textSurface({
-        text: "EnigmaCurry",
-        width: 0.6, height: 0.2
-      })
-      this.scene.add(txt)
+      this.resizeShaderMesh()
+      // const txt = this.$textures.textSurface({
+      //   text: "EnigmaCurry"
+      // })
+      // this.scene.add(txt)
     },
     waitForRendererMount(callback) {
       this.renderer.onResize()
