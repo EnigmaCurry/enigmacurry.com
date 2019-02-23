@@ -16,6 +16,10 @@ import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
 import fragmentShaderTemplate from 'raw-loader!~/assets/shaders/graph.fragment.glsl'
 import nunjucks from 'nunjucks'
 
+const colorToVec = (color) => {
+  return `vec3(${color.r.toFixed(4)}, ${color.g.toFixed(4)}, ${color.b.toFixed(4)})`
+}
+
 export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
@@ -32,16 +36,19 @@ export default {
       iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
       iCenter: {type: 'v2', value: new Three.Vector2(0, 0)},
       iZoom: {type: 'f', value: zoom},
-      iStrokeWidth: {type: 'f', value: 0.003},
     }
+    const functions = [
+      {name: 'sine',
+       def: 'sin(x)',
+       stroke: '0.003',
+       color: colorToVec(new Three.Color(1,0,0))},
+      {name: 'crazy',
+       def: 'sin(x+cos(x))',
+       stroke: '0.003',
+       color: colorToVec(new Three.Color(0,1,0))}
+    ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
-                                                 {'function': 'crazy',
-                                                  'functions': {
-                                                    sine: 'sin(x)',
-                                                    crazy: 'sin(x+cos(x))'
-                                                  }
-                                                 })
-                                                 
+                                                 { functions })
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
       vertexShader: vertexShader,
