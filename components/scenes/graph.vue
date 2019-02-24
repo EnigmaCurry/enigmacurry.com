@@ -26,6 +26,8 @@ export default {
   props: {
     showGrid: {type: Boolean, default: false},
     downscale: {type: Number, default: 1},
+    backgroundClass: {type: String, default: "mutagon-4"},
+    backgroundAlpha: {type: Number, default: 0},
   },
   data() {
     const zoom = 1
@@ -36,6 +38,7 @@ export default {
       iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
       iCenter: {type: 'v2', value: new Three.Vector2(0, 0)},
       iZoom: {type: 'f', value: zoom},
+      iTransparency: {type: 'f', value: 0.5}
     }
     const functions = [
       {def: 'cos(x*sin(iTime/16.)*4.)*sin(x*sin(x/cos(iTime/12.)) * 15.)*2.',

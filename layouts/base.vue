@@ -120,6 +120,10 @@
   background-image: url(~assets/img/fractal/splash-grid.12.1080.jpg);
 }
 
+#bg.mutagon-4 {
+  background-image: url(~assets/img/fractal/muta-gon.4.1024.jpg);
+}
+
 div#app {
   background: transparent;
 }

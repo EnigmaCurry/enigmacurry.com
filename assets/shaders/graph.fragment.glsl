@@ -3,6 +3,7 @@ uniform float iTime;
 uniform vec2 iResolution;
 uniform vec2 iCenter;
 uniform float iZoom;
+uniform float iTransparency;
 varying vec2 vUv;
 
 #define PI 3.14159
@@ -60,7 +61,7 @@ void main(void)
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {
-    gl_FragColor = vec4(buf, 1.);
+    gl_FragColor = vec4(buf, iTransparency);
   } else {
     gl_FragColor = vec4(0.);
   }
