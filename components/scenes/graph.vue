@@ -24,11 +24,11 @@ export default {
   mixins: [BackgroundImage],
   inject: ['renderer'],
   props: {
-    showGrid: {type: Boolean, default: true},
+    showGrid: {type: Boolean, default: false},
     downscale: {type: Number, default: 1},
   },
   data() {
-    const zoom = 5
+    const zoom = 1
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
       scene: {type: "i", value: 0},
@@ -38,10 +38,10 @@ export default {
       iZoom: {type: 'f', value: zoom},
     }
     const functions = [
-      {def: 'sin(x*4.)*10.',
+      {def: 'abs(sin(x*sin(iTime/44.)*14.)*sin(x*33.))*.8+.1',
        polar: true,
-       stroke: 4,
-       color: colorToVec(new Three.Color(0,1,1))},
+       stroke: 140,
+       color: 'vec3(sin(iTime+p.x),cos(iTime+p.y),clamp(0.1,0.9,asin(iTime+p.x)))'},
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
                                                  { functions })

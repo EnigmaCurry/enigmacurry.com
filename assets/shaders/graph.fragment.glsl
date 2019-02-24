@@ -20,6 +20,9 @@ float plot_{{ loop.index0 }}(in vec2 p) {
              - func_{{ loop.index0 }}(p.x - e)) / (PI * e);
   return abs(p.y * cos(atan(g)));
 }
+vec3 color_{{ loop.index0 }}(in vec2 p) {
+  return {{ f.color }};
+}
 {% endfor %}
 
 vec3 line(in float plot, in float strokeWidth, in vec3 color) {
@@ -53,7 +56,7 @@ void main(void)
     coord = polar.yx;
     {% endif %}
     buf = layer(buf, line(plot_{{ loop.index0 }}(coord),
-                          {{ f.stroke * 0.001 }}, {{ f.color }}));
+                          {{ f.stroke * 0.001 }}, color_{{loop.index0}}(coord)));
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {
