@@ -3,7 +3,6 @@ uniform float iTime;
 uniform vec2 iResolution;
 uniform vec2 iCenter;
 uniform float iZoom;
-uniform float iTransparency;
 varying vec2 vUv;
 
 #define PI 3.14159
@@ -28,18 +27,18 @@ float plot_{{ loop.index0 }}(in vec2 p) {
              - func_{{ loop.index0 }}(p.x - e)) / (PI * e);
   return abs(p.y * cos(atan(g)));
 }
-vec3 color_{{ loop.index0 }}(in vec2 p) {
-  return {{ f.color }};
+vec4 color_{{ loop.index0 }}(in vec2 p) {
+  return vec4({{ f.color }}, {{f.alpha}});
 }
 {% endfor %}
 
-vec3 line(in float plot, in float strokeWidth, in vec3 color) {
-  return vec3(smoothstep(strokeWidth / iZoom, 0.0, plot)) * color;
+vec4 line(in float plot, in float strokeWidth, in vec4 color) {
+  return vec4(vec3(smoothstep(strokeWidth / iZoom, 0.0, plot)), 1.) * color;
 }
 
-vec3 layer(in vec3 buf, in vec3 color) {
+vec4 layer(in vec4 buf, in vec4 color) {
   if (color.r > 0.1 || color.g > 0.1 || color.b > 0.1) {
-    return color;
+    return mix(buf, color, color.a);
   } else {
     return buf;
   }
@@ -58,12 +57,14 @@ void main(void)
 
 
   // Layer all functions passed into the template:
-  vec3 buf = vec3(0.);
+  vec4 buf;
   vec2 coord = p;
   {% for f in functions %}
   {% if f.enabled %}
     {% if f.polar %}
     coord = polar.yx;
+    {% else %}
+    coord = p;
     {% endif %}
     buf = layer(buf, line(plot_{{ loop.index0 }}(coord),
                           {{ f.stroke * 0.001 }}, color_{{loop.index0}}(coord)));
@@ -71,7 +72,7 @@ void main(void)
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {
-    gl_FragColor = vec4(buf, iTransparency);
+    gl_FragColor = vec4(buf);
   } else {
     gl_FragColor = vec4(0.);
   }

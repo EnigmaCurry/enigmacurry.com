@@ -37,30 +37,40 @@ export default {
       iTime: {type: 'f', value: 0.1},
       iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
       iCenter: {type: 'v2', value: new Three.Vector2(0, 0)},
-      iZoom: {type: 'f', value: zoom},
-      iTransparency: {type: 'f', value: 0.5}
+      iZoom: {type: 'f', value: zoom}
     }
     const functions = [
       {def: 'smoothstep(-1., 2., 12./sin((x/cos(iTime/(22.+(sin(iTime/4.))*1.))))) * 1.5',
        enabled: true,
+       alpha: 0.7,
        polar: true,
        stroke: 140,
        color: 'vec3(smoothstep(-1., 1., sin(iTime)/p.x), cos(iTime/p.y), cos(sin(iTime)))'},
       {def: 'sin(x*sin(iTime/16.)*4.) * sin(x*sin(x/cos(iTime/12.))*15.) * 1.',
        enabled: true,
+       alpha: 0.8,
        polar: true,
        stroke: 140,
        color: 'vec3(smoothstep(-2., 1., sin(iTime)/p.y), tan(iTime/p.x), cos(iTime/p.y))'},
+      {def: 'sin(x*sin(iTime/16.)*4.) * sin(x*sin(x/cos(iTime/12.))*15.) * 1.',
+       enabled: true,
+       alpha: 0.6,
+       polar: false,
+       stroke: 40,
+       color: 'vec3(1.)'},
       {def: '2./cos(x/sin(iTime/16.))* 22.',
        enabled: true,
+       alpha: 0.8,
        polar: true,
        stroke: 44,
        color: 'vec3(smoothstep(-14., 2., sin(iTime)/p.y), cos(p.y/p.x), sin(p.x+sin(iTime)))'},
       {def: '12./cos(x/sin(iTime/66.))* 22.',
        enabled: true,
+       alpha: 0.7,
        polar: true,
        stroke: 44,
-       color: 'vec3(1.)'},
+       color: 'vec3(1.,0.,1.)'},
+      
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
                                                  { functions })
