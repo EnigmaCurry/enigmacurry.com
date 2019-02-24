@@ -15,6 +15,10 @@
           <v-btn flat icon>
             <v-icon @click="toggleDrawer">close</v-icon>
           </v-btn>
+          <v-spacer />
+          <v-btn flat icon :href="`https://www.github.com/EnigmaCurry/enigmacurry.com`" target="_new">
+            <v-icon>zmdi-hc-3x zmdi-github</v-icon>
+         </v-btn>
           </v-list-tile>
           <v-list-tile
             v-for="(item, i) in menuItems"

@@ -49,7 +49,8 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    '~/assets/style/app.styl'
+    '~/assets/style/app.styl',
+    '~/node_modules/material-design-iconic-font/dist/css/material-design-iconic-font.min.css'
   ],
 
   /*
