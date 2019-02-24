@@ -8,6 +8,13 @@ varying vec2 vUv;
 
 #define PI 3.14159
 
+vec2 rotateVec2(in vec2 v, in vec2 axis, in float angle) {
+  vec2 vprime = v - axis;
+  vec2 vrot = vec2(vprime.x * cos(angle) - vprime.y * sin(angle),
+                   vprime.y * cos(angle) + vprime.x * sin(angle));
+  return vrot + axis;
+}
+
 /// Metaprogram of each function passed into the template:
 {% for f in functions %}
 float func_{{ loop.index0 }}(in float x) {
@@ -46,6 +53,7 @@ void main(void)
   } else {
     p.y *= iResolution.y/iResolution.x;
   }
+  p = rotateVec2(p, vec2(0.), sin(iTime / 360.) * 15.);
   vec2 polar = vec2(length(p)* 2., atan(p.y, p.x));
 
 
