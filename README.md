@@ -1,6 +1,6 @@
 # EnigmaCurry.com
 
-This is the source for my website at [enigmacurry.com](enigmacurry.com)
+This is the source for my website at [enigmacurry.com](https://www.enigmacurry.com)
 
 ## Build Setup
 
