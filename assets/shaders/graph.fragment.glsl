@@ -61,11 +61,13 @@ void main(void)
   vec3 buf = vec3(0.);
   vec2 coord = p;
   {% for f in functions %}
+  {% if f.enabled %}
     {% if f.polar %}
     coord = polar.yx;
     {% endif %}
     buf = layer(buf, line(plot_{{ loop.index0 }}(coord),
                           {{ f.stroke * 0.001 }}, color_{{loop.index0}}(coord)));
+  {% endif %}
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {

@@ -27,7 +27,7 @@ export default {
     showGrid: {type: Boolean, default: false},
     downscale: {type: Number, default: 1},
     backgroundClass: {type: String, default: "mutagon-4"},
-    backgroundAlpha: {type: Number, default: 0},
+    backgroundAlpha: {type: Number, default: 0.5},
   },
   data() {
     const zoom = 1
@@ -41,18 +41,26 @@ export default {
       iTransparency: {type: 'f', value: 0.5}
     }
     const functions = [
-      {def: 'cos(x*sin(iTime/16.)*4.)*sin(x*sin(x/cos(iTime/12.)) * 15.)*2.',
+      {def: 'smoothstep(-1., 2., 12./sin((x/cos(iTime/(22.+(sin(iTime/4.))*1.))))) * 1.5',
+       enabled: true,
        polar: true,
        stroke: 140,
-       color: 'vec3(smoothstep(-2., 1., sin(iTime)/p.y), sin(iTime/p.x), cos(iTime/p.y))'},
-      {def: 'sin(pow(x,2.)/cos(iTime/14.))*2.',
+       color: 'vec3(smoothstep(-1., 1., sin(iTime)/p.x), cos(iTime/p.y), cos(sin(iTime)))'},
+      {def: 'sin(x*sin(iTime/16.)*4.) * sin(x*sin(x/cos(iTime/12.))*15.) * 1.',
+       enabled: true,
        polar: true,
        stroke: 140,
-       color: 'vec3(smoothstep(-4., 1., sin(iTime)/p.x), cos(iTime/p.y), 1.)'},
-      {def: '2./cos(x/sin(iTime/6.))* 22.',
+       color: 'vec3(smoothstep(-2., 1., sin(iTime)/p.y), tan(iTime/p.x), cos(iTime/p.y))'},
+      {def: '2./cos(x/sin(iTime/16.))* 22.',
+       enabled: true,
        polar: true,
        stroke: 44,
-       color: 'vec3(smoothstep(-14., 2., sin(iTime)/p.y), cos(p.y/p.x), sin(p.x))'},
+       color: 'vec3(smoothstep(-14., 2., sin(iTime)/p.y), cos(p.y/p.x), sin(p.x+sin(iTime)))'},
+      {def: '12./cos(x/sin(iTime/66.))* 22.',
+       enabled: true,
+       polar: true,
+       stroke: 44,
+       color: 'vec3(1.)'},
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
                                                  { functions })
