@@ -38,10 +38,10 @@ export default {
       iZoom: {type: 'f', value: zoom},
     }
     const functions = [
-      {def: 'abs(sin(x*sin(iTime/44.)*14.)*sin(x*33.))*.8+.1',
+      {def: 'cos(x*sin(iTime/16.)*4.)*sin(x*5.)*2.',
        polar: true,
        stroke: 140,
-       color: 'vec3(sin(iTime+p.x),cos(iTime+p.y),clamp(0.1,0.9,asin(iTime+p.x)))'},
+       color: 'vec3(smoothstep(-2., 1., sin(iTime)/p.y), sin(iTime/p.x), cos(iTime/p.y))'},
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
                                                  { functions })
