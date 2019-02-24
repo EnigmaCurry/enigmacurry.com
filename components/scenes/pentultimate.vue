@@ -40,13 +40,13 @@ export default {
       iZoom: {type: 'f', value: zoom}
     }
     const functions = [
-      {def: 'smoothstep(-1., 200., 12./sin((x/cos(iTime/(22.+(sin(iTime/4.))*1.))))) * 1.5',
+      {def: 'smoothstep(-1., 2., 12./sin((x/cos(iTime/(22.+(sin(iTime/4.))*1.))))) * 1.5',
        enabled: true,
        alpha: 0.7,
        polar: true,
        stroke: 140,
        color: 'vec3(smoothstep(-1., 1., sin(iTime)/p.x), cos(iTime/p.y), cos(sin(iTime)))'},
-      {def: 'smoothstep(-1., sin(x*iTime), sin(x*sin(iTime/16.)*4.) * sin(x*sin(x/cos(iTime/12.))*15.))',
+      {def: 'smoothstep(-1., sin(x*iTime)/12., sin(x*sin(iTime/16.)*4.) * sin(x*sin(x/cos(iTime/12.))*15.))',
        enabled: true,
        alpha: 0.8,
        polar: true,
@@ -59,7 +59,7 @@ export default {
        stroke: 14,
        color: 'vec3(0.4 + p.x*sin(iTime/2.))'},
       {def: '2./cos(x/sin(iTime/16.))* 22.',
-       enabled: false,
+       enabled: true,
        alpha: 0.8,
        polar: true,
        stroke: 44,
