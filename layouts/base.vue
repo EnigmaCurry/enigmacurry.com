@@ -206,8 +206,9 @@ export default {
         { img: require('~/assets/img/icons/pingpong.png'), title: 'Ping Pong Verse', to: '/geometry/pingpongverse' },
         { img: require('~/assets/img/icons/mandelbrot.png'), title: 'Mandelbrot', to: '/geometry/mandelbrot' },
         { img: require('~/assets/img/icons/hexgrid.png'), title: 'Hex Grid', to: '/geometry/hexgrid' },
-        { img: require('~/assets/img/icons/reuleaux.png'), title: 'Reuleaux Triangle', to: '/geometry/reuleaux' },
-     ],
+        { img: require('~/assets/img/icons/reuleaux.png'), title: 'Reuleaux Triangle', to: '/geometry/reuleaux' }, 
+        // { img: require('~/assets/img/icons/pentultimate.png'), title: 'Pentultimate', to: '/geometry/pentultimate' },
+    ],
     }
   },
   computed: {
