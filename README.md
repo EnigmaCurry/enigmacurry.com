@@ -1,6 +1,6 @@
-# enigmacurry.com
+# EnigmaCurry.com
 
-> EnigmaCurry.com
+This is the source for my website at [enigmacurry.com](enigmacurry.com)
 
 ## Build Setup
 
