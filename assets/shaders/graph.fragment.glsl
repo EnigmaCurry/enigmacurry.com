@@ -16,7 +16,8 @@ float plot_{{ loop.index0 }}(in vec2 p) {
   // http://glslsandbox.com/e#52722.2
   const float e = 0.001;
   p.y -= func_{{ loop.index0 }}(p.x);
-  float g = (func_{{ loop.index0 }}(p.x + e) - func_{{ loop.index0 }}(p.x - e)) / (PI * e);
+  float g = (func_{{ loop.index0 }}(p.x + e)
+             - func_{{ loop.index0 }}(p.x - e)) / (PI * e);
   return abs(p.y * cos(atan(g)));
 }
 {% endfor %}
@@ -41,11 +42,18 @@ void main(void)
   } else {
     p.y *= iResolution.y/iResolution.x;
   }
+  vec2 polar = vec2(length(p)* 2., atan(p.y, p.x));
+
 
   // Layer all functions passed into the template:
   vec3 buf = vec3(0.);
+  vec2 coord = p;
   {% for f in functions %}
-  buf = layer(buf, line(plot_{{ loop.index0 }}(p.xy), {{ f.stroke * 0.001 }}, {{ f.color }}));
+    {% if f.polar %}
+    coord = polar.yx;
+    {% endif %}
+    buf = layer(buf, line(plot_{{ loop.index0 }}(coord),
+                          {{ f.stroke * 0.001 }}, {{ f.color }}));
   {% endfor %}
 
   if (buf.r > 0.1 || buf.g > 0.1 || buf.b > 0.1) {

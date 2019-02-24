@@ -28,7 +28,7 @@ export default {
     downscale: {type: Number, default: 1},
   },
   data() {
-    const zoom = 15
+    const zoom = 5
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
       scene: {type: "i", value: 0},
@@ -38,15 +38,10 @@ export default {
       iZoom: {type: 'f', value: zoom},
     }
     const functions = [
-      {def: 'sin(x/2.)*9.',
-       stroke: 5,
+      {def: 'sin(x*4.)*10.',
+       polar: true,
+       stroke: 4,
        color: colorToVec(new Three.Color(0,1,1))},
-      {def: 'sin(x)',
-       stroke: 3,
-       color: colorToVec(new Three.Color(1,0,0))},
-      {def: 'sin(x+cos(x))',
-       stroke: 3,
-       color: colorToVec(new Three.Color(0,1,0))}
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
                                                  { functions })
@@ -109,7 +104,6 @@ export default {
          pWidth = 2
          pHeight = (height/width) * 2
       }
-      console.log((pWidth/pHeight) * 2)
       if (this.shaderMesh != null) {
         this.scene.remove(this.shaderMesh)
       }
