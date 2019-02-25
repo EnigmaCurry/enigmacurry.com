@@ -19,6 +19,17 @@ Feel free to copy (I do.), but make it your own.
    [components/geometry](components/geometry)
  * See the [LICENSE](LICENSE) for a full list of credits.
 
+### Components
+
+ * [GRenderer](components/geometry/GRenderer.vue) - A single GRenderer takes up the full width and height of the window, and persists across all pages.
+ * [GScene](components/geometry/GScene.vue) - Mounts into the GRenderer per page.
+ * [components/scenes](components/scenes) - Collection of scenes.
+ * [pages/geometry](pages/geometry) - The pages that contain scenes.
+ * [assets/shaders](assets/shaders) - GLSL shaders and
+   [nunjucks](https://mozilla.github.io/nunjucks/) templated shaders.
+ * [plugins](plugins) - nuxt.js plugins that become availalble to every
+   component (`this.$pluginname`), reusable geometry functions live in here.
+
 ## Build Setup
 
 ``` bash
@@ -38,4 +49,5 @@ $ yarn run generate
 
 
 
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+For detailed explanation on how things work, checkout [Nuxt.js
+docs](https://nuxtjs.org).
