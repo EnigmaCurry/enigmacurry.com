@@ -16,18 +16,26 @@ vec2 rotateVec2(in vec2 v, in vec2 axis, in float angle) {
 
 /// Metaprogram of each function passed into the template:
 {% for f in functions %}
-float func_{{ loop.index0 }}(in float x) {
+float func_{{ loop.index0 }}(in vec2 p) {
+  float x = p.x;
+  {% for v in f.vars %}
+  {{v.type}} {{ v.name }} = {{ v.def }};
+  {% endfor %}
   return {{ f.def }};
 }
 float plot_{{ loop.index0 }}(in vec2 p) {
   // http://glslsandbox.com/e#52722.2
   const float e = 0.001;
-  p.y -= func_{{ loop.index0 }}(p.x);
-  float g = (func_{{ loop.index0 }}(p.x + e)
-             - func_{{ loop.index0 }}(p.x - e)) / (PI * e);
+  p.y -= func_{{ loop.index0 }}(p);
+  float g = (func_{{ loop.index0 }}(vec2(p.x + e, p.y))
+             - func_{{ loop.index0 }}(vec2(p.x - e, p.y))) / (PI * e);
   return abs(p.y * cos(atan(g)));
 }
 vec4 color_{{ loop.index0 }}(in vec2 p) {
+  float x = p.x;
+  {% for v in f.vars %}
+  {{v.type}} {{ v.name }} = {{ v.def }};
+  {% endfor %}
   return vec4({{ f.color }}, {{f.alpha}});
 }
 {% endfor %}
