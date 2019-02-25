@@ -85,7 +85,7 @@ export default {
        stroke: 44,
        color: 'vec3(smoothstep(-14., 2., q), r, s)'},
       {def: 'cos(x/tan(iTime/22.))',
-       enabled: false,
+       enabled: true,
        alpha: 0.7,
        polar: true,
        stroke: 144,
