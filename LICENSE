@@ -1,7 +1,8 @@
 --------------------------------------------------------------------------------
-MIT License
+MIT License for enigmacurry.com source code.
+Additional licenses for derived sources follow.
 
-Copyright 2018 EnigmaCurry
+Copyright (c) 2018, 2019 EnigmaCurry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 --------------------------------------------------------------------------------
--- Portions of this softare are derived from vue-threejs
+-- Portions of this softare are derived from fritx/vue-threejs
 -- https://github.com/fritx/vue-threejs
 --------------------------------------------------------------------------------
 Copyright (c) 2018 Fritz Lin
