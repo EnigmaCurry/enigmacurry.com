@@ -40,7 +40,7 @@ export default {
       iZoom: {type: 'f', value: zoom}
     }
     const functions = [
-      {def: 'smoothstep(-1., 2., 12./sin((x/cos(iTime/(22.+(sin(iTime/4.))*1.))))) * 1.5',
+      {def: 'smoothstep(-1., 33., 12./sin(22. * (x/cos(iTime/(22.+(sin(iTime/4.))*1.))))) * 1.5',
        enabled: true,
        alpha: 0.7,
        polar: true,
@@ -64,12 +64,12 @@ export default {
        polar: true,
        stroke: 44,
        color: 'vec3(smoothstep(-14., 2., sin(iTime)/p.y), cos(p.y/p.x), sin(p.x+sin(iTime)))'},
-      {def: '12./cos(x/sin(iTime/66.))* 22.',
-       enabled: false,
+      {def: 'cos(x/tan(iTime/22.))',
+       enabled: true,
        alpha: 0.7,
        polar: true,
-       stroke: 44,
-       color: 'vec3(1.,0.,1.)'},
+       stroke: 144,
+       color: 'vec3(cos(sin(tan(iTime*p.x))))'},
       
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
