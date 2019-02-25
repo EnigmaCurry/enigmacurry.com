@@ -1,9 +1,9 @@
 //// This is a nunjucks template
-uniform float iTime;
-uniform vec2 iResolution;
-uniform vec2 iCenter;
-uniform float iZoom;
 varying vec2 vUv;
+
+{% for name,u in tUniform %}
+uniform {{u.type}} {{name}};
+{% endfor %}
 
 #define PI 3.14159
 

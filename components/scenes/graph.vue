@@ -33,29 +33,34 @@ export default {
     const zoom = 1
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
-      scene: {type: "i", value: 0},
-      iTime: {type: 'f', value: 0.1},
-      iResolution: {type: 'v2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
-      iCenter: {type: 'v2', value: new Three.Vector2(0, 0)},
-      iZoom: {type: 'f', value: zoom},
-      iTransparency: {type: 'f', value: 0.5}
+      iTime: {type: 'float', value: 0.1},
+      iResolution: {type: 'vec2', value: new Three.Vector2(this.renderer.width, this.renderer.height) },
+      iCenter: {type: 'vec2', value: new Three.Vector2(0, 0)},
+      iZoom: {type: 'float', value: zoom},
+      iTransparency: {type: 'float', value: 0.5}
     }
     const functions = [
       {def: 'cos(x*sin(iTime/16.)*4.)*sin(x*sin(x/cos(iTime/12.)) * 15.)*2.',
        polar: true,
        stroke: 140,
+       alpha: 1,
+       enabled: true,
        color: 'vec3(smoothstep(-2., 1., sin(iTime)/p.y), sin(iTime/p.x), cos(iTime/p.y))'},
       {def: 'sin(pow(x,2.)/cos(iTime/14.))*2.',
        polar: true,
+       alpha: 1,
+       enabled: true,
        stroke: 140,
        color: 'vec3(smoothstep(-4., 1., sin(iTime)/p.x), cos(iTime/p.y), 1.)'},
       {def: '2./cos(x/sin(iTime/6.))* 22.',
        polar: true,
+       alpha: 1,
+       enabled: true,
        stroke: 44,
        color: 'vec3(smoothstep(-14., 2., sin(iTime)/p.y), cos(p.y/p.x), sin(p.x))'},
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
-                                                 { functions })
+                                                 { functions, tUniform })
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
       vertexShader: vertexShader,

@@ -33,12 +33,11 @@ export default {
     const zoom = 1
     const textureLoader = new Three.TextureLoader()
     const tUniform = {
-      scene: {type: "i", value: 0},
-      iTime: {type: 'f', value: 0.1},
-      iResolution: {type: 'v2', value: new Three.Vector2(
+      iTime: {type: 'float', value: 0.1},
+      iResolution: {type: 'vec2', value: new Three.Vector2(
         this.renderer.width, this.renderer.height) },
-      iCenter: {type: 'v2', value: new Three.Vector2(0, 0)},
-      iZoom: {type: 'f', value: zoom}
+      iCenter: {type: 'vec2', value: new Three.Vector2(0, 0)},
+      iZoom: {type: 'float', value: zoom}
     }
     const functions = [
       {def: 'smoothstep(-1., 33., c) * 1.5',
@@ -95,7 +94,7 @@ export default {
       
     ]
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
-                                                 { functions })
+                                                 { functions, tUniform })
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
       vertexShader: vertexShader,
