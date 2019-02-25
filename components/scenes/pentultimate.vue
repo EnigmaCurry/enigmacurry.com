@@ -11,7 +11,6 @@ import * as Three from 'three'
 import * as TWEEN from '@tweenjs/tween.js'
 import {shuffle} from 'underscore'
 import BackgroundImage from '~/components/BackgroundImage.vue'
-import Visibility from 'visibilityjs'
 import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
 import fragmentShaderTemplate from 'raw-loader!~/assets/shaders/graph.fragment.glsl'
 import nunjucks from 'nunjucks'
@@ -127,12 +126,8 @@ export default {
       this.recreateShaderProjectionScreen()
       window.addEventListener('resize', this.recreateShaderProjectionScreen)
     })
-    this.visibilityInterval = Visibility.every(30 * 1000, () => {
-      this.tUniform.scene.value = (this.tUniform.scene.value + 1) % this.numScenes
-    })
   },
   beforeDestroy() {
-    Visibility.stop(this.visibilityInterval)
     window.removeEventListener('resize', this.recreateShaderProjectionScreen)
     this.renderer.downscale /= this.downscale    
   },
