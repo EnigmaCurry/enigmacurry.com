@@ -50,6 +50,7 @@ export default {
       effects.push(this.renderer.antialiasPass)
     }
     this.renderer.setupPostProcessing(new Three.RenderPass(this.curObj, camera), effects)
+    this.renderer.onResize()
   },
   destroyed() {
     this.renderer.downscale /= this.downscale
