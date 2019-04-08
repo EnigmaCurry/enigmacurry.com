@@ -80,6 +80,7 @@ export default {
     }
   },
   created() {
+    console.log("Soundcloud embed_url: "+this.embed_url)
     this.addEventListener(window, 'resize', () => {
       this.$forceUpdate()
     })
