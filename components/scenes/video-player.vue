@@ -53,6 +53,7 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('click', this.onClick)
+    this.$bus.$emit('music-resume')
   }
 }
 </script>

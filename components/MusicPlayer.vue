@@ -89,8 +89,8 @@ export default {
     },
     resume() {
       if (typeof(this.soundcloudAPI != "undefined")) {
-        this.soundcloudAPI.isPaused((paused) => {
-          if(paused) {
+        this.soundcloudAPI.getPosition((pos) => {
+          if(pos > 0) {
             this.soundcloudAPI.play()
           }
         })
