@@ -217,6 +217,8 @@ export default {
         { img: require('~/assets/img/icons/pentultimate.png'), title: 'Pentultimate', to: '/geometry/pentultimate' },
         { img: require('~/assets/img/icons/the-iridule.png'), title: 'The Iridule', to: '/video/the-iridule' },
         { img: require('~/assets/img/icons/akashic-diffusion.png'), title: 'Akashic Diffusion', to: '/video/akashic-diffusion-carbon-collector-at-emerald-station' },
+        { img: require('~/assets/img/icons/docetic-bodhisattva.png'), title: 'Docetic Bodhisattva', to: '/video/docetic-bodhisattva-his-noetic-body-sought-ya' },
+        { img: require('~/assets/img/icons/no-minor-sea.png'), title: 'No Minor Sea', to: '/video/no-minor-sea' },
     ],
     }
   },
