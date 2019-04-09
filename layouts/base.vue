@@ -131,6 +131,9 @@
 div#app {
   background: transparent;
 }
+.container {
+  max-width: none;
+}
 #base-content {
   margin-bottom: 400px;
   z-index: -1;

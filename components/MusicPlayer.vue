@@ -77,6 +77,24 @@ export default {
       if (typeof(this.soundcloudAPI != "undefined")) {
         this.soundcloudAPI.setVolume(volume)
       }
+    },
+    pause() {
+      if (typeof(this.soundcloudAPI != "undefined")) {
+        this.soundcloudAPI.getPosition((pos) => {
+          if(pos > 0) {
+            this.soundcloudAPI.pause()
+          }
+        })
+      }
+    },
+    resume() {
+      if (typeof(this.soundcloudAPI != "undefined")) {
+        this.soundcloudAPI.isPaused((paused) => {
+          if(paused) {
+            this.soundcloudAPI.play()
+          }
+        })
+      }
     }
   },
   created() {
@@ -88,6 +106,13 @@ export default {
     this.$bus.$on('music-volume-set', volume => {
       this.setVolume(volume)
     })
+    this.$bus.$on('music-pause', () => {
+      this.pause()
+    })
+    this.$bus.$on('music-resume', () => {
+      this.resume()
+    })
+    console.log(this.soundcloudAPI)
   }
 }
 </script>
