@@ -215,6 +215,7 @@ export default {
         { img: require('~/assets/img/icons/hexgrid.png'), title: 'Hex Grid', to: '/geometry/hexgrid' },
         { img: require('~/assets/img/icons/reuleaux.png'), title: 'Reuleaux Triangle', to: '/geometry/reuleaux' }, 
         { img: require('~/assets/img/icons/pentultimate.png'), title: 'Pentultimate', to: '/geometry/pentultimate' },
+        { img: require('~/assets/img/icons/the-iridule.png'), title: 'The Iridule', to: '/video/the-iridule' },
     ],
     }
   },
