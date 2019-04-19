@@ -1,5 +1,5 @@
 <template>
-  <video-player video="https://spee.ch/@EnigmaCurry:9/NoMinorSea.mp4"/>
+  <video-player video="https://cdn.rymcg.tech/Video/No-Minor-Sea.mp4"/>
 </template>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-  <video-player video="https://spee.ch/@EnigmaCurry:9/DoceticBodhisattvahisnoeticbodysoughtya.mp4"/>
+  <video-player video="https://cdn.rymcg.tech/Video/Docetic-Bodhisattva-his-noetic-body-sought-ya.mp4"/>
 </template>
 
 <style scoped>

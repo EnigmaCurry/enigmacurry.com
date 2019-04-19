@@ -1,5 +1,5 @@
 <template>
-  <video-player video="https://spee.ch/@EnigmaCurry:9/AkashicDiffusion-CarbonCollectoratEmeraldStation.mp4"/>
+  <video-player video="https://cdn.rymcg.tech/Video/Akashic-Diffusion-Carbon-Collector-at-Emerald-Station.mp4"/>
 </template>
 
 <style scoped>
