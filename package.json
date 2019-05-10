@@ -14,6 +14,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/pwa": "^3.0.0-beta.16",
     "@tweenjs/tween.js": "^17.2.0",
     "canvg": "^1.5.3",
     "chroma-js": "^2.0.2",

@@ -45,6 +45,10 @@ module.exports = {
   */
   loading: { color: '#fff' },
 
+  icon: {
+    iconSrc: "[srcdir]/assets/img/icons/seed-of-life.512.png"
+  },
+
   /*
   ** Global CSS
   */
@@ -76,6 +80,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/pwa'
   ],
 
   /*

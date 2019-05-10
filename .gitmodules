@@ -1,3 +1,7 @@
 [submodule "static"]
 	path = static
 	url = git@bitbucket.org:enigmacurry/enigmacurry.com-legacy.git
+[submodule "enigmacurry.com-legacy"]
+	path = enigmacurry.com-legacy
+	url = git@bitbucket.org:enigmacurry/enigmacurry.com-legacy.git
+	branch = master
