@@ -19,6 +19,9 @@
           <v-btn flat icon alt="github" title="github" :href="`https://www.github.com/EnigmaCurry/enigmacurry.com`" target="_new">
             <v-icon>zmdi-hc-3x zmdi-github</v-icon>
          </v-btn>
+         <v-btn flat icon alt="soundcloud" title="soundcloud" :href="`https://www.soundcloud.com/enigmacurry`" target="_new">
+            <v-icon>zmdi-hc-3x zmdi-soundcloud</v-icon>
+         </v-btn>
           </v-list-tile>
           <v-list-tile
             v-for="(item, i) in menuItems"
