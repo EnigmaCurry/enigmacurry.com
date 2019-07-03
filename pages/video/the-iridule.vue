@@ -1,5 +1,5 @@
 <template>
-  <video-player video="https://cdn.rymcg.tech/Video/Waiting-for-Nothing-The-Iridule.mp4"/>
+  <video-player pause-music video="https://cdn.rymcg.tech/Video/Waiting-for-Nothing-The-Iridule.mp4"/>
 </template>
 
 <style scoped>

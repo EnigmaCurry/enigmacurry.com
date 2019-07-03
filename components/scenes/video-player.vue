@@ -34,6 +34,7 @@ export default {
     backgroundAlpha: {type: Number, default: 0},    
     showGrid: {type: Boolean, default: false},
     video: {type: String },
+    pauseMusic: {type: Boolean},
   },
   data() {
     return {
@@ -49,7 +50,9 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.onClick)
-    this.$bus.$emit('music-pause')
+    if (this.pauseMusic) {
+      this.$bus.$emit('music-pause')
+    }
   },
   beforeDestroy() {
     document.removeEventListener('click', this.onClick)

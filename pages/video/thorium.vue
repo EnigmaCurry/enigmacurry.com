@@ -1,5 +1,6 @@
 <template>
-  <video-player pause-music video="https://cdn.rymcg.tech/Video/No-Minor-Sea.mp4"/>
+<video-player
+  video="https://cdn.rymcg.tech/Video/thorium.3.mp4"/>
 </template>
 
 <style scoped>
