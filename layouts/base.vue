@@ -222,6 +222,7 @@ export default {
         { img: require('~/assets/img/icons/akashic-diffusion.png'), title: 'Akashic Diffusion', to: '/video/akashic-diffusion-carbon-collector-at-emerald-station' },
         { img: require('~/assets/img/icons/docetic-bodhisattva.png'), title: 'Docetic Bodhisattva', to: '/video/docetic-bodhisattva-his-noetic-body-sought-ya' },
         { img: require('~/assets/img/icons/no-minor-sea.png'), title: 'No Minor Sea', to: '/video/no-minor-sea' },
+        { img: require('~/assets/img/icons/thorium.png'), title: 'Thorium', to: '/video/thorium' },
     ],
     }
   },
