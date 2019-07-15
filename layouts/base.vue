@@ -224,6 +224,7 @@ export default {
         { img: require('~/assets/img/icons/no-minor-sea.png'), title: 'No Minor Sea', to: '/video/no-minor-sea' },
         { img: require('~/assets/img/icons/thorium.png'), title: 'Thorium', to: '/video/thorium' },
         { img: require('~/assets/img/icons/refraction.png'), title: 'Refraction', to: '/video/refraction' },
+        { img: require('~/assets/img/icons/gambit.png'), title: 'Gambit', to: '/video/gambit' },
     ],
     }
   },
