@@ -1,6 +1,6 @@
 <template>
 <video-player
-  pause-music video="https://cdn.rymcg.tech/Video/gambit.mp4"/>
+  pause-music video="https://cdn.rymcg.tech/Video/Sierpinski-Mandalax-Zoom.2.gambit.8Mbps.mp4"/>
 </template>
 
 <style scoped>
