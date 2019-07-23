@@ -225,6 +225,7 @@ export default {
         { img: require('~/assets/img/icons/thorium.png'), title: 'Thorium', to: '/video/thorium' },
         { img: require('~/assets/img/icons/refraction.png'), title: 'Refraction', to: '/video/refraction' },
         { img: require('~/assets/img/icons/gambit.png'), title: 'Gambit', to: '/video/gambit' },
+        { img: require('~/assets/img/icons/starburst.png'), title: 'Starburst', to: '/video/starburst' },
     ],
     }
   },
