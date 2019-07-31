@@ -226,6 +226,7 @@ export default {
         { img: require('~/assets/img/icons/refraction.png'), title: 'Refraction', to: '/video/refraction' },
         { img: require('~/assets/img/icons/gambit.png'), title: 'Gambit', to: '/video/gambit' },
         { img: require('~/assets/img/icons/starburst.png'), title: 'Starburst', to: '/video/starburst' },
+        { img: require('~/assets/img/icons/boxmerge.png'), title: 'Box Merge', to: '/video/boxmerge' },
     ],
     }
   },
