@@ -226,8 +226,9 @@ export default {
         { img: require('~/assets/img/icons/refraction.png'), title: 'Refraction', to: '/video/refraction' },
         { img: require('~/assets/img/icons/gambit.png'), title: 'Gambit', to: '/video/gambit' },
         { img: require('~/assets/img/icons/starburst.png'), title: 'Starburst', to: '/video/starburst' },
-        { img: require('~/assets/img/icons/boxmerge.png'), title: 'Box Merge', to: '/video/boxmerge' },
-        { img: require('~/assets/img/icons/tribulb.png'), title: 'Tribulb', to: '/video/tribulb' },
+        { img: require('~/assets/img/icons/turn-in.png'), title: 'Turn In', to: '/video/myrcury-turn-in/' },
+        { img: require('~/assets/img/icons/soothe_me.png'), title: 'Soothe Me', to: '/video/myrcury-soothe-me/' },
+        { img: require('~/assets/img/icons/mammashumminheart.png'), title: 'Hummin Heart', to: '/video/myrcury-mammas-hummin-heart/' },
     ],
     }
   },
