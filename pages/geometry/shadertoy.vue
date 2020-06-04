@@ -1,5 +1,5 @@
 <template>
-  <shadertoy-scene />
+  <shadertoy-scene shader="shadertoy_kaleidoscope.glsl" iChannel0="bricks.png" iChannel1="clouds.png"  iChannel2="madim-vallis.2-side-down.ps.6.jpg" />
 </template>
 
 <script>

@@ -15,14 +15,16 @@ import vertexShader from 'raw-loader!~/assets/shaders/general.vertex.glsl'
 import fragmentShaderTemplate from 'raw-loader!~/assets/shaders/shadertoy.fragment.glsl'
 import nunjucks from 'nunjucks'
 
+const shadertoyAppID = "Nt8tM8"
+
 const colorToVec = (color) => {
   return `vec3(${color.r.toFixed(4)}, ${color.g.toFixed(4)}, ${color.b.toFixed(4)})`
 }
 
 function loadTexture(img) {
   const tex = new Three.TextureLoader().load(img)
-  tex.minFilter = Three.NearestFilter
-  tex.magFilter = Three.NearestFilter
+  tex.minFilter = Three.LinearMipmapLinearFilter
+  tex.magFilter = Three.LinearMipmapLinearFilter
   tex.wrapS = Three.RepeatWrapping
   tex.wrapT = Three.RepeatWrapping
   return tex
@@ -36,26 +38,34 @@ export default {
     downscale: {type: Number, default: 1},
     backgroundClass: {type: String, default: "splash-grid"},
     backgroundAlpha: {type: Number, default: 0.80},
+    shader: {type: String, default: "shadertoy_test_texture.glsl"},
+    iChannel0: {type: String, default: "shadertoy0.jpg"},
+    iChannel1: {type: String, default: "shadertoy1.jpg"},
+    iChannel2: {type: String, default: "shadertoy2.jpg"},
+    iChannel3: {type: String, default: "shadertoy3.png"},
+    timeScale: {type: Number, default: 1},
+    rotation: {type: Number, default: 90}
   },
   data() {
     const zoom = 1
-    const iChannel0 = loadTexture(require("~/assets/img/texture/shadertoy0.jpg"))
-    const iChannel1 = loadTexture(require("~/assets/img/texture/shadertoy1.jpg"))
-    const iChannel2 = loadTexture(require("~/assets/img/texture/shadertoy2.jpg"))
-    const iChannel3 = loadTexture(require("~/assets/img/texture/shadertoy3.png"))
+    const iChannel0 = loadTexture(require("~/assets/img/texture/"+this.iChannel0))
+    const iChannel1 = loadTexture(require("~/assets/img/texture/"+this.iChannel1))
+    const iChannel2 = loadTexture(require("~/assets/img/texture/"+this.iChannel2))
+    const iChannel3 = loadTexture(require("~/assets/img/texture/"+this.iChannel3))
     const tUniform = {
       iTime: {type: 'float', value: 0},
       iResolution: {type: 'vec3', value: new Three.Vector3(
         this.renderer.width, this.renderer.height) },
       iCenter: {type: 'vec2', value: new Three.Vector2(0, 0)},
-      iZoom: {type: 'float', value: zoom},
+      iZoom: {type: 'float', value: zoom},      
       iChannel0: {type: 'sampler2D', value: iChannel0},
       iChannel1: {type: 'sampler2D', value: iChannel1},
       iChannel2: {type: 'sampler2D', value: iChannel2},
-      iChannel3: {type: 'sampler2D', value: iChannel3}
+      iChannel3: {type: 'sampler2D', value: iChannel3},
+      iMouse: {type: 'vec4', value: new Three.Vector4(0,0,0,0)}
     }
     const fragmentShader = nunjucks.renderString(fragmentShaderTemplate,
-                                                 { tUniform })
+                                                 { tUniform, shadertoySrc: require('raw-loader!~/assets/shaders/'+this.shader) })
     const shaderMat = new Three.ShaderMaterial( {
       uniforms: tUniform,
       vertexShader: vertexShader,
@@ -70,7 +80,7 @@ export default {
       shaderMat,
       clock: new Three.Clock(),
       shaderMesh: null,
-      zoom,
+      zoom
     }
   },
   watch: {
@@ -96,7 +106,7 @@ export default {
   },
   methods: {
     animate(tt) {
-      this.tUniform.iTime.value += this.clock.getDelta()
+      this.tUniform.iTime.value += this.clock.getDelta() * this.timeScale
     },
     resizeShaderMesh() {
       this.shaderMesh.scale.copy(new Three.Vector3(this.zoom, this.zoom, this.zoom))
@@ -119,10 +129,6 @@ export default {
                                         this.shaderMat)
       this.scene.add(this.shaderMesh)
       this.resizeShaderMesh()
-      // const txt = this.$textures.textSurface({
-      //   text: "EnigmaCurry"
-      // })
-      // this.scene.add(txt)
     },
     waitForRendererMount(callback) {
       this.renderer.onResize()
