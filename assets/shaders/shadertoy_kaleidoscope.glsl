@@ -1,10 +1,10 @@
 vec2 kaleido(vec2 uv)
 {
   float th = atan(uv.y, uv.x);
-  float r = pow(length(uv), .9);
-  float f = 3.14159 / 3.5;
-  th = abs(mod(th + f/8.0, f) - f/2.0) / (1.0 + r);
-  //th = sin(th * 6.283 / f);
+  float r = pow(length(uv), sin(iTime/88.)+0.5);
+  float f = 3.14159 / (sin(iTime/28.)+13.5*cos(iTime/14.));
+  th = abs(mod(th + f/2.0, f) - f/smoothstep(-1., 1., sin(iTime/24.))*0.15) / (2. + r);
+  th = th * sin(th * 16.283 / f);
   return vec2(cos(th), sin(th)) * r * .1;
 
 }
@@ -17,11 +17,11 @@ vec2 transformKaleidoMap(vec2 at, float currentTime)
   return v;
 
 }
-vec2 transform(vec2 at, float currentTime)
+vec2 transform(sampler2D chan1, sampler2D chan2, vec2 at, float currentTime)
 {
   vec2 v;
-  vec4 kaleidomap=texture(iChannel1, transformKaleidoMap(at,currentTime));
-  vec4 kaleidomap2=texture(iChannel2, transformKaleidoMap(at,currentTime));
+  vec4 kaleidomap=texture(chan1, transformKaleidoMap(at,currentTime));
+  vec4 kaleidomap2=texture(chan2, transformKaleidoMap(at,currentTime));
   float th = .01 * iTime;
   v.x = at.x+kaleidomap.x * cos(th) - at.y* distance(at.x,sin(iTime*0.1*kaleidomap.x)*0.5) * sin(th) - 0.8 * sin(th);
   v.y = at.x*kaleidomap2.y * sin(th) + at.y* distance(at.y,cos(iTime*0.1*kaleidomap.y)*0.5) * cos(th) + 1.2 * cos(th);
@@ -30,7 +30,16 @@ vec2 transform(vec2 at, float currentTime)
 }
 vec4 scene(vec2 at, float currentTime)
 {
-  return texture(iChannel0, transform(at, currentTime) * 5.0);
+  int m = int(mod(floor(iTime/12.), 4.));
+  if (m == 0){
+    return texture(iChannel0, transform(iChannel1, iChannel2, at, currentTime) * float(m+1));
+  } else if (m == 1) {
+    return texture(iChannel0, transform(iChannel3, iChannel2, at, currentTime) * float(m+1));
+  } else if (m == 2) {
+    return texture(iChannel0, transform(iChannel3, iChannel1, at, currentTime) * float(m+1));
+  } else if (m == 3) {
+    return texture(iChannel0, transform(iChannel1, iChannel3, at, currentTime) * float(m+1));
+  }
 
 }
 vec4 makeLayerTimeShift(vec2 uv, float timeShift){
