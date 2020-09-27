@@ -2,9 +2,9 @@ vec2 kaleido(vec2 uv)
 {
   float th = atan(uv.y, uv.x);
   float r = pow(length(sin(uv)), .9);
-  float f = 3.14159 / (atan(iTime/144./(uv.y*sin(pow(iTime,cos(iTime/14.))/12.)))*3.5) * (sin(iTime/12.)+0.5);
-  th = abs(mod(th + f/4.0, f) - f/2.0) / (1.0 + r);
-  th = sin(th * 6.283)+3.3 / f * sin(iTime/144.)+12.;
+  float f = 6.14159 / (atan(iTime/1044./(uv.y*sin(pow(iTime,cos(iTime/14.))/12.)))*3.5) * (sin(iTime/12.)+0.5);
+  th = abs(mod(th + f/4.0, f) - f/12.0) / (1.0 + r);
+  th = sin(th * 0.283)+3.3 / f * sin(iTime/144.)+2.;
   return vec2(cos(th), sin(th)) * r * .1;
 
 }

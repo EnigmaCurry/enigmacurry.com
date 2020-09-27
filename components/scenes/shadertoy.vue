@@ -21,8 +21,8 @@ const colorToVec = (color) => {
   return `vec3(${color.r.toFixed(4)}, ${color.g.toFixed(4)}, ${color.b.toFixed(4)})`
 }
 
-function loadTexture(img) {
-  const tex = new Three.TextureLoader().load(img)
+function loadTexture(url_or_data, callback) {
+  const tex = new Three.TextureLoader().load(url_or_data, callback)
   tex.minFilter = Three.LinearMipmapLinearFilter
   tex.magFilter = Three.LinearMipmapLinearFilter
   tex.wrapS = Three.RepeatWrapping
@@ -73,7 +73,7 @@ export default {
       side: Three.DoubleSide,
       transparent: true,
     } )
-
+    
     return {
       scene: new Three.Scene(),
       tUniform,
@@ -119,8 +119,8 @@ export default {
       let pWidth = (width/height) * 2
       let pHeight = 2
       if (height > width) {
-         pWidth = 2
-         pHeight = (height/width) * 2
+        pWidth = 2
+        pHeight = (height/width) * 2
       }
       if (this.shaderMesh != null) {
         this.scene.remove(this.shaderMesh)
@@ -143,6 +143,30 @@ export default {
         }
       }, 100)
     },
+    onImageDrop(img, index, name) {
+      const data = img.getAttribute("src")
+      loadTexture(data, (tex) => {
+        if (index === 0) {
+          console.log("Loading iChannel0 : "+name)
+          this.tUniform.iChannel0.value = tex
+        } else if (index === 1) {
+          console.log("Loading iChannel1 : "+name)
+          this.tUniform.iChannel1.value = tex
+        } else if (index === 2) {
+          console.log("Loading iChannel2 : "+name)
+          this.tUniform.iChannel2.value = tex
+        } else if (index === 3) {
+          console.log("Loading iChannel3 : "+name)
+          this.tUniform.iChannel3.value = tex
+        }
+      })
+    }
+  },
+  created() {
+    this.$bus.$on('image-drop', this.onImageDrop)
+  },
+  beforeDestroy() {
+    this.$bus.$off('image-drop', this.onImageDrop)
   }
 }
 </script>
