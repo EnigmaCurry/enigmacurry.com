@@ -229,6 +229,7 @@ export default {
         { img: require('~/assets/img/icons/turn-in.png'), title: 'Turn In', to: '/video/myrcury-turn-in/' },
         { img: require('~/assets/img/icons/soothe_me.png'), title: 'Soothe Me', to: '/video/myrcury-soothe-me/' },
         { img: require('~/assets/img/icons/mammashumminheart.png'), title: 'Hummin Heart', to: '/video/myrcury-mammas-hummin-heart/' },
+        { img: require('~/assets/img/icons/bird.png'), title: 'If I made a bird', to: '/video/myrcury-if-i-made-a-bird/' },
     ],
     }
   },
