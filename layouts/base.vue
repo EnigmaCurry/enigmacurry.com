@@ -2,6 +2,9 @@
   <div v-bind:class="{ hideCursor: !cursorShown }">
     <div id="bg">
     </div>
+    <div id="drop_zone" v-if="dropFilesAllowed" v-on:drop="dropFile" v-on:dragover="dragOver">
+    </div>
+    <sound-engine/>
     <music-player v-if="musicPlayerLoaded"/>
     <v-app dark id="app">
       <v-navigation-drawer
@@ -66,13 +69,6 @@
         </v-container>
       </v-content>
     </v-app>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-129894901-1');
-    </script>
   </div>
 </template>
 
@@ -85,6 +81,13 @@
   background-size: cover;
   background-position: center center;
   background-color: #000;
+}
+
+#drop_zone {
+    position: fixed;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
 }
 
 #bg.fov-bearing {
@@ -180,6 +183,7 @@ div#app {
 
 <script>
 import ActivityMonitor from '~/components/ActivityMonitor.vue'
+import SoundEngine from '~/components/SoundEngine.vue'
 import MusicPlayer from '~/components/MusicPlayer.vue'
 import EventListener from '~/components/EventListener.vue'
 import ScrollbarHideListener from '~/components/ScrollbarHideListener.vue'
@@ -188,7 +192,7 @@ import * as FullscreenPolyfill from 'fullscreen-api-polyfill'
 
 export default {
   mixins: [EventListener, ActivityMonitor, ScrollbarHideListener],
-  components: {MusicPlayer},
+  components: {SoundEngine, MusicPlayer},
   props: {
     activityTimeout: {type: Number, default: 10}
   },
@@ -199,6 +203,7 @@ export default {
       drawerShown: false,
       volumeBarShown: false,
       musicPlayerLoaded: false,
+      dropFilesAllowed: true,
       volume: 100,
       title: 'EnigmaCurry',
       menuItems: [
@@ -261,6 +266,33 @@ export default {
     toggleDrawer() {
       this.$store.commit('ui/music_player_show', false)
       this.drawerShown = !this.drawerShown
+    },
+    dropFile(event) {
+      event.preventDefault()
+      event.stopPropagation()
+      for(let i=0; i < event.dataTransfer.files.length; i++) {
+        let file = event.dataTransfer.files[i]
+        if (file.type === "image/jpeg" || file.type === "image/png") {
+          var img = document.createElement("img")
+          img.classList.add("obj")
+          img.file = file
+          let reader = new FileReader()
+          reader.onload = ((aImg) => {
+            return (e) => {
+              aImg.onload=() => {
+                this.$bus.$emit('image-drop', aImg, i, file.name)
+              }
+              // e.target.result is a dataURL for the image
+              aImg.src = e.target.result
+            }
+          })(img)
+          reader.readAsDataURL(file)
+        }
+      }
+    },
+    dragOver(event) {
+      event.preventDefault();
+      event.stopPropagation()
     }
   },
   mounted() {
