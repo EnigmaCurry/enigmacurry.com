@@ -19,6 +19,9 @@
             <v-icon @click="toggleDrawer" alt="close" title="close">close</v-icon>
           </v-btn>
           <v-spacer />
+          <v-btn flat icon alt="github" title="blog" :href="`https://blog.rymcg.tech`" target="_new">
+            <img src="~/assets/img/icons/blog.rymcg.tech.png"/>
+         </v-btn>
           <v-btn flat icon alt="github" title="github" :href="`https://www.github.com/EnigmaCurry/enigmacurry.com`" target="_new">
             <v-icon>zmdi-hc-3x zmdi-github</v-icon>
          </v-btn>
