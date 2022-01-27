@@ -8574,10 +8574,10 @@ three.texttexture@^19.0.0:
   resolved "https://registry.yarnpkg.com/three.texttexture/-/three.texttexture-19.0.0.tgz#a60f04b491fd50888151de6465f68191b17b862e"
   integrity sha512-p+OKMk7NNMt8LYj+eUmhy+PQd0eBGncU0SSLIbOTH9zUDSBaIsk8j9FLHgc5+oXjqDlPHLfZZ+l+ita2fs+XWQ==
 
-three@^0.97.0:
-  version "0.97.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.97.0.tgz#76141e1b0ace14246fe9198a458fefddc98a4e30"
-  integrity sha512-ctZF79O1R2aMIDnz9cV5GUIONyFnYvfQKg4+EAwEVaEr1mgy99rglstH6hhRdIThu3SOa4Ns5da/Ee5fTbWc9A==
+three@^0.137.0:
+  version "0.137.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.137.0.tgz#0ebd6ba66637a332c31f234bcdd35aeec071a6e3"
+  integrity sha512-rzSDhia6cU35UCy6y+zEEws6vSgytfHqFMSaBvUcySgzwvDO6vETyswtSNi/+aVqJw8WLMwyT1mlQQ1T/dxxOA==
 
 through2@^2.0.0:
   version "2.0.5"
